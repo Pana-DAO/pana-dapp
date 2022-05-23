@@ -1,0 +1,309 @@
+.dapp-sidebar {
+  height: 100%;
+  overflow: hidden;
+  border-radius: 0 !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  .sidebar {
+    min-width: 280px;
+    z-index: 2;
+    border-radius: 0 !important;
+  }
+
+
+  .MuiDrawer-paper .MuiPaper-root {
+    border-radius: 0 !important;
+  }
+
+  // #navbarNav div{
+  //   margin: 0px;
+  //   padding-left: 20px;
+  //   padding-top: 10px;
+  //   padding-bottom: 10px;
+  //   &:active{
+  //     background-color: #999999;
+  //     text-decoration: none;
+  //   }
+  //   &:hover{
+  //     background-color: #999999;
+  //     text-decoration: none;
+  //   }
+  // }
+
+
+
+
+  #navbarNav .nav-item-container{
+    margin: 0px;
+    padding: 8px 6px 8px 15px  
+  }
+
+  .menu-divider {
+    margin-left: 30px;
+    margin-block: 10px;
+  }
+
+  #navbarNav{
+    .MuiListItem-root{
+      padding-top: 4px;
+      padding-bottom: 4px;
+    }
+    a{
+      &.active{
+        text-decoration: none;
+      }
+    }
+    .nav-content{
+      display: inline-flex;
+      position: relative;
+      top:0px;
+    }
+    .nav-svg{
+      position: relative;
+      top:3px;
+    }
+    .arrowposition{
+      position: relative;    
+      margin-left: 5px;
+      top: -2px;
+    }
+    .arrowposition-roi{
+      position: relative;
+      top:2px;
+      margin-left: 5px;
+    }
+  }
+
+
+  .submenu{
+    margin-left: 40px !important;
+    &.menu2{
+      padding-left: 16px;
+      ul{
+        padding: 0px!important;
+      }
+    }
+    padding-bottom: 10px !important;
+    .MuiListSubheader-root{
+      line-height: 30px;
+      cursor: pointer;
+    }
+    .submenulist{
+      padding-left: 20px;
+      &.menu2{
+        padding-left: 0px !important;
+      }  
+    }
+    .submenulist a p{
+      padding: 5px 10px;
+      width: 80%;
+      .bond-pair-roi{
+        float: right;
+      }
+    }
+  }
+  .nav-link{
+    
+    // svg.menuicon{ 
+    //   font-size: smaller;
+    // }
+    
+    .nav-text{
+      // margin-top: 5px;
+      padding: 0px 0px 0px 15px;  
+    }
+  }
+  .dapp-sidebar-inner {
+    height: 100%;
+    overflow: auto;
+  }
+
+  .branding-header {
+    display: flex;
+    flex-direction: column;
+    /* text-align: center; */
+    /* justify-content: center; */
+    /* width: 100%; */
+    /* align-items: center; */
+    text-decoration: none;
+    margin-left: 20px;
+    padding-top: 1.7rem;
+    /* margin-right: 18px; */
+    padding-bottom: 0.7rem;
+    .branding-header-logo{
+      padding-bottom: 10px;
+    }
+    .branding-header-logo img{
+      padding-right: 10px;
+    }
+    .branding-header-icon {
+      width: 150px;
+      display: block;
+      margin: 0;
+      
+    }
+    div{
+      margin: auto;
+    }
+    .wallet-link {
+      margin: 0 0 8px 0;
+      display: flex;
+      align-items: center;
+    }
+    .avatar {
+      margin-right: 8px;
+      height: 20px;
+      border-radius: 100px;
+    }
+  }
+
+  .dapp-menu-top {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    margin-bottom: 10px;
+    min-height: max-content;
+    .dapp-nav {
+      display: flex;
+      flex-flow: column;
+    }
+  }
+
+  .dapp-menu-bottom {
+    height: 40vh;
+    min-height: 30vh;
+  }
+  .dapp-menu-data.discounts {
+    display: flex;
+  }
+
+  .dapp-menu-links {
+    min-height: 35vh;
+    align-items: center;
+  }
+
+  .bond-discounts {
+    text-align: left;
+    color: #999999;
+    padding-left: 33px;
+    margin-top: 8px;
+    a {
+      margin-top: 0.7rem;
+      margin-left: 33px;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .discounts-accordion {
+      backdrop-filter: none;
+      background-color: inherit;
+      margin: 12px 0;
+
+      &:before {
+        display: none;
+      }
+
+      .MuiAccordionSummary-root {
+        padding: 0;
+        justify-content: space-between;
+        min-height: auto;
+      }
+
+      .MuiAccordionSummary-content {
+        display: block;
+        margin: 0;
+
+        .MuiTypography-body2 {
+          color: #999999;
+          margin-left: 33px;
+        }
+      }
+
+      .MuiAccordionSummary-expandIcon {
+        color: inherit;
+        height: inherit;
+        padding-top: 0;
+        padding-bottom: 0;
+        position: absolute;
+        left: 92px;
+        top: -5px;
+        transition: left 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, top 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+          transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+        &.Mui-expanded {
+          left: 94px;
+          top: -2px;
+        }
+      }
+
+      .MuiAccordionDetails-root {
+        padding: 0;
+        display: block;
+
+        .bond {
+          display: block;
+          padding: unset;
+          margin-bottom: 0 0 1px 0;
+          text-decoration: none !important;
+          .bond-pair-roi {
+            float: right;
+            margin-left: 33px;
+          }
+        }
+      }
+    }
+  }
+
+  .give-sub-menus {
+    text-align: left;
+    padding-left: 33px;
+    > p {
+      margin-left: 33px;
+    }
+    .give-option {
+      display: block;
+      padding: unset;
+      margin-bottom: 0 0 1px 0;
+      margin-left: 33px;
+    }
+  }
+  .panalogo{
+    height: 50px;
+    width: 50px;
+    object-fit: cover;
+  }
+  .pad0{
+    padding: 0px !important;
+  }
+}
+.social-row {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-evenly;
+  padding: 1.3rem;
+  a {
+    &:hover {
+      transform: scale(1.1);
+    }
+    img {
+      height: 20px;
+      width: 20px;
+    }
+  }
+}
+
+.mobile .show .dapp-sidebar {
+  .dapp-menu-links {
+    flex-flow: row !important;
+    justify-content: center !important;
+  }
+  .dapp-nav {
+    .dapp-menu-data.discounts {
+      margin-top: 2.5em;
+      .bond-discounts {
+        display: none;
+      }
+    }
+  }
+}
+

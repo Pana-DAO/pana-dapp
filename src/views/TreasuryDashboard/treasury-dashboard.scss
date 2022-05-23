@@ -1,0 +1,121 @@
+#treasury-dashboard-view {
+  overflow-y: hidden;
+  overflow-x: hidden;
+  height: 100%;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  overflow-y: auto;
+  -ms-overflow-style: none !important; /* IE and Edge */
+  scrollbar-width: none !important; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .pana-card {
+    max-width: unset !important;
+    width: 100%;
+    margin: auto;
+    .card-header {
+      margin-bottom: 1rem;
+    }
+    &.pana-chart-card {
+      .chart-card-header {
+        padding: 0px 20px !important;
+        min-width: 300px;
+      }
+      height: 355px;
+    }
+  }
+  .hero-metrics {
+    width: 100%;
+    margin-bottom: 23px;    
+    .pana-card {
+      max-width: unset !important;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: space-evenly;
+      h5 {
+        font-weight: bold;
+      }
+    }
+  }
+  .data-grid {
+    overflow: hidden;
+  }
+
+  .dashboard-metrics {
+    .MuiGrid-root {
+      text-align: left !important;
+
+      .MuiTypography-h6 {
+        font-size: 18px !important;
+      }
+
+      .MuiTypography-h5 {
+        font-size: 25px !important;
+      }
+    }
+  }
+}
+
+.paper-format-treasury{
+  max-width: 833px;
+  width: 97%;
+  padding: 20px 30px 30px 30px;
+  z-index: 5;
+  overflow: hidden;
+  border-radius: 10px !important;
+  margin-bottom: 1.8rem;
+  backdrop-filter: blur(33px);
+  
+}
+
+.smaller {
+  .pana-card {
+    width: 97%;
+  }
+  .hero-metrics .pana-card {
+    > .MuiBox-root {
+      flex-direction: column;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    div.metric {
+      text-align: left !important;
+    }
+  }
+}
+
+.mobile {
+  div.metric {
+    white-space: nowrap;
+    min-width: 30% !important;
+    max-width: 60%;
+    text-align: left !important;
+    &.market,
+    &.price,
+    &.wsoprice,
+    &.circ,
+    &.bpo,
+    &.index {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+}
+
+.very-small {
+  .hero-metrics .pana-card {
+    > .MuiBox-root {
+      flex-direction: column;
+      justify-content: center;
+    }
+  }
+}
+
+.stake-wallet-notification{
+  text-align: center;
+}

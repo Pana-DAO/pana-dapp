@@ -1,0 +1,815 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2021-11-17 18:04+0100\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: pt\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/views/33Together/PoolWithdraw.jsx:121
+msgid "(exit fee has been waived)"
+msgstr ""
+
+#: src/views/33Together/PoolInfo.jsx:67
+msgid "1 in {0}"
+msgstr "1 em {0}"
+
+#: src/views/33Together/33together.tsx:167
+msgid "3, 3 Together"
+msgstr "3, 3 Juntos"
+
+#: src/views/Zap/ZapInfo.jsx:81
+#~ msgid "A zap swap is a series of smart contracts that deploys one asset to another a protocol to handle a trusted transaction."
+#~ msgstr "Uma troca no Zap é uma série de smart contracts que colocam um ativo noutro protocolo para levar a cabo uma transação confiável."
+
+#: src/views/Zap/ZapInfo.jsx:81
+msgid "A zap swap is a series of smart contracts that deploys one asset to another protocol to handle a trusted transaction."
+msgstr ""
+
+#: src/components/TopBar/OhmMenu.jsx:155
+msgid "ADD TOKEN TO WALLET"
+msgstr "ADICIONAR TOKEN À WALLET"
+
+#: src/views/Stake/Stake.tsx:218
+msgid "APY"
+msgstr "APY"
+
+#: src/views/Zap/ZapCta.jsx:50
+msgid "All-in-One contract to save time"
+msgstr "Contrato tudo-em-um para poupar tempo"
+
+#: src/views/Zap/ZapInfo.jsx:103
+msgid "All-in-one easy staking"
+msgstr "Staking fácil tudo-em-um"
+
+#: src/views/Zap/ZapInfo.jsx:98
+msgid "All-in-one zap contracts"
+msgstr "Contratos Zap tudo-em-um"
+
+#: src/views/Bond/BondPurchase.jsx:158
+msgid "Amount"
+msgstr "Quantia"
+
+#: src/views/Zap/ZapStakeHeader.jsx:26
+msgid "Any asset"
+msgstr ""
+
+#: src/views/33Together/PoolDeposit.jsx:175
+#: src/views/Stake/Stake.tsx:354
+#: src/views/Stake/Stake.tsx:386
+#: src/views/Zap/ZapStakeAction.jsx:427
+msgid "Approve"
+msgstr "Aprovar"
+
+#: src/views/Zap/ZapStakeAction.jsx:420
+msgid "Approved"
+msgstr "Aprovado"
+
+#: src/views/Stake/ExternalStakePool.jsx:85
+#~ msgid "Asset"
+#~ msgstr "Ativo"
+
+#: src/views/Zap/ZapStakeHeader.jsx:63
+msgid "Auto staked for KARSHA"
+msgstr "Com staking automático para KARSHA"
+
+#: src/views/33Together/PoolPrize.jsx:114
+msgid "Award Balance will grow at 1st rebase."
+msgstr "O Saldo de Recompensa vai crescer no primeiro rebase."
+
+#: src/views/33Together/PoolPrize.jsx:203
+msgid "Award period has finished, you can navigate to Pool Together's UI to begin distribution"
+msgstr "O período de Recompensa terminou, pode navegar para a UI do Pool Juntos para começar a distribuição"
+
+#: src/views/33Together/PoolPrize.jsx:182
+msgid "Award period has finished, you can navigate to Pool Together's UI to complete distribution"
+msgstr "O período de Recompensa terminou, pode navegar para a UI do Pool Juntos para terminar a distribuição."
+
+#: src/views/TreasuryDashboard/components/Metric/Metric.js:57
+msgid "Backing per PANA"
+msgstr ""
+
+#: src/views/Stake/ExternalStakePool.jsx:97
+#: src/views/Stake/ExternalStakePool.jsx:196
+#~ msgid "Balance"
+#~ msgstr "Saldo"
+
+#: src/components/Sidebar/NavContent.jsx:152
+#: src/views/ChooseBond/ChooseBond.tsx:71
+#: src/views/ChooseBond/ChooseBond.tsx:121
+#: src/views/ChooseBond/ClaimBonds.jsx:75
+msgid "Bond"
+msgstr "Obrigação"
+
+#: src/views/Bond/Bond.tsx:80
+msgid "Bond Price"
+msgstr "Preço da Obrigação"
+
+#: src/components/Sidebar/NavContent.jsx:159
+msgid "Bond discounts"
+msgstr "Descontos das Obrigações"
+
+#: src/views/ChooseBond/BondRow.jsx:73
+msgid "Bond {0}"
+msgstr "Obrigação {0}"
+
+#: src/components/Sidebar/NavContent.jsx:136
+#: src/components/Sidebar/NavContent.jsx:246
+msgid "Bridge"
+msgstr ""
+
+#: src/components/TopBar/OhmMenu.jsx:237
+msgid "Bridge Tokens"
+msgstr ""
+
+#: src/components/TopBar/OhmMenu.jsx:114
+#: src/components/TopBar/OhmMenu.jsx:127
+msgid "Buy on {0}"
+msgstr "Comprar no {0}"
+
+#: src/components/TopBar/ThemeSwitch.jsx:12
+msgid "Change Theme"
+msgstr "Mudar Tema"
+
+#: src/components/TopBar/LocaleSwitch.tsx:37
+msgid "Change locale"
+msgstr "Mudar de local"
+
+#: src/views/33Together/PoolDeposit.jsx:116
+#: src/views/33Together/PoolWithdraw.jsx:109
+msgid "Check back soon!"
+msgstr "Verifique em breve!"
+
+#: src/views/Bond/AdvancedSettings.jsx:63
+msgid "Choose recipient address. By default, this is your currently connected address"
+msgstr "Escolha o endereço do beneficiário. Por defeito, é o endereço que tem actualmente ligado."
+
+#: src/views/TreasuryDashboard/components/Metric/Metric.js:44
+msgid "Circulating Supply (total)"
+msgstr ""
+
+#: src/views/Bond/BondRedeem.jsx:72
+#: src/views/ChooseBond/ClaimRow.jsx:133
+msgid "Claim"
+msgstr "Resgatar"
+
+#: src/views/ChooseBond/ClaimBonds.jsx:118
+msgid "Claim all"
+msgstr "Resgatar todas"
+
+#: src/views/ChooseBond/ClaimBonds.jsx:135
+msgid "Claim all and Stake"
+msgstr "Resgatar todas e fazer Staking"
+
+#: src/views/Bond/BondRedeem.jsx:88
+msgid "Claim and Autostake"
+msgstr "Resgatar e fazer Autostaking"
+
+#: src/views/ChooseBond/ClaimRow.jsx:141
+msgid "Claim and Stake"
+msgstr "Resgatar e fazer Staking"
+
+#: src/views/ChooseBond/ClaimBonds.jsx:78
+msgid "Claimable"
+msgstr "Resgatável"
+
+#: src/views/Bond/BondRedeem.jsx:105
+msgid "Claimable Rewards"
+msgstr "Recompensas Resgatáveis"
+
+#: src/views/Stake/ExternalStakePool.jsx:168
+#~ msgid "Coming Soon"
+#~ msgstr "Em breve"
+
+#: src/components/ConnectButton.jsx:9
+#: src/components/TopBar/ConnectMenu.jsx:20
+#: src/views/Stake/Stake.tsx:157
+#: src/views/Zap/Zap.jsx:33
+msgid "Connect Wallet"
+msgstr "Ligar Wallet"
+
+#: src/views/Stake/Stake.tsx:252
+msgid "Connect your wallet to stake PANA"
+msgstr "Ligue a sua wallet para fazer Staking de PANA"
+
+#: src/views/Zap/Zap.jsx:37
+msgid "Connect your wallet to use Zap"
+msgstr "Ligue a sua wallet para usar o Zap"
+
+#: src/views/Stake/Stake.tsx:236
+#: src/views/TreasuryDashboard/components/Metric/Metric.js:70
+msgid "Current Index"
+msgstr "Índice Atual"
+
+#: src/views/33Together/PoolPrize.jsx:121
+msgid "Current Prize"
+msgstr "Prémio Atual"
+
+#: src/components/Sidebar/NavContent.jsx:94
+msgid "Dashboard"
+msgstr "Painel de Ferramentas"
+
+#: src/views/Bond/BondPurchase.jsx:270
+#: src/views/Bond/BondRedeem.jsx:129
+msgid "Debt Ratio"
+msgstr "Rácio da Dívida"
+
+#: src/views/33Together/33together.tsx:168
+#~ msgid "Deposit"
+#~ msgstr "Depositar"
+
+#: src/views/33Together/PoolDeposit.jsx:164
+msgid "Deposit KARSHA"
+msgstr "Depositar KARSHA"
+
+#: src/views/33Together/PoolDeposit.jsx:101
+msgid "Deposit KARSHA to win! Once deposited, you will receive a corresponding amount of 33T and be entered to win until your KARSHA is withdrawn."
+msgstr "Deposite KARSHA para ganhar! Assim que depositar, vai receber a quantia correspondente de 33T e habilitar-se-á a ganhar até que o seu KARSHA seja retirado."
+
+#: src/views/33Together/PoolDeposit.jsx:182
+msgid "Depositing {quantity} KARSHA will increase odds of winning to 1 in {newOdds}"
+msgstr "Depositar {quantity} KARSHA vai aumentar a sua probabilidade de ganhar para 1 em {newOdds}"
+
+#: src/views/33Together/PoolDeposit.jsx:113
+msgid "Deposits can be made once the prize has been awarded."
+msgstr "Podem ser feitos depósitos assim que o prémio tenha sido atribuído."
+
+#: src/views/Zap/ZapStakeAction.jsx:477
+msgid "Dialing Zapper..."
+msgstr "A ligar o Zapper..."
+
+#: src/components/TopBar/ConnectMenu.jsx:28
+#: src/components/TopBar/ConnectMenu.jsx:125
+msgid "Disconnect"
+msgstr "Desligar"
+
+#: src/components/Sidebar/externalUrls.jsx:20
+msgid "Docs"
+msgstr "Documentação"
+
+#: src/views/33Together/PoolInfo.jsx:122
+msgid "Early Exit Fee"
+msgstr "Taxa de Saída Antecipada"
+
+#: src/views/33Together/PoolWithdraw.jsx:180
+msgid "Early withdraw will incur a fairness fee of {exitFee}."
+msgstr "A retirada antecipada incorrerá numa taxa de equidade de {exitFee}."
+
+#: src/views/Zap/ZapStakeAction.jsx:397
+#: src/views/Zap/ZapStakeAction.jsx:449
+msgid "Enter Amount"
+msgstr ""
+
+#: src/views/Zap/ZapStakeAction.jsx:356
+#: src/views/Zap/ZapStakeAction.jsx:408
+#~ msgid "Enter an Amount"
+#~ msgstr "Insira uma quantia"
+
+#: src/views/33Together/PoolDeposit.jsx:134
+msgid "Enter an amount"
+msgstr "Insira uma quantia"
+
+#: src/views/Zap/ZapStakeAction.jsx:366
+msgid "Exchange Rate"
+msgstr "Taxa de Câmbio"
+
+#: src/views/33Together/PoolInfo.jsx:128
+msgid "Exit Fee Decay Time"
+msgstr "Tempo de Decaimento da Taxa de Saída"
+
+#: src/views/Stake/ExternalStakePool.tsx:62
+msgid "Farm Pool"
+msgstr "Farm Pool"
+
+#: src/views/Bond/BondPurchase.jsx:149
+msgid "First time bonding"
+msgstr "Primeira vez a comprar"
+
+#: src/views/Stake/Stake.tsx:287
+msgid "First time staking"
+msgstr "Primeira vez a fazer staking de"
+
+#: src/views/Stake/Stake.tsx:294
+msgid "First time exchanging"
+msgstr "Primeira vez fazer exchanging de"
+
+#: src/components/Sidebar/externalUrls.jsx:10
+msgid "Forum"
+msgstr "Fórum"
+
+#: src/views/ChooseBond/ClaimBonds.jsx:84
+msgid "Fully Vested"
+msgstr "Totalmente Exercível"
+
+#: src/components/Sidebar/externalUrls.jsx:15
+msgid "Governance"
+msgstr "Governança"
+
+#: src/components/TopBar/ConnectMenu.jsx:33
+msgid "In progress"
+msgstr "Em progresso"
+
+#: src/components/RebaseTimer/RebaseTimer.jsx:30
+#: src/components/RebaseTimer/RebaseTimer.jsx:61
+msgid "Less than a minute"
+msgstr "Menos de um minuto"
+
+#: src/views/TreasuryDashboard/components/Metric/Metric.js:16
+msgid "Market Cap"
+msgstr "Valor de Mercado"
+
+#: src/views/Bond/Bond.tsx:88
+msgid "Market Price"
+msgstr "Preço de Mercado"
+
+#: src/views/33Together/PoolDeposit.jsx:147
+#: src/views/33Together/PoolWithdraw.jsx:147
+#: src/views/Bond/BondPurchase.jsx:170
+msgid "Max"
+msgstr "Máximo"
+
+#: src/views/Zap/ZapStakeAction.jsx:328
+#~ msgid "Max Slippage"
+#~ msgstr "Máximo de Slippage"
+
+#: src/views/Bond/BondPurchase.jsx:248
+msgid "Max You Can Buy"
+msgstr "Máximo Que Pode Comprar"
+
+#: src/views/Stake/Stake.tsx:205
+msgid "Migrate KARSHA!"
+msgstr "Migrar KARSHA!"
+
+#: src/views/Zap/ZapStakeAction.jsx:381
+msgid "Minimum You Get"
+msgstr "Mínimo Que Receberá"
+
+#: src/views/Stake/Stake.tsx:444
+msgid "Next Reward Amount"
+msgstr "Quantia da Próxima Recompensa"
+
+#: src/views/Stake/Stake.tsx:446
+msgid "Next Reward Yield"
+msgstr "Rendimento da Próxima Recompensa"
+
+#: src/views/33Together/PoolPrize.jsx:131
+#~ msgid "Next award"
+#~ msgstr "Próximo prémio"
+
+#: src/views/ChooseBond/ChooseBond.tsx:101
+#: src/views/TreasuryDashboard/components/Metric/Metric.js:29
+msgid "PANA Price"
+msgstr "Preço de PANA"
+
+#: src/views/Zap/ZapInfo.jsx:106
+msgid "OlyZap reduces complexity, saves you time and keeps you here on Olympus."
+msgstr "O OlyZap reduz a complexidade, poupa-lhe tempo e mantém-no aqui em Olympus."
+
+#: src/views/404/NotFound.tsx:14
+msgid "Page not found"
+msgstr "Página não encontrada"
+
+#: src/views/ChooseBond/ClaimBonds.jsx:81
+msgid "Pending"
+msgstr "Pendente"
+
+#: src/views/Bond/BondRedeem.jsx:97
+msgid "Pending Rewards"
+msgstr "Recompensas Pendentes"
+
+#: src/slices/PendingTxnsSlice.ts:38
+#: src/slices/PendingTxnsSlice.ts:42
+#: src/slices/PendingTxnsSlice.ts:46
+#: src/views/Zap/ZapStakeAction.jsx:395
+#: src/views/Zap/ZapStakeAction.jsx:427
+msgid "Pending..."
+msgstr "Pendente..."
+
+#: src/views/Bond/BondPurchase.jsx:150
+#: src/views/Stake/Stake.tsx:289
+#: src/views/Stake/Stake.tsx:296
+msgid "Please approve Pana Dao to use your"
+msgstr "Por favor aprove que o Pana Dao use o seu"
+
+#: src/views/Bond/BondPurchase.jsx:53
+msgid "Please enter a valid value!"
+msgstr "Por favor insira um valor válido!"
+
+#: src/views/33Together/PoolDeposit.jsx:67
+#: src/views/33Together/PoolWithdraw.jsx:60
+#: src/views/Bond/BondPurchase.jsx:51
+#: src/views/Stake/Stake.tsx:126
+#: src/views/Stake/Stake.tsx:126
+msgid "Please enter a value!"
+msgstr "Por favor insira um valor!"
+
+#: src/views/33Together/PoolPrize.jsx:111
+msgid "Pool Award Balance is currently 0."
+msgstr "O Saldo do Prémio da Pool é atualmente 0."
+
+#: src/views/33Together/PoolInfo.jsx:113
+msgid "Pool owner"
+msgstr "Dono da Pool"
+
+#: src/views/Zap/ZapStakeAction.jsx:187
+#~ msgid "Powered by Zapper"
+#~ msgstr "Disponibilizado pelo Zapper"
+
+#: src/views/ChooseBond/BondRow.jsx:38
+#: src/views/ChooseBond/ChooseBond.tsx:124
+msgid "Price"
+msgstr "Preço"
+
+#: src/views/33Together/PoolInfo.jsx:40
+msgid "Prize Pool Info"
+msgstr "Informação sobre o Prémio da Pool"
+
+#: src/views/33Together/PoolPrize.jsx:127
+msgid "Prize is being awarded"
+msgstr "O Prémio está a ser atribuído"
+
+#: src/views/ChooseBond/BondRow.jsx:55
+#: src/views/ChooseBond/ChooseBond.tsx:130
+msgid "Purchased"
+msgstr "Comprado"
+
+#: src/views/Bond/BondPurchase.jsx:261
+#: src/views/Bond/BondRedeem.jsx:120
+#: src/views/ChooseBond/BondRow.jsx:46
+#: src/views/ChooseBond/ChooseBond.tsx:127
+msgid "ROI"
+msgstr "ROI"
+
+#: src/views/Stake/Stake.tsx:451
+msgid "ROI (5-Day Rate)"
+msgstr "ROI (Taxa de 5 Dias)"
+
+#: src/views/33Together/PoolWithdraw.jsx:188
+msgid "Read more about Fairness"
+msgstr "Ler mais sobre Equidade"
+
+#: src/views/Bond/BondPurchase.jsx:287
+msgid "Recipient"
+msgstr "Beneficiário"
+
+#: src/views/Bond/AdvancedSettings.jsx:57
+msgid "Recipient Address"
+msgstr "Endereço do Beneficiário"
+
+#: src/views/Bond/Bond.tsx:112
+msgid "Redeem"
+msgstr "Resgatar"
+
+#: src/views/Zap/ZapStakeAction.jsx:465
+msgid "Select Zap Token"
+msgstr "Seleccione o Token para o Zap"
+
+#: src/views/Zap/ZapStakeAction.jsx:241
+#: src/views/Zap/ZapStakeAction.jsx:278
+msgid "Select a Token"
+msgstr "Seleccione um Token"
+
+#: src/views/Zap/ZapStakeHeader.jsx:26
+msgid "Select any asset"
+msgstr "Seleccione qualquer ativo"
+
+#: src/views/Zap/ZapStakeAction.jsx:483
+msgid "Ser, you have no assets..."
+msgstr "Ser, não tem ativos..."
+
+#: src/views/Stake/Stake.tsx:412
+msgid "Single Staking"
+msgstr "Staking Único"
+
+#: src/views/Bond/AdvancedSettings.jsx:37
+msgid "Slippage"
+msgstr "Slippage"
+
+#: src/views/Zap/ZapStakeAction.jsx:341
+msgid "Slippage Tolerance"
+msgstr ""
+
+#: src/views/Bond/BondPurchase.jsx:185
+#: src/views/ChooseBond/BondRow.jsx:73
+#: src/views/ChooseBond/BondRow.jsx:128
+msgid "Sold Out"
+msgstr "Esgotado"
+
+#: src/views/33Together/PoolInfo.jsx:143
+msgid "Something not right, fren? Check Pool Together's UI below."
+msgstr "Algo errado? Veja a UI do Pool Juntos abaixo."
+
+#: src/components/Sidebar/NavContent.jsx:109
+msgid "Stake"
+msgstr "Fazer Staking"
+
+#: src/views/Stake/Stake.tsx:342
+msgid "Stake PANA"
+msgstr "Fazer Staking de PANA"
+
+#: src/views/Stake/ExternalStakePool.jsx:144
+#: src/views/Stake/ExternalStakePool.jsx:212
+#~ msgid "Stake in Crucible"
+#~ msgstr "Fazer Staking no Crucible"
+
+#: src/views/Stake/ExternalStakePool.tsx:87
+#: src/views/Stake/ExternalStakePool.tsx:115
+msgid "Stake on Trader Joe"
+msgstr ""
+
+#: src/views/Stake/Stake.tsx:404
+msgid "Staked Balance"
+msgstr "Saldo em Staking"
+
+#: src/views/Stake/Stake.tsx:418
+msgid "Staked Balance in Fuse"
+msgstr "Saldo em Staking no Fuse"
+
+#: src/views/Zap/ZapInfo.jsx:129
+msgid "Staking"
+msgstr "A fazer Staking"
+
+#: src/slices/PendingTxnsSlice.ts:28
+msgid "Staking PANA"
+msgstr "A fazer Staking de PANA"
+
+#: src/views/Zap/ZapInfo.jsx:132
+msgid "Staking is the primary value accrual strategy of Olympus. When you stake, you lock PANA and receive an equal amount of KARSHA."
+msgstr "O Staking é a principal estratégia de acumulação de rendimentos de Olympus. Quando faz staking, bloqueia o seu PANA e recebe um valor igual de KARSHA."
+
+#: src/views/Dashboard/Dashboard.jsx:66
+#~ msgid "Supply (circulating/total)"
+#~ msgstr "Oferta (em circulação/total)"
+
+#: src/views/Zap/ZapStakeHeader.jsx:50
+msgid "Swap for PANA"
+msgstr "Trocar por PANA"
+
+#: src/views/Zap/ZapStakeHeader.jsx:40
+msgid "Swap for KARSHA"
+msgstr "Trocar por KARSHA"
+
+#: src/views/Zap/ZapCta.jsx:58
+msgid "Swap into KARSHA"
+msgstr "Trocar para KARSHA"
+
+#: src/views/Stake/ExternalStakePool.jsx:91
+#: src/views/Stake/ExternalStakePool.jsx:176
+#~ msgid "TVD"
+#~ msgstr "TVD"
+
+#: src/views/33Together/PoolWithdraw.jsx:118
+msgid "The pool has been temporarily disabled for V2 Migration. Please withdraw your 33T"
+msgstr ""
+
+#: src/views/33Together/PoolDeposit.jsx:110
+msgid "This Prize Pool is unable to accept deposits at this time."
+msgstr "Esta Pool de Prémio não aceita depósitos neste momento."
+
+#: src/views/33Together/PoolWithdraw.jsx:103
+msgid "This Prize Pool is unable to accept withdrawals at this time."
+msgstr "Esta Pool de Prémio não aceita retiradas neste momento."
+
+#: src/views/Bond/BondRedeem.jsx:113
+msgid "Time until fully vested"
+msgstr "Tempo até ser totalmente exercível"
+
+#: src/views/33Together/PoolInfo.jsx:91
+msgid "Total Deposits"
+msgstr "Total de Depósitos"
+
+#: src/views/33Together/PoolInfo.jsx:99
+msgid "Total Sponsorship"
+msgstr "Total de Patrocínios"
+
+#: src/views/Stake/Stake.tsx:227
+msgid "Total Value Deposited"
+msgstr "Valor Total Depositado"
+
+#: src/views/Bond/AdvancedSettings.jsx:51
+msgid "Transaction may revert if price changes by more than slippage %"
+msgstr "É possível que a transação reverta caso o preço mude mais do que a slippage %"
+
+#: src/views/ChooseBond/ChooseBond.tsx:79
+msgid "Treasury Balance"
+msgstr "Saldo da Tesouraria"
+
+#: src/views/Stake/Stake.tsx:277
+msgid "Unstake"
+msgstr "Unstaking"
+
+#: src/components/TopBar/OhmMenu.jsx:226
+msgid "Unstake Legacy LP Token"
+msgstr "Unstaking do Token de Legacy LP"
+
+#: src/views/Stake/Stake.tsx:374
+msgid "Unstake PANA"
+msgstr "Unstaking de PANA"
+
+#: src/views/Stake/Stake.tsx:396
+msgid "Unstaked Balance"
+msgstr "Saldo fora de Staking"
+
+#: src/slices/PendingTxnsSlice.ts:28
+msgid "Unstaking KARSHA"
+msgstr "A fazer Unstaking de KARSHA"
+
+#: src/slices/PendingTxnsSlice.ts:32
+msgid "Unwrapping KARSHA"
+msgstr "A Desembrulhar KARSHA"
+
+#: src/views/Bond/BondPurchase.jsx:279
+#: src/views/Bond/BondRedeem.jsx:138
+msgid "Vesting Term"
+msgstr "Termo de Aquisição"
+
+#: src/views/ChooseBond/BondRow.jsx:28
+#: src/views/ChooseBond/BondRow.jsx:97
+msgid "View Contract"
+msgstr "Ver Contrato"
+
+#: src/views/33Together/PoolInfo.jsx:85
+msgid "Winners / prize period"
+msgstr "Vencedores / período do prémio"
+
+#: src/views/33Together/33together.tsx:180
+msgid "Withdraw"
+msgstr "Retirar"
+
+#: src/views/33Together/PoolWithdraw.jsx:162
+msgid "Withdraw Early & pay"
+msgstr "Retirar Antecipadamente e pagar"
+
+#: src/views/33Together/PoolWithdraw.jsx:163
+msgid "Withdraw KARSHA"
+msgstr "Retirar KARSHA"
+
+#: src/views/33Together/PoolWithdraw.jsx:106
+msgid "Withdrawals can be made once the prize has been awarded."
+msgstr "Retiradas podem ser feitas assim que o prémio tenha sido atribuído."
+
+#: src/views/33Together/PoolWithdraw.jsx:170
+msgid "Withdrawing {quantity} KARSHA reduces your odds of winning to 1 in {newOdds}"
+msgstr "Retirar {quantity} KARSHA reduz a sua probabilidade de ganhar para 1 in {newOdds}"
+
+#: src/views/Stake/Stake.tsx:424
+#: src/views/Stake/Stake.tsx:436
+msgid "Wrapped Balance"
+msgstr "Saldo Embrulhado"
+
+#: src/views/Stake/Stake.tsx:430
+msgid "Wrapped Balance in FiatDAO"
+msgstr ""
+
+#: src/slices/PendingTxnsSlice.ts:32
+msgid "Wrapping PANA"
+msgstr "A Embrulhar PANA"
+
+#: src/views/33Together/PoolInfo.jsx:107
+msgid "Yield Source"
+msgstr "Fonte de Rendimento"
+
+#: src/views/Zap/ZapStakeAction.jsx:291
+msgid "You Get"
+msgstr "Vai Receber"
+
+#: src/views/Zap/ZapInfo.jsx:124
+msgid "You Get KARSHA"
+msgstr "Receberá KARSHA"
+
+#: src/views/Zap/ZapInfo.jsx:73
+msgid "You Give"
+msgstr "Receberá"
+
+#: src/views/Zap/ZapStakeAction.jsx:212
+msgid "You Pay"
+msgstr "Pagará"
+
+#: src/views/Bond/BondPurchase.jsx:235
+msgid "You Will Get"
+msgstr "Receberá"
+
+#: src/views/33Together/PoolWithdraw.jsx:94
+msgid "You can choose to withdraw the deposited fund at any time. By withdrawing the fund, you are eliminating reducing the chance to win the prize in this pool in future prize periods"
+msgstr "Pode escolher retirar o fundo depositado em qualquer altura. Ao retirar o fundo estará a eliminar / reduzir as suas hipótses de ganhar o prémio nesta pool em futuros períodos de prémio"
+
+#: src/views/Stake/Stake.tsx:132
+#: src/views/Stake/Stake.tsx:132
+msgid "You cannot stake more than your PANA balance."
+msgstr "Não pode fazer staking de mais do que o seu saldo em PANA."
+
+#: src/views/Stake/Stake.tsx:136
+#: src/views/Stake/Stake.tsx:136
+msgid "You cannot exchange more than your KARSHA balance."
+msgstr "Não pode fazer exchanging de mais do que o seu saldo em KARSHA."
+
+#: src/views/33Together/PoolWithdraw.jsx:87
+msgid "You cannot withdraw more than your pool balance"
+msgstr "Nao pode retirar mais do que o seu saldo na pool"
+
+#: src/views/Bond/BondPurchase.jsx:56
+msgid "You have an existing bond. Bonding will reset your vesting period and forfeit rewards. We recommend claiming rewards first or using a fresh wallet. Do you still want to proceed?"
+msgstr "Tem uma obrigação existente. Criar uma obrigação vai reiniciar o seu período de aquisição e anular a recompensa. Recomendamos que primeiro resgate a recompensa, ou que use outra wallet. Quer continuar mesmo assim?"
+
+#: src/views/Bond/BondPurchase.jsx:220
+msgid "Your Balance"
+msgstr "O seu Saldo"
+
+#: src/views/33Together/PoolWithdraw.jsx:198
+msgid "Your Pooled Balance (withdrawable)"
+msgstr "O seu Saldo em Pool (resgatável)"
+
+#: src/views/33Together/PoolDeposit.jsx:193
+msgid "Your Staked Balance (Depositable)"
+msgstr "O seu Saldo em Staking (Depositável)"
+
+#: src/views/33Together/PoolInfo.jsx:61
+msgid "Your odds"
+msgstr "As suas probabilidades"
+
+#: src/views/33Together/PoolInfo.jsx:55
+msgid "Your pool deposits"
+msgstr "Os seus depósitos na pool"
+
+#: src/views/33Together/PoolInfo.jsx:49
+msgid "Your total awards"
+msgstr "O seu total em recompensas"
+
+#: src/views/33Together/PoolInfo.jsx:73
+msgid "Your wallet balance"
+msgstr "O saldo da sua wallet"
+
+#: src/views/Zap/ZapInfo.jsx:78
+msgid "Zap is a swap"
+msgstr "Um Zap é um swap"
+
+#: src/views/Zap/ZapCta.jsx:40
+msgid "Zap with more assets and stake <0>PANA</0>"
+msgstr "Faça Zap com mais ativos e faça staking de <0>PANA</0>"
+
+#: src/views/Zap/ZapStakeAction.jsx:399
+#: src/views/Zap/ZapStakeAction.jsx:449
+msgid "Zap-Stake"
+msgstr "Zap-Stake"
+
+#: src/views/33Together/PoolPrize.jsx:141
+msgid "day"
+msgstr "dia"
+
+#. The action of bonding (verb)
+#: src/views/Bond/Bond.tsx:106
+#: src/views/ChooseBond/BondRow.jsx:128
+msgid "do_bond"
+msgstr "Comprar Obrigação"
+
+#. The action of staking (verb)
+#: src/views/Stake/Stake.tsx:271
+msgid "do_stake"
+msgstr "Fazer Staking"
+
+#: src/views/Bond/BondPurchase.jsx:151
+msgid "for bonding"
+msgstr "para comprar obrigação"
+
+#: src/views/Stake/Stake.tsx:290
+msgid "for staking"
+msgstr "para fazer staking"
+
+#: src/views/Stake/Stake.tsx:297
+msgid "for exchanging"
+msgstr "para fazer exchanging"
+
+#: src/views/33Together/PoolPrize.jsx:148
+msgid "hrs"
+msgstr "horas"
+
+#: src/views/33Together/PoolPrize.jsx:155
+msgid "min"
+msgstr "minutos"
+
+#: src/views/33Together/PoolInfo.jsx:158
+msgid "KARSHA Pool Details"
+msgstr "Detalhes da Pool de KARSHA"
+
+#: src/views/33Together/PoolInfo.jsx:150
+msgid "KARSHA Prize Pool"
+msgstr "Pool de Prémio de KARSHA"
+
+#: src/views/33Together/PoolPrize.jsx:161
+msgid "sec"
+msgstr "segundos"
+
+#: src/components/RebaseTimer/RebaseTimer.jsx:74
+msgid "to next rebase"
+msgstr "para o próximo rebase"
+
+#: src/views/TreasuryDashboard/components/Metric/Metric.js:84
+msgid "wKARSHA Price"
+msgstr ""

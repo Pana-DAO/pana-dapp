@@ -1,0 +1,118 @@
+.memorandum-chart {
+  width: 98%;
+}
+.paper-format-memo{
+  max-width: 833px;
+  width: 97%;
+  padding: 20px 30px 30px 30px;
+  z-index: 5;
+  overflow: hidden;
+  border-radius: 10px !important;
+  margin: auto;
+  margin-bottom: 1.8rem;
+  backdrop-filter: blur(33px);
+  
+}
+
+.name-row{
+  display: inline-flex;
+}
+
+
+.memorandum-container {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  width: 100%;
+  padding: 5px;
+  align-items: center;
+}
+
+.memorandum-header {
+  padding-top: 1rem;
+  text-decoration: underline;
+  margin: 0 0 0 0;
+  font-size: 30px;
+  font-weight: 600;
+}
+
+.memorandum-row{
+    display: inline-flex;
+    .memorandum-header-value{
+      margin-left: 10px;
+    }
+}
+
+.memorandum-header-label {
+  text-decoration: none;
+  font-size: 16px;
+  text-align: right;
+  font-weight: 600;
+}
+
+.memorandum-header-value {
+  text-decoration: none;
+  font-size: 16px;
+  text-align: left;
+  font-weight: 600;
+}
+
+.memorandum-header-row {
+  justify-content: space-around;
+  align-items: center;
+  height: auto;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  width: 100%;
+  min-width: 162px;
+  max-width: initial;
+  margin: 5px;
+}
+
+.memorandum-section-header {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  text-decoration: underline;
+  margin: 0 0 0 0;
+  width: 100%;
+  font-size: 16px;
+  text-align: left;
+  font-weight: 600;
+}
+
+.memorandum-section-header-sub {
+  padding-left: 1rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  text-decoration: underline;
+  margin: 0 0 0 0;
+  width: 100%;
+  font-size: 16px;
+  text-align: left;
+  font-weight: 600;
+}
+
+.memorandum-section-content {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  text-decoration: none;
+  width: 100%;
+  font-size: 14px;
+  text-align: justify;
+}
+
+.memorandum-section-content-bullet {
+  text-decoration: none;
+  width: 100%;
+  font-size: 14px;
+  text-align: justify;
+}
+
+.memorandum-section-spacer {
+  height: 100px;
+  text-decoration: none;
+  width: 100%;
+  font-size: 14px;
+  text-align: justify;
+}

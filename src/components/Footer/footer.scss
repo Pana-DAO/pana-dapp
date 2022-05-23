@@ -1,0 +1,41 @@
+.dapp-footer {
+    .dapp-footer-logo {
+        padding-top: 1.1rem;
+    }
+    .dapp-footer-logo-text {
+        padding: 0.8rem 0;
+        margin-left: 1rem;
+        .dapp-footer-logo-text-inner {
+            height: 100%;
+            padding: 0.7rem 1.5rem;
+        }
+    }
+    // .dapp-footer-social {
+    //     max-width: 30%;
+    //     flex-basis: 25%;
+    // }
+    @media only screen and (max-width: 500px) {
+        .dapp-footer-logo-text-inner{
+            border: 0px !important;
+        }
+    }
+    @media only screen and (max-width: 420px) {
+        .dapp-footer .dapp-footer-logo
+        {
+            padding-top: 1rem !important;
+        }
+
+        .dapp-footer .dapp-footer-logo-text
+        {
+            padding: 0.4rem 0  !important;
+        }
+        .dapp-footer .dapp-footer-logo-text .dapp-footer-logo-text-inner
+        {
+            padding: 0.3rem 0.3rem  !important;
+        }
+        .social-row
+        {
+            padding: 0.7rem  !important;
+        }
+    }
+}

@@ -1,0 +1,57 @@
+#redeem-ppana-view {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  
+    .button-box {
+      margin-right: 0 !important;
+    }
+
+    .pPana-input-container {
+        padding-top: 0 !important;
+    }
+  }
+  
+  .paper-format{
+    max-width: 833px;
+    width: 97%;
+    padding: 20px 30px 30px 30px;
+    z-index: 5;
+    overflow: hidden;
+    border-radius: 10px !important;
+    margin-bottom: 1.8rem;
+    backdrop-filter: blur(33px);
+    .card-header{
+      width: 100%;
+      position: relative;
+      min-height: 33px;
+      margin-bottom: 10px;
+    }
+  }
+  
+  .tab-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    &.-row {
+      justify-content: space-around;
+      align-items: center;
+      height: auto;
+      padding-bottom: 1rem;
+    }
+  }
+  
+  .tab-content-label {
+    margin-bottom: 2rem;
+  }
+
+  .help-text{
+    display: flex;
+    padding-top: 10px;
+    align-items: center;
+    justify-content: center;
+  }
