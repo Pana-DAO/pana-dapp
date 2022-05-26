@@ -5,7 +5,7 @@ import { prettifySeconds } from "src/helpers";
 import { RootState } from "src/store";
 import { BondDepository__factory, Pana__factory } from "src/typechain";
 import { getBalances } from "./AccountSlice";
-import { findOrLoadMarketPrice } from "./AppSlice";
+import { findOrLoadMarketPrice, debug } from "./AppSlice";
 import {
   IBaseAddressAsyncThunk,
   IBaseBondClaimAsyncThunk,
@@ -43,7 +43,7 @@ export interface IBond extends IBondCore, IBondMeta, IBondTerms {
   maxPayoutOrCapacityInQuote: string;
   maxPayoutOrCapacityInBase: string;
   bondIconSvg: PanaTokenStackProps["tokens"];
-  marketPriceInToken: number
+  marketPriceInToken: number;
 }
 
 export interface IBondBalance {
@@ -156,11 +156,13 @@ export const purchaseBond = createAsyncThunk(
     let depositTx: ethers.ContractTransaction | undefined;
     try {
       // DEBUG
-      console.log(`amount: ${amount}`);
-      console.log(`bond: ${bond.index}`);
-      console.log(`maxPrice: ${maxPrice}`);
-      console.log(`address: ${address}`);
-      console.log(`referral: ${addresses[networkID].DAO_TREASURY}`);
+      if (debug) {
+        console.log(`amount: ${amount}`);
+        console.log(`bond: ${bond.index}`);
+        console.log(`maxPrice: ${maxPrice}`);
+        console.log(`address: ${address}`);
+        console.log(`referral: ${addresses[networkID].DAO_TREASURY}`);
+      }
       depositTx = await depositoryContract.deposit(
         bond.index,
         amount,
@@ -178,13 +180,12 @@ export const purchaseBond = createAsyncThunk(
     } catch (e: unknown) {
       const rpcError = e as IJsonRPCError;
       if (rpcError.code === -32603 && rpcError.data.message.indexOf("Depository: zero or negative profit") >= 0) {
-        dispatch(
-          error("Sorry!! This Bond is not available for purchase at this time"),
-        )
-      } else if(rpcError.code === -32603 && rpcError.data.message.indexOf("execution reverted: TRANSFER_FROM_FAILED") >= 0) {
-        dispatch(
-          error("Token transfer failed. Please check if you have enough balance"),
-        )
+        dispatch(error("Sorry!! This Bond is not available for purchase at this time"));
+      } else if (
+        rpcError.code === -32603 &&
+        rpcError.data.message.indexOf("execution reverted: TRANSFER_FROM_FAILED") >= 0
+      ) {
+        dispatch(error("Token transfer failed. Please check if you have enough balance"));
       } else {
         dispatch(error(rpcError.message));
       }
@@ -213,7 +214,7 @@ export const getSingleBond = createAsyncThunk(
 
 export const getTokenBalance = createAsyncThunk(
   "bonds/getBalance",
-  async ({ provider, networkID, address, value }: IValueAsyncThunk, { }): Promise<IBondBalance> => {
+  async ({ provider, networkID, address, value }: IValueAsyncThunk, {}): Promise<IBondBalance> => {
     checkNetwork(networkID);
     const tokenContract = Pana__factory.connect(value, provider);
     const balance = await tokenContract.balanceOf(address);
@@ -299,25 +300,26 @@ async function processBond(
     +capacityInQuoteToken > +maxPayoutInQuoteToken ? maxPayoutInQuoteToken : capacityInQuoteToken;
 
   // DEBUG
-  console.log(`=-=-=-=-=-=-=-=-= =-=-=-=-=-=-=-=-=-= =-=-=-=-=-=-=-=-=`);
-  console.log(`=-=-=-=-=-=-=-=-= processBond index:${index} =-=-=-=-=-=-=-=-=`);
-  console.log(`${index} totalDebt: ${ethers.utils.formatUnits(bond.totalDebt, BASE_TOKEN_DECIMALS)}`);
-  console.log(`${index} maxPayout: ${ethers.utils.formatUnits(bond.maxPayout, BASE_TOKEN_DECIMALS)}`);
-  console.log(`${index} marketPriceInToken: ${marketPriceInToken}`);
-  console.log(`${index} bondPrice: ${bondPrice}`);
-  console.log(`${index} bondPriceBigNumber: ${bondPriceBigNumber}`);
-  console.log(`${index} panaPrice: ${panaPrice}`);
-  console.log(`${index} bondDiscount: ${bondDiscount}`);
-  console.log(`${index} bond.capacityInQuote: ${bond.capacityInQuote}`);
-  console.log(`${index} maxPayoutInBaseToken: ${maxPayoutInBaseToken}`);
-  console.log(`${index} maxPayoutInQuoteToken: ${maxPayoutInQuoteToken}`);
-  console.log(`${index} BASE_TOKEN_DECIMALS: ${BASE_TOKEN_DECIMALS}`);
-  console.log(`${index} metadata.quoteDecimals: ${metadata.quoteDecimals}`);
-  console.log(`${index} soldOut: ${soldOut}`);
-  console.log(`${index} maxPayoutOrCapacityInBase: ${maxPayoutOrCapacityInBase}`);
-  console.log(`${index} maxPayoutOrCapacityInQuote: ${maxPayoutOrCapacityInQuote}`);
-  console.log(`^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^`);
-
+  if (debug) {
+    console.log(`=-=-=-=-=-=-=-=-= =-=-=-=-=-=-=-=-=-= =-=-=-=-=-=-=-=-=`);
+    console.log(`=-=-=-=-=-=-=-=-= processBond index:${index} =-=-=-=-=-=-=-=-=`);
+    console.log(`${index} totalDebt: ${ethers.utils.formatUnits(bond.totalDebt, BASE_TOKEN_DECIMALS)}`);
+    console.log(`${index} maxPayout: ${ethers.utils.formatUnits(bond.maxPayout, BASE_TOKEN_DECIMALS)}`);
+    console.log(`${index} marketPriceInToken: ${marketPriceInToken}`);
+    console.log(`${index} bondPrice: ${bondPrice}`);
+    console.log(`${index} bondPriceBigNumber: ${bondPriceBigNumber}`);
+    console.log(`${index} panaPrice: ${panaPrice}`);
+    console.log(`${index} bondDiscount: ${bondDiscount}`);
+    console.log(`${index} bond.capacityInQuote: ${bond.capacityInQuote}`);
+    console.log(`${index} maxPayoutInBaseToken: ${maxPayoutInBaseToken}`);
+    console.log(`${index} maxPayoutInQuoteToken: ${maxPayoutInQuoteToken}`);
+    console.log(`${index} BASE_TOKEN_DECIMALS: ${BASE_TOKEN_DECIMALS}`);
+    console.log(`${index} metadata.quoteDecimals: ${metadata.quoteDecimals}`);
+    console.log(`${index} soldOut: ${soldOut}`);
+    console.log(`${index} maxPayoutOrCapacityInBase: ${maxPayoutOrCapacityInBase}`);
+    console.log(`${index} maxPayoutOrCapacityInQuote: ${maxPayoutOrCapacityInQuote}`);
+    console.log(`^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^`);
+  }
   return {
     ...bond,
     ...metadata,
@@ -381,7 +383,7 @@ export const getAllBonds = createAsyncThunk(
 
 export const getUserNotes = createAsyncThunk(
   "bonds/notes",
-  async ({ provider, networkID, address }: IBaseAddressAsyncThunk, { }): Promise<IUserNote[]> => {
+  async ({ provider, networkID, address }: IBaseAddressAsyncThunk, {}): Promise<IUserNote[]> => {
     checkNetwork(networkID);
     const currentTime = Date.now() / 1000;
     const depositoryContract = BondDepository__factory.connect(addresses[networkID].BOND_DEPOSITORY, provider);
@@ -449,7 +451,7 @@ export const getUserNotes = createAsyncThunk(
 
 export const getUserOldNotes = createAsyncThunk(
   "bonds/oldNotes",
-  async ({ provider, networkID, address }: IBaseAddressAsyncThunk, { }): Promise<IUserNote[]> => {
+  async ({ provider, networkID, address }: IBaseAddressAsyncThunk, {}): Promise<IUserNote[]> => {
     checkNetwork(networkID);
     const currentTime = Date.now() / 1000;
     const depositoryContract = BondDepository__factory.connect(addresses[networkID].BOND_DEPOSITORY_OLD, provider);
@@ -625,7 +627,7 @@ const initialState: IBondSlice = {
   balances: {},
   bonds: {},
   notes: [],
-  oldNotes: []
+  oldNotes: [],
 };
 
 const bondingSlice = createSlice({
