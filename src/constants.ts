@@ -191,7 +191,7 @@ export const NETWORKS: { [key: number]: INetwork } = {
     image: polygon,
     imageAltText: "Arbitrum Logo",
     uri: () => NodeHelper.getMainnetURI(NetworkId.ARBITRUM_MAINNET),
-    isOracleIntegrated: true,
+    isOracleIntegrated: false
   },
   [NetworkId.ARBITRUM_TESTNET]: {
     chainName: "Arbitrum Testnet",
@@ -206,7 +206,7 @@ export const NETWORKS: { [key: number]: INetwork } = {
     image: arbitrum_testnet,
     imageAltText: "Arbitrum Testnet",
     uri: () => NodeHelper.getMainnetURI(NetworkId.ARBITRUM_TESTNET),
-    isOracleIntegrated: false,
+    isOracleIntegrated: true
   },
 };
 
