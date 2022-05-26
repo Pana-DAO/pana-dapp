@@ -154,6 +154,8 @@ export const loadAppDetails = createAsyncThunk(
   },
 );
 
+export const debug = false;
+
 /**
  * checks if app.slice has marketPrice already
  * if yes then simply load that state
