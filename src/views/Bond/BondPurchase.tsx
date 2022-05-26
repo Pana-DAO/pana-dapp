@@ -67,7 +67,7 @@ function BondPurchase({
     } else if (Number(quantity) > maxBondable) {
       dispatch(
         error(
-          t`Max capacity is ${maxBondable} ${bond.displayName} for ${
+          `Max capacity is ${maxBondable} ${bond.displayName} for ${
             trim(+bond.maxPayoutOrCapacityInBase / +currentIndex, 4) || "0"
           } KARSHA. Click Max to autocomplete.`,
         ),
