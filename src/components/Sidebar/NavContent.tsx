@@ -25,6 +25,7 @@ import {
   FilterNoneOutlined,
   RedeemOutlined,
   InfoOutlined,
+  BubbleChartOutlined,
 } from "@material-ui/icons";
 
 import React, { useEffect, useState, useRef } from "react";
@@ -238,6 +239,16 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
                         ) : (
                           <></>
                         )}
+                        <Link className="nav-link" component={NavLink} to="/tokenlaunch">
+                          <ListItem button selected={location.pathname == "/tokenlaunch"}>
+                            <Typography variant="h6" className="nav-content">
+                              <div className="nav-svg">
+                                <SvgIcon viewBox="0 0 25 25" className="menuicon" component={BubbleChartOutlined} />
+                              </div>
+                              <div className="nav-text">Token Launch</div>
+                            </Typography>
+                          </ListItem>
+                        </Link>
                       </>
                     ) : (
                       <></>
