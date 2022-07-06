@@ -191,6 +191,37 @@ export const onUnstakeAssets = createAsyncThunk(
     },
 );
 
+export const onHarvestAll = createAsyncThunk(
+    "stakingpools/onHarvestAll",
+    async ({ provider, networkID, address }: IBaseAddressAsyncThunk, { dispatch }) => {
+        checkNetwork(networkID);
+        const signer = provider.getSigner();
+        const stakingPoolsContract = StakingPools__factory.connect(addresses[networkID].STAKING_POOLS, signer);
+
+        let harvestAllTx: ethers.ContractTransaction | undefined;
+        try {
+            harvestAllTx = await stakingPoolsContract.harvestAll()
+            const text = `Harvesting All Farms`;
+            const pendingTxnType = `farm_harvestAll`;
+            if (harvestAllTx) {
+                dispatch(fetchPendingTxns({ txnHash: harvestAllTx.hash, text, type: pendingTxnType }));
+                await harvestAllTx.wait();
+                dispatch(clearPendingTxn(harvestAllTx.hash));
+            }
+        } catch (e: unknown) {
+            dispatch(error((e as IJsonRPCError).message));
+            return;
+        } finally {
+            if (harvestAllTx) {
+                dispatch(info("Successfully harvested all your farms!"));
+                dispatch(getUserPoolBalance({ networkID, address, provider }));
+                dispatch(getUserPendingPana({ networkID, address, provider }));
+            }
+        }
+
+    },
+);
+
 const stakingPoolsSlice = createSlice({
     name: "stakingPools",
     initialState,

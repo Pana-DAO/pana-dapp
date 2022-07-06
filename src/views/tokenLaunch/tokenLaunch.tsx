@@ -21,12 +21,16 @@ import { useWeb3Context } from "src/hooks/web3Context";
 import { useState } from "react";
 import { farms } from "src/helpers/tokenLaunch";
 import FarmData from "./farmData";
-import { trim } from "src/helpers";
 import { isPendingTxn, txnButtonText } from "src/slices/PendingTxnsSlice";
 import { useAppSelector } from "src/hooks";
+import { ethers } from "ethers";
+import { formatCurrency } from "src/helpers";
+import { onHarvestAll } from "src/slices/StakingPoolsSlice";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "src/store";
 
 function TokenLaunch() {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const history = useHistory();
   const { provider, address, connect, networkId } = useWeb3Context();
   usePathForNetwork({ pathName: "tokenlaunch", networkID: networkId, history });
@@ -38,11 +42,15 @@ function TokenLaunch() {
     return state.pendingTransactions;
   });
 
-  const totalClaimable = 1;
+  const totalPendingPanaForUser = useAppSelector(state => {
+    return state.stakingPools.pendingPanaForUser && state.stakingPools.pendingPanaForUser.length > 0
+      ? state.stakingPools.pendingPanaForUser.reduce((total, val) => total.add(val)) : null;
+  });
+
   const modalButton = [];
 
-  const onHarvestAll = () => {
-    return true;
+  const doHarvestAll = () => {
+    dispatch(onHarvestAll({ provider, networkID: networkId, address }));
   }
 
   modalButton.push(
@@ -72,7 +80,7 @@ function TokenLaunch() {
                   Claimable Rewards (Pana)
                 </Typography>
                 <Typography variant="h4" align="center" style={{ marginBottom: "10px" }}>
-                  {trim(totalClaimable, 4) + " Pana"}
+                  {totalPendingPanaForUser ? formatCurrency(+ethers.utils.formatUnits(totalPendingPanaForUser, 18), 4, "PANA") : '-'}
                 </Typography>
 
                 <Button
@@ -81,15 +89,13 @@ function TokenLaunch() {
                   className="transaction-button"
                   fullWidth
                   disabled={
-                    isPendingTxn(pendingTransactions, "harvest_all_pana")
-                    // ||
-                    // !activeNotes
-                    //   .map(note => note.fullyMatured)
-                    //   .reduce((prev, current) => prev || current, false)
+                    isPendingTxn(pendingTransactions, "farm_harvestAll")
+                    || !totalPendingPanaForUser
+                    || (totalPendingPanaForUser && +totalPendingPanaForUser <= 0)
                   }
-                  onClick={onHarvestAll}
+                  onClick={doHarvestAll}
                 >
-                  {txnButtonText(pendingTransactions, "harvest_all_pana", t`Harvest All Pana`)}
+                  {txnButtonText(pendingTransactions, "farm_harvestAll", t`Harvest All Pana`)}
                 </Button>
               </Box>
               <Grid container item className="MuiPaper-root">

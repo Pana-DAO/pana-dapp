@@ -201,7 +201,7 @@ function Farm({ index }: { index: number }) {
                                     <Trans>Staked</Trans>
                                 </Typography>
                                 <Typography variant="h3" color="primary" className="price">
-                                    {userPoolBalance && userPoolBalance[farm.index] ? ethers.utils.formatUnits(userPoolBalance[farm.index], farm.decimals) + ' ' + farm.symbol : '-'}
+                                    {(userPoolBalance && userPoolBalance[farm.index]) ? formatCurrency(+ethers.utils.formatUnits(userPoolBalance[farm.index], farm.decimals), 4, "PANA") + ' ' + farm.symbol : '-'}
                                 </Typography>
                             </div>
                             <div className="farm-price-data">
@@ -209,7 +209,7 @@ function Farm({ index }: { index: number }) {
                                     <Trans>Earned</Trans>
                                 </Typography>
                                 <Typography variant="h3" color="primary" className="price">
-                                    {pendingPanaForUser && pendingPanaForUser[farm.index] ? ethers.utils.formatUnits(pendingPanaForUser[farm.index], farm.decimals) + ' Pana' : '-'}
+                                    {(pendingPanaForUser && pendingPanaForUser[farm.index]) ? formatCurrency(+ethers.utils.formatUnits(pendingPanaForUser[farm.index], farm.decimals), 4, "PANA") + ' Pana' : '-'}
                                 </Typography>
                             </div>
                         </Box>

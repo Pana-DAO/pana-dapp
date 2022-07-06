@@ -4,6 +4,7 @@ import { BigNumber, ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { NavLink, useHistory } from "react-router-dom";
 import { NetworkId } from "src/constants";
+import { formatCurrency } from "src/helpers";
 import { FarmInfo, farms, stakingPoolsConfig, totalFarmPoints } from "src/helpers/tokenLaunch";
 import { useAppSelector, useWeb3Context } from "src/hooks";
 import TokenStack from "src/lib/PanaTokenStack";
@@ -75,12 +76,12 @@ function FarmData({ networkId, farm }: { networkId: NetworkId, farm: FarmInfo })
     }
 
     function getFarmRewardsPerDayFormated(index: number) {
-        return ethers.utils.formatUnits(farmRewardsPerDay(index), farms[index].decimals);
+        return formatCurrency(+ethers.utils.formatUnits(farmRewardsPerDay(index), farms[index].decimals), 4, "PANA");
     }
 
     function getPendingPanaForUserFormated(index: number) {
         if (pendingPanaForUser) {
-            return ethers.utils.formatUnits(pendingPanaForUser[index], 18);
+            return formatCurrency(+ethers.utils.formatUnits(pendingPanaForUser[index], 18), 4, "PANA");
         }
     }
 
