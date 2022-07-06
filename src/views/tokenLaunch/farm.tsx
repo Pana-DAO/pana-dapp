@@ -2,63 +2,167 @@ import "./farm.scss";
 import { Box, Button, Fade, FormControl, FormControlLabel, Grid, InputAdornment, InputLabel, Modal, OutlinedInput, Paper, Radio, RadioGroup, Slide, SvgIcon, Typography } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 import { useHistory } from "react-router";
-import { farms } from "src/helpers/tokenLaunch";
+import { farms, parseBigNumber, stakingPoolsConfig, totalFarmPoints } from "src/helpers/tokenLaunch";
 import TokenStack from "src/lib/PanaTokenStack";
-import { formatCurrency, trim } from "src/helpers";
+import { formatCurrency } from "src/helpers";
 import ConnectButton from "src/components/ConnectButton/ConnectButton";
 import { useAppSelector, useWeb3Context } from "src/hooks";
 import { t, Trans } from "@lingui/macro";
 import { ethers } from "ethers";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { isPendingTxn, txnButtonText } from "src/slices/PendingTxnsSlice";
 import { Skeleton } from "@material-ui/lab";
+import { useDispatch } from "react-redux";
+import { changeAssetApproval, getAssetAllowance, getAssetBalance, getErc20TokenBalance, onStakeAssets, onUnstakeAssets } from "src/slices/StakingPoolsSlice";
+import { error } from "src/slices/MessagesSlice";
+import { AppDispatch } from "src/store";
 
 function Farm({ index }: { index: number }) {
+    const dispatch = useDispatch<AppDispatch>();
     const history = useHistory();
     const { provider, address, networkId } = useWeb3Context();
     const farm = farms[index];
     const [quantity, setQuantity] = useState("");
+    const [quantityUnstake, setQuantityUnstake] = useState("");
     const [stake, setStake] = useState('stake');
+    const [panaPerDay, setPanaPerDay] = useState(ethers.constants.Zero);
+    const [farmBalance, setFarmBalance] = useState(ethers.constants.MaxUint256);
     const onClickAway = (): void => {
         history.push(`/tokenlaunch`);
     };
 
-    const maxStakable = 1; //+bond.maxPayoutOrCapacityInQuote;
-    const balanceNumber = 1;
-    const balance = 1;
+    // const balanceNumber = 1;
+    // const balance = 1;
+
+    useEffect(() => {
+        const promise = getErc20TokenBalance(farm.address, provider, networkId);
+        promise.then(balance => setFarmBalance(balance));
+    }, [farm]);
 
     const isFarmLoading = false; //useAppSelector<boolean>(state => state.bonding.loading ?? true);
 
+    const pendingPanaForUser = useAppSelector(state => {
+        return state.stakingPools.pendingPanaForUser && state.stakingPools.pendingPanaForUser.length > 0
+            ? state.stakingPools.pendingPanaForUser : null;
+    });
+
+    const userPoolBalance = useAppSelector(state => {
+        return state.stakingPools.userPoolBalance && state.stakingPools.userPoolBalance.length > 0
+            ? state.stakingPools.userPoolBalance : null;
+    });
+
+    useEffect(() => {
+        try {
+            setPanaPerDay(ethers.constants.Zero);
+            if (quantity && farm && !farmBalance.eq(ethers.constants.MaxUint256)) {
+                const amount = parseBigNumber(quantity, farm.decimals);
+                const poolTotal = amount.add(farmBalance);
+                if (amount.gt(0) && poolTotal.gt(0)) {
+                    const farmPerDay = stakingPoolsConfig.panaPerSecond.mul(86400).mul(farm.points).div(totalFarmPoints);
+                    setPanaPerDay(farmPerDay.mul(amount).div(poolTotal));
+                }
+            }
+        }
+        catch (error: any) {
+            console.error('PanaDAO.PanaPerDay', error);
+        }
+    }, [quantity, farm, farmBalance]);
+
     const handleStakeBtnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setStake((event.target as HTMLInputElement).value);
+        setPanaPerDay(ethers.constants.Zero);
+        if (stake == 'stake') {
+            setQuantityUnstake("");
+        } else {
+            setQuantity("");
+        }
     };
 
     const pendingTransactions = useAppSelector(state => {
         return state.pendingTransactions;
     });
 
-    const hasAllowance = () => {
-        return true;
-    }
+    const assetAllowance = useAppSelector(state => state.stakingPools.assetAllowance[farm.address]);
+    const assetBalance = useAppSelector(state => {
+        if (state.stakingPools.assetBalance[farm.address]) {
+            return ethers.utils.formatUnits(state.stakingPools.assetBalance[farm.address], farm.decimals);
+        }
+    });
+
+    const hasAllowance = useCallback(() => {
+        return +assetAllowance > 0;
+    }, [assetAllowance]);
 
     const setMax = () => {
-        let maxQ: string;
-        const maxStakableNumber = maxStakable * 0.999;
-        if (balanceNumber > maxStakableNumber) {
-            maxQ = maxStakableNumber.toString();
-        } else {
-            maxQ = ethers.utils.formatUnits(balance, farm.decimals);
+        setQuantity(assetBalance || "");
+    };
+
+    const setMaxUnstake = () => {
+        if (userPoolBalance) {
+            setQuantityUnstake(ethers.utils.formatUnits(userPoolBalance[farm.index], farm.decimals) || "");
         }
-        setQuantity(maxQ);
     };
 
     const onSeekApproval = async () => {
-        //dispatch(changeApproval({ address, provider, networkID: networkId, bond }));
+        dispatch(changeAssetApproval({ address, provider, networkID: networkId, value: farm.address }));
     };
 
     const onStakeUnstake = async () => {
+
+        if (stake == "stake") {
+            if (quantity === "" || Number(quantity) <= 0) {
+                dispatch(error(t`Please enter a value!`));
+            } else if (Number(quantity) > Number(assetBalance)) {
+                dispatch(
+                    error(
+                        `Max staking is ${assetBalance} ${farm.symbol}. Click Max to autocomplete.`,
+                    ),
+                );
+            } else {
+                dispatch(
+                    onStakeAssets({
+                        amount: ethers.utils.parseUnits(quantity, farm.decimals),
+                        networkID: networkId,
+                        provider,
+                        farm,
+                        address
+                    }),
+                ).then(() => clearInput());
+            }
+
+        } else if (stake == "unstake" && userPoolBalance) {
+            if (quantityUnstake === "" || Number(quantityUnstake) <= 0) {
+                dispatch(error(t`Please enter a value!`));
+            } else if (Number(quantityUnstake) > Number(userPoolBalance[farm.index])) {
+                dispatch(
+                    error(
+                        `Max unstaking is ${ethers.utils.formatUnits(userPoolBalance[farm.index], farm.decimals)} ${farm.symbol}. Click Max to autocomplete.`,
+                    ),
+                );
+            } else {
+                dispatch(
+                    onUnstakeAssets({
+                        amount: ethers.utils.parseUnits(quantityUnstake, farm.decimals),
+                        networkID: networkId,
+                        provider,
+                        farm,
+                        address
+                    }),
+                ).then(() => clearInput());
+            }
+        }
         //dispatch(changeApproval({ address, provider, networkID: networkId, bond }));
     };
+
+    const clearInput = () => {
+        setQuantity("");
+        setQuantityUnstake("");
+    };
+
+    useEffect(() => {
+        dispatch(getAssetAllowance({ networkID: networkId, address, provider, value: farm.address }));
+        dispatch(getAssetBalance({ networkID: networkId, address, provider, value: farm.address }));
+    }, [address])
 
     return (
         <Fade in={true} mountOnEnter unmountOnExit>
@@ -97,7 +201,7 @@ function Farm({ index }: { index: number }) {
                                     <Trans>Staked</Trans>
                                 </Typography>
                                 <Typography variant="h3" color="primary" className="price">
-                                    {formatCurrency(0.012323, 4, "PANA")}
+                                    {userPoolBalance && userPoolBalance[farm.index] ? ethers.utils.formatUnits(userPoolBalance[farm.index], farm.decimals) + ' ' + farm.symbol : '-'}
                                 </Typography>
                             </div>
                             <div className="farm-price-data">
@@ -105,7 +209,7 @@ function Farm({ index }: { index: number }) {
                                     <Trans>Earned</Trans>
                                 </Typography>
                                 <Typography variant="h3" color="primary" className="price">
-                                    {formatCurrency(11.3434, 4, "PANA")}
+                                    {pendingPanaForUser && pendingPanaForUser[farm.index] ? ethers.utils.formatUnits(pendingPanaForUser[farm.index], farm.decimals) + ' Pana' : '-'}
                                 </Typography>
                             </div>
                         </Box>
@@ -139,26 +243,46 @@ function Farm({ index }: { index: number }) {
                                                         <FormControlLabel value="unstake" control={<Radio color="primary" />} label="Unstake" />
                                                     </RadioGroup>
                                                 </FormControl>
-                                                <FormControl className="pana-input" variant="outlined">
-                                                    <InputLabel className="pana-input-label" htmlFor="outlined-adornment-amount">
-                                                        Amount
-                                                    </InputLabel>
-                                                    <OutlinedInput
-                                                        id="outlined-adornment-amount"
-                                                        type="number"
-                                                        value={quantity}
-                                                        onChange={e => setQuantity(e.target.value)}
-                                                        endAdornment={<InputAdornment onClick={setMax} position="end">{t`Max`}</InputAdornment>}
-                                                        aria-describedby="outlined-weight-helper-text"
-                                                        inputProps={{
-                                                            "aria-label": "Amount",
-                                                        }}
-                                                    />
-                                                </FormControl>
+                                                {stake == 'stake' ? (
+                                                    <FormControl className="pana-input" variant="outlined">
+                                                        <InputLabel className="pana-input-label" htmlFor="outlined-adornment-amount">
+                                                            Amount
+                                                        </InputLabel>
+                                                        <OutlinedInput
+                                                            id="outlined-stake-amount"
+                                                            type="number"
+                                                            value={quantity}
+                                                            onChange={e => setQuantity(e.target.value)}
+                                                            endAdornment={<InputAdornment onClick={setMax} position="end">{t`Max`}</InputAdornment>}
+                                                            aria-describedby="outlined-weight-helper-text"
+                                                            inputProps={{
+                                                                "aria-label": "Amount",
+                                                            }}
+                                                        />
+                                                    </FormControl>
+                                                ) : (
+                                                    <FormControl className="pana-input" variant="outlined">
+                                                        <InputLabel className="pana-input-label" htmlFor="outlined-adornment-amount">
+                                                            Amount
+                                                        </InputLabel>
+                                                        <OutlinedInput
+                                                            id="outlined-unstake-amount"
+                                                            type="number"
+                                                            value={quantityUnstake}
+                                                            onChange={e => setQuantityUnstake(e.target.value)}
+                                                            endAdornment={<InputAdornment onClick={setMaxUnstake} position="end">{t`Max`}</InputAdornment>}
+                                                            aria-describedby="outlined-weight-helper-text"
+                                                            inputProps={{
+                                                                "aria-label": "Amount",
+                                                            }}
+                                                        />
+                                                    </FormControl>
+                                                )}
+
                                             </div>
                                         )}
 
-                                        {balance ? (
+                                        {assetBalance ? (
                                             hasAllowance() ? (
                                                 <Button
                                                     variant="contained"
@@ -176,10 +300,10 @@ function Farm({ index }: { index: number }) {
                                                     color="primary"
                                                     id="farm-approve-btn"
                                                     className="transaction-button"
-                                                    disabled={isPendingTxn(pendingTransactions, `approve_${farm.index}_farming`)}
+                                                    disabled={isPendingTxn(pendingTransactions, `approve_${farm.address}_farming`)}
                                                     onClick={onSeekApproval}
                                                 >
-                                                    {txnButtonText(pendingTransactions, `approve_${farm.index}_farming`, "Approve")}
+                                                    {txnButtonText(pendingTransactions, `approve_${farm.address}_farming`, "Approve")}
                                                 </Button> : <></>
                                             )
                                         ) : (
@@ -197,7 +321,7 @@ function Farm({ index }: { index: number }) {
                                             </Typography>
                                         </Box>
                                         <Typography className="price-data">
-                                            {isFarmLoading ? <Skeleton width="100px" /> : `${trim(balanceNumber, 4)} ${farm.symbol}`}
+                                            {isFarmLoading ? <Skeleton width="100px" /> : `${assetBalance && formatCurrency(+assetBalance, 4, "PANA")} ${farm.symbol}`}
                                         </Typography>
                                     </Box>
                                     <Box display="flex" className="flxrow data-row" flexDirection="row" justifyContent="space-between">
@@ -207,7 +331,7 @@ function Farm({ index }: { index: number }) {
                                             </Typography>
                                         </Box>
                                         <Typography className="price-data">
-                                            {isFarmLoading ? <Skeleton width="100px" /> : `${trim(balanceNumber, 4)} ${farm.symbol}`}
+                                            {isFarmLoading ? <Skeleton width="100px" /> : `${formatCurrency(+ethers.utils.formatUnits(panaPerDay, 18), 4, "PANA")} Pana`}
                                         </Typography>
                                     </Box>
                                 </Box>

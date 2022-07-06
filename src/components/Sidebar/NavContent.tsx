@@ -47,6 +47,7 @@ import Social from "./Social";
 import RebaseTimer from "../RebaseTimer/RebaseTimer";
 
 import { ReactComponent as PanaDAOIcon } from "../../assets/icons/panadao-nav-header.svg";
+import { getUserPoolBalance, getUserPendingPana } from "src/slices/StakingPoolsSlice";
 
 type NavContentProps = {
   handleDrawerToggle?: () => void;
@@ -85,6 +86,8 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
     const interval = setTimeout(() => {
       dispatch(getAllBonds({ address, networkID: networkId, provider }));
       dispatch(getUserNotes({ address, networkID: networkId, provider }));
+      dispatch(getUserPoolBalance({ networkID: networkId, address, provider }));
+      dispatch(getUserPendingPana({ networkID: networkId, address, provider }));
     }, 60000);
     return () => clearTimeout(interval);
   });

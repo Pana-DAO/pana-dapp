@@ -34,6 +34,7 @@ import Footer from "./components/Footer/Footer";
 import TokenLaunch from "./views/tokenLaunch/tokenLaunch";
 import Farm from "./views/tokenLaunch/farm";
 import { farms } from "./helpers/tokenLaunch";
+import { getUserPendingPana, getUserPoolBalance } from "./slices/StakingPoolsSlice";
 
 const queryClient = new QueryClient();
 
@@ -126,6 +127,8 @@ function App() {
       dispatch(getUserNotes({ networkID: networkId, address, provider: loadProvider }));
       dispatch(getUserOldNotes({ networkID: networkId, address, provider: loadProvider }));
       dispatch(loadAccountDetails({ networkID: networkId, address, provider: loadProvider }));
+      dispatch(getUserPoolBalance({ networkID: networkId, address, provider: loadProvider }));
+      dispatch(getUserPendingPana({ networkID: networkId, address, provider: loadProvider }));
     },
     [networkId, address, providerInitialized],
   );
