@@ -25,6 +25,7 @@ import {
   FilterNoneOutlined,
   RedeemOutlined,
   InfoOutlined,
+  BubbleChartOutlined,
 } from "@material-ui/icons";
 
 import React, { useEffect, useState, useRef } from "react";
@@ -46,6 +47,7 @@ import Social from "./Social";
 import RebaseTimer from "../RebaseTimer/RebaseTimer";
 
 import { ReactComponent as PanaDAOIcon } from "../../assets/icons/panadao-nav-header.svg";
+import { getUserPoolBalance, getUserPendingPana } from "src/slices/StakingPoolsSlice";
 
 type NavContentProps = {
   handleDrawerToggle?: () => void;
@@ -84,6 +86,8 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
     const interval = setTimeout(() => {
       dispatch(getAllBonds({ address, networkID: networkId, provider }));
       dispatch(getUserNotes({ address, networkID: networkId, provider }));
+      dispatch(getUserPoolBalance({ networkID: networkId, address, provider }));
+      dispatch(getUserPendingPana({ networkID: networkId, address, provider }));
     }, 60000);
     return () => clearTimeout(interval);
   });
@@ -135,6 +139,16 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
                     </Link>
                     {networkId === NetworkId.ARBITRUM_TESTNET ? (
                       <>
+                      <Link className="nav-link" component={NavLink} to="/tokenlaunch">
+                          <ListItem button selected={location.pathname == "/tokenlaunch"}>
+                            <Typography variant="h6" className="nav-content">
+                              <div className="nav-svg">
+                                <SvgIcon viewBox="0 0 25 25" className="menuicon" component={BubbleChartOutlined} />
+                              </div>
+                              <div className="nav-text">Token Launch</div>
+                            </Typography>
+                          </ListItem>
+                        </Link>
                         <span className="nav-link">
                           <Link className="nav-link" component={NavLink} to="/bonds">
                             <ListItem button selected={location.pathname.indexOf("/bonds") > -1}>
