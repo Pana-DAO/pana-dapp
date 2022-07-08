@@ -95,7 +95,7 @@ function TokenLaunch() {
                   }
                   onClick={doHarvestAll}
                 >
-                  {txnButtonText(pendingTransactions, "farm_harvestAll", t`Harvest All Pana`)}
+                  {txnButtonText(pendingTransactions, "farm_harvestAll", t`Harvest All`)}
                 </Button>
               </Box>
               <Grid container item className="MuiPaper-root">
@@ -106,20 +106,20 @@ function TokenLaunch() {
                         <TableCell align="left">
                           <Trans>Name</Trans>
                         </TableCell>
-                        <TableCell align="left">
+                        <TableCell align="center">
                           <Trans>Multiplier</Trans>
                         </TableCell>
-                        <TableCell align="left">
+                        <TableCell align="center">
                           <Trans>Liquidity</Trans>
                         </TableCell>
-                        <TableCell align="left">
+                        <TableCell align="center">
                           <Trans>My Stakes</Trans>
                         </TableCell>
-                        <TableCell align="left">
+                        <TableCell align="center">
                           <Trans>Per Day</Trans>
                         </TableCell>
-                        <TableCell align="left">
-                          <Trans>Rewards</Trans>
+                        <TableCell align="center">
+                          <Trans>Rewards (Pana)</Trans>
                         </TableCell>
                       </TableRow>
                     </TableHead>
