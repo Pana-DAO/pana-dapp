@@ -1,5 +1,5 @@
 import "./farm.scss";
-import { Box, Button, Fade, FormControl, FormControlLabel, Grid, InputAdornment, InputLabel, Modal, OutlinedInput, Paper, Radio, RadioGroup, Slide, SvgIcon, Typography } from "@material-ui/core";
+import { Box, Button, Fade, FormControl, FormControlLabel, Grid, InputAdornment, InputLabel, Link, Modal, OutlinedInput, Paper, Radio, RadioGroup, Slide, SvgIcon, Typography } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 import { useHistory } from "react-router";
 import { farms, parseBigNumber, stakingPoolsConfig, totalFarmPoints } from "src/helpers/tokenLaunch";
@@ -16,6 +16,7 @@ import { useDispatch } from "react-redux";
 import { changeAssetApproval, getAssetAllowance, getAssetBalance, getErc20TokenBalance, onStakeAssets, onUnstakeAssets } from "src/slices/StakingPoolsSlice";
 import { error } from "src/slices/MessagesSlice";
 import { AppDispatch } from "src/store";
+import { ReactComponent as ArrowUp } from "../../assets/icons/arrow-up.svg";
 
 function Farm({ index }: { index: number }) {
     const dispatch = useDispatch<AppDispatch>();
@@ -162,7 +163,7 @@ function Farm({ index }: { index: number }) {
     useEffect(() => {
         dispatch(getAssetAllowance({ networkID: networkId, address, provider, value: farm.address }));
         dispatch(getAssetBalance({ networkID: networkId, address, provider, value: farm.address }));
-    }, [address])
+    }, [address, networkId])
 
     return (
         <Fade in={true} mountOnEnter unmountOnExit>
@@ -188,12 +189,14 @@ function Farm({ index }: { index: number }) {
                                 </Box>
                                 <div className="top-right"></div>
                             </div>
-                            {/* <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center">
-                                <Typography>{bond.fixedTerm ? t`Fixed Term` : t`Fixed Expiration`}</Typography>
-                                <Typography style={{ marginTop: "3px" }}>
-                                    {bond.fixedTerm ? `${bond.duration}` : `${bond.expiration}`}
-                                </Typography>
-                            </Box> */}
+                            <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center">
+                                <Link color="primary" href={farm.url} target="_blank">
+                                    <Typography className="get-token-link" variant="body1">
+                                        <Trans>{'Get ' + farm.symbol + ' Token'}</Trans>
+                                        <SvgIcon component={ArrowUp} htmlColor="#A3A3A3" />
+                                    </Typography>
+                                </Link>
+                            </Box>
                         </div>
                         <Box id="modal-modal-description" display="flex" flexDirection="row" className="farm-price-data-row">
                             <div className="farm-price-data">
@@ -218,8 +221,8 @@ function Farm({ index }: { index: number }) {
                                 {!address ? (
                                     <ConnectButton />
                                 ) : (
-                                    <>
-                                        {!hasAllowance() ? (
+                                    <> {assetBalance ? (
+                                        !hasAllowance() ? (
                                             <div className="help-text">
                                                 <em>
                                                     <Typography variant="body1" align="center" color="textSecondary">
@@ -238,6 +241,7 @@ function Farm({ index }: { index: number }) {
                                                         onChange={handleStakeBtnChange}
                                                         name="rb-staking-group"
                                                         row
+                                                        className="radio-staking-group"
                                                     >
                                                         <FormControlLabel value="stake" control={<Radio color="primary" />} label="Stake" />
                                                         <FormControlLabel value="unstake" control={<Radio color="primary" />} label="Unstake" />
@@ -280,7 +284,8 @@ function Farm({ index }: { index: number }) {
                                                 )}
 
                                             </div>
-                                        )}
+                                        )) : <></>
+                                    }
 
                                         {assetBalance ? (
                                             hasAllowance() ? (
@@ -307,7 +312,7 @@ function Farm({ index }: { index: number }) {
                                                 </Button> : <></>
                                             )
                                         ) : (
-                                            <Skeleton width="300px" height={40} />
+                                            <Skeleton width="350px" height={40} />
                                         )}
                                     </>
                                 )}
@@ -324,16 +329,18 @@ function Farm({ index }: { index: number }) {
                                             {isFarmLoading ? <Skeleton width="100px" /> : `${assetBalance && formatCurrency(+assetBalance, 4, "PANA")} ${farm.symbol}`}
                                         </Typography>
                                     </Box>
-                                    <Box display="flex" className="flxrow data-row" flexDirection="row" justifyContent="space-between">
-                                        <Box display="flex" flexDirection="row">
-                                            <Typography>
-                                                <Trans>You will get (Pana per Day)</Trans>
+                                    {stake == 'stake' &&
+                                        <Box display="flex" className="flxrow data-row" flexDirection="row" justifyContent="space-between">
+                                            <Box display="flex" flexDirection="row">
+                                                <Typography>
+                                                    <Trans>You will get (Pana per Day)</Trans>
+                                                </Typography>
+                                            </Box>
+                                            <Typography className="price-data">
+                                                {isFarmLoading ? <Skeleton width="100px" /> : `${formatCurrency(+ethers.utils.formatUnits(panaPerDay, 18), 4, "PANA")} Pana`}
                                             </Typography>
                                         </Box>
-                                        <Typography className="price-data">
-                                            {isFarmLoading ? <Skeleton width="100px" /> : `${formatCurrency(+ethers.utils.formatUnits(panaPerDay, 18), 4, "PANA")} Pana`}
-                                        </Typography>
-                                    </Box>
+                                    }
                                 </Box>
                             </Slide>
                         </Box>

@@ -127,25 +127,25 @@ function FarmData({ networkId, farm }: { networkId: NetworkId, farm: FarmInfo })
                     </>
                 </div>
             </TableCell>
-            <TableCell align="left">
+            <TableCell align="center">
                 <Typography>{farm.points / 10}x</Typography>
             </TableCell>
-            <TableCell align="left">
+            <TableCell align="center">
                 <Typography>{farmLiquidity(farm.index)}</Typography>
             </TableCell>
-            <TableCell align="left">
+            <TableCell align="center">
                 <Typography>{getUserPoolBalanceFormated(farm.index)}</Typography>
             </TableCell>
-            <TableCell align="left">
+            <TableCell align="center">
                 <Typography>{getFarmRewardsPerDayFormated(farm.index)}</Typography>
             </TableCell>
-            <TableCell align="left">
+            <TableCell align="center">
                 <Typography>{getPendingPanaForUserFormated(farm.index)}</Typography>
             </TableCell>
             <TableCell>
                 <Link component={NavLink} to={`/tokenlaunch/${farm.index}`}>
                     <Button variant="outlined" color="primary" style={{ width: "100%" }}>
-                        <Typography variant="h6">{t`do_stake`}</Typography>
+                        <Typography variant="h6">{t`Stake/Unstake`}</Typography>
                     </Button>
                 </Link>
             </TableCell>
