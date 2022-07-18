@@ -20,9 +20,10 @@ export const stakingPoolsConfig = {
 }
 
 export const farms: FarmInfo[] = [
-    // { index: 0, pid: 0, symbol: 'Pana', name: 'Pana', address: '0x55975321D9d22587d1742DC68B35481C8DBB0Db8', decimals: 18, points: 100, icon: ['PANA'], url: '' },
-    { index: 0, pid: 0, symbol: 'Pana-DAI', name: 'Pana-DAI LP', address: '0x75C78C8F779dE09687629E158Ad4f33EE35b5eE1', decimals: 18, points: 400, icon: ['PANA', 'DAI'], url: 'https://swapr.eth.link/#/swap?chainId=421611' }
-    // { index: 2, pid: 1, symbol: 'DAI', name: 'DAI Stable Coin', address: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174', decimals: 6, points: 10, icon: ['DAI'], url: '' }
+    { index: 0, pid: 0, symbol: 'Pana-DAI', name: 'Pana-DAI LP', address: '0x75C78C8F779dE09687629E158Ad4f33EE35b5eE1', decimals: 18, points: 400, icon: ['PANA', 'DAI'], url: 'https://swapr.eth.link/#/swap?chainId=421611' },
+    { index: 1, pid: 1, symbol: 'Pana', name: 'Pana', address: '0x29f55058bE3104EdE589fA51ff74B2F07eBb46F6', decimals: 18, points: 100, icon: ['PANA'], url: 'https://swapr.eth.link/#/swap?chainId=421611' },
+    { index: 2, pid: 2, symbol: 'DAI', name: 'DAI Stable Coin', address: '0x327459343E34F4c2Cc3fE6678ea8cA3Cf22fBfC8', decimals: 18, points: 10, icon: ['DAI'], url: 'https://swapr.eth.link/#/swap?chainId=421611' },
+    { index: 3, pid: 3, symbol: 'wETH', name: 'Wrapped ETH', address: '0xB47e6A5f8b33b3F17603C83a0535A9dcD7E32681', decimals: 18, points: 10, icon: ['wETH'], url: 'https://swapr.eth.link/#/swap?chainId=421611' }
 ]
 
 export const totalFarmPoints = farms.reduce((total, value) => total + value.points, 0);
