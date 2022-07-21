@@ -192,7 +192,7 @@ function Farm({ index }: { index: number }) {
                             <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center">
                                 <Link color="primary" href={farm.url} target="_blank">
                                     <Typography className="get-token-link" variant="body1">
-                                        <Trans>{'Get ' + farm.symbol + ' Token'}</Trans>
+                                        {'Get ' + farm.symbol + ' Token'}
                                         <SvgIcon component={ArrowUp} htmlColor="#A3A3A3" />
                                     </Typography>
                                 </Link>
@@ -235,7 +235,7 @@ function Farm({ index }: { index: number }) {
                                         ) : (
                                             <div>
                                                 <FormControl>
-                                                    <RadioGroup
+                                                    <RadioGroup 
                                                         aria-labelledby="rb-group-stake"
                                                         value={stake}
                                                         onChange={handleStakeBtnChange}
@@ -269,7 +269,7 @@ function Farm({ index }: { index: number }) {
                                                         <InputLabel className="pana-input-label" htmlFor="outlined-adornment-amount">
                                                             Amount
                                                         </InputLabel>
-                                                        <OutlinedInput
+                                                        <OutlinedInput 
                                                             id="outlined-unstake-amount"
                                                             type="number"
                                                             value={quantityUnstake}
