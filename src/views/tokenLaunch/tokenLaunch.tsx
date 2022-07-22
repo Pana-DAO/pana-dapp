@@ -67,7 +67,7 @@ function TokenLaunch() {
             {t`Pana Token Launch`}
           </Typography>
 
-          {!isSmallScreen && farms.length != 0 && (
+          {!isSmallScreen && farms.length != 0 && networkId != 1 && (
             <>
               <Box
                 marginBottom={'20px'}
