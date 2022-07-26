@@ -100,7 +100,7 @@ function Farm({ index }: { index: number }) {
 
     const setMaxUnstake = () => {
         if (userPoolBalance) {
-            setQuantityUnstake(ethers.utils.formatUnits(userPoolBalance[farm.index], farm.decimals) || "");
+            setQuantityUnstake(ethers.utils.formatUnits(userPoolBalance[farm.pid], farm.decimals) || "");
         }
     };
 
@@ -134,10 +134,10 @@ function Farm({ index }: { index: number }) {
         } else if (stake == "unstake" && userPoolBalance) {
             if (quantityUnstake === "" || Number(quantityUnstake) <= 0) {
                 dispatch(error(t`Please enter a value!`));
-            } else if (Number(quantityUnstake) > Number(userPoolBalance[farm.index])) {
+            } else if (Number(quantityUnstake) > Number(userPoolBalance[farm.pid])) {
                 dispatch(
                     error(
-                        `Max unstaking is ${ethers.utils.formatUnits(userPoolBalance[farm.index], farm.decimals)} ${farm.symbol}. Click Max to autocomplete.`,
+                        `Max unstaking is ${ethers.utils.formatUnits(userPoolBalance[farm.pid], farm.decimals)} ${farm.symbol}. Click Max to autocomplete.`,
                     ),
                 );
             } else {
@@ -204,7 +204,7 @@ function Farm({ index }: { index: number }) {
                                     <Trans>Staked</Trans>
                                 </Typography>
                                 <Typography variant="h3" color="primary" className="price">
-                                    {(userPoolBalance && userPoolBalance[farm.index]) ? formatCurrency(+ethers.utils.formatUnits(userPoolBalance[farm.index], farm.decimals), 4, "PANA") + ' ' + farm.symbol : '-'}
+                                    {(userPoolBalance && userPoolBalance[farm.pid]) ? formatCurrency(+ethers.utils.formatUnits(userPoolBalance[farm.pid], farm.decimals), 4, "PANA") + ' ' + farm.symbol : '-'}
                                 </Typography>
                             </div>
                             <div className="farm-price-data">
@@ -212,7 +212,7 @@ function Farm({ index }: { index: number }) {
                                     <Trans>Earned</Trans>
                                 </Typography>
                                 <Typography variant="h3" color="primary" className="price">
-                                    {(pendingPanaForUser && pendingPanaForUser[farm.index]) ? formatCurrency(+ethers.utils.formatUnits(pendingPanaForUser[farm.index], farm.decimals), 4, "PANA") + ' Pana' : '-'}
+                                    {(pendingPanaForUser && pendingPanaForUser[farm.pid]) ? formatCurrency(+ethers.utils.formatUnits(pendingPanaForUser[farm.pid], farm.decimals), 4, "PANA") + ' Pana' : '-'}
                                 </Typography>
                             </div>
                         </Box>
