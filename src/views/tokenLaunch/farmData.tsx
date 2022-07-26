@@ -79,7 +79,7 @@ function FarmData({ networkId, farm }: { networkId: NetworkId, farm: FarmInfo })
             for (let i = 0; i < farms.length; i++) {
                 const data = { index: farms[i].index, liquidity: 0 } as FarmPriceData;
 
-                const farmLiq = await farms[i].calculateLiquidity(i, provider, networkId);
+                const farmLiq = await farms[i].calculateLiquidity(farms[i].index, provider, networkId);
                 if (farmLiq > 0) {
                     data.liquidity = farmLiq
                 }
