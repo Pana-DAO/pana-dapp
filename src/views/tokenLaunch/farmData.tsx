@@ -156,13 +156,13 @@ function FarmData({ networkId, farm }: { networkId: NetworkId, farm: FarmInfo })
                 <Typography>{getFarmLiquidity(farm.index)}</Typography>
             </TableCell>
             <TableCell align="center">
-                <Typography>{getUserPoolBalanceFormated(farm.index)}</Typography>
+                <Typography>{getUserPoolBalanceFormated(farm.pid)}</Typography>
             </TableCell>
             <TableCell align="center">
-                <Typography>{getFarmRewardsPerDayFormated(farm.index)}</Typography>
+                <Typography>{getFarmRewardsPerDayFormated(farm.pid)}</Typography>
             </TableCell>
             <TableCell align="center">
-                <Typography>{getPendingPanaForUserFormated(farm.index)}</Typography>
+                <Typography>{getPendingPanaForUserFormated(farm.pid)}</Typography>
             </TableCell>
             <TableCell>
                 <Link component={NavLink} to={`/tokenlaunch/${farm.index}`}>
