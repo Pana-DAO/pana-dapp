@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { NavLink, useHistory } from "react-router-dom";
 import { NetworkId } from "src/constants";
 import { formatCurrency } from "src/helpers";
-import { FarmInfo, farms, stakingPoolsConfig, totalFarmPoints } from "src/helpers/tokenLaunch";
+import { FarmInfo, FarmPriceData, farms, formatMoney, stakingPoolsConfig, totalFarmPoints } from "src/helpers/tokenLaunch";
 import { useAppSelector, useWeb3Context } from "src/hooks";
 import TokenStack from "src/lib/PanaTokenStack";
 import { getErc20TokenBalance } from "src/slices/StakingPoolsSlice";
@@ -17,6 +17,7 @@ function FarmData({ networkId, farm }: { networkId: NetworkId, farm: FarmInfo })
     const [loadCount, setLoadCount] = useState(0);
     const [loadProgress, setLoadProgress] = useState(0);
     const [farmBalanceData, setFarmBalanceData] = useState(Array(farms.length) as BigNumber[]);
+    const [farmLiquidity, setFarmLiquidity] = useState(Array(farms.length) as FarmPriceData[]);
     const { provider, address, connect } = useWeb3Context();
 
     const userPoolBalance = useAppSelector(state => {
@@ -62,12 +63,33 @@ function FarmData({ networkId, farm }: { networkId: NetworkId, farm: FarmInfo })
     }, [loadCount]);
 
 
-    function farmLiquidity(index: number): string {
-        // if (farmPriceData[index]) {
-        //   return formatMoney(farmPriceData[index].liquidity, true);
-        // }
+    function getFarmLiquidity(index: number): string {
+        const farmLiq = farmLiquidity.find((p) => {
+            return p && p.index === index
+        });
+        if (farmLiq && farmLiq.liquidity > 0) {
+            return formatMoney(farmLiq.liquidity, true);
+        }
         return '-';
     }
+
+    useEffect(() => {
+        const loadFarmLiquidity = async () => {
+            const prices = Array(farms.length) as FarmPriceData[];
+            for (let i = 0; i < farms.length; i++) {
+                const data = { index: farms[i].index, liquidity: 0 } as FarmPriceData;
+
+                const farmLiq = await farms[i].calculateLiquidity(farms[i].index, provider, networkId);
+                if (farmLiq > 0) {
+                    data.liquidity = farmLiq
+                }
+                prices[i] = data;
+            }
+            setFarmLiquidity(prices);
+        }
+
+        loadFarmLiquidity();
+    }, [loadCount]);
 
     function getUserPoolBalanceFormated(index: number) {
         if (userPoolBalance) {
@@ -131,7 +153,7 @@ function FarmData({ networkId, farm }: { networkId: NetworkId, farm: FarmInfo })
                 <Typography>{farm.points / 10}x</Typography>
             </TableCell>
             <TableCell align="center">
-                <Typography>{farmLiquidity(farm.pid)}</Typography>
+                <Typography>{getFarmLiquidity(farm.index)}</Typography>
             </TableCell>
             <TableCell align="center">
                 <Typography>{getUserPoolBalanceFormated(farm.pid)}</Typography>
