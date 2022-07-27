@@ -60,7 +60,6 @@ export const getBalances = createAsyncThunk(
     let panaBalance = BigNumber.from("0");
     let daiBalance = BigNumber.from("0");
     let pPanaBalance = BigNumber.from("0");
-    let redeemablePpanaBalance = BigNumber.from("0");
 
     try {
       const karshaContract = new ethers.Contract(
@@ -95,6 +94,26 @@ export const getBalances = createAsyncThunk(
     } catch (e) {
       handleContractError(e);
     }
+    
+
+    return {
+      balances: {
+        karsha: ethers.utils.formatUnits(karshaBalance, 18),
+        pana: ethers.utils.formatUnits(panaBalance, 18),
+        dai: ethers.utils.formatUnits(daiBalance, 18),
+        pPana: ethers.utils.formatUnits(pPanaBalance, 18),
+        redeemablePpana: ethers.utils.formatUnits(0, 18),
+      },
+    };
+  },
+);
+
+export const getPPanaRedeemableFor = createAsyncThunk(
+  "account/getPPanaRedeemableFor",
+  async ({ address, networkID, provider }: IBaseAddressAsyncThunk): Promise<BigNumber> => {
+    
+    let redeemablePpanaBalance = BigNumber.from("0");
+
     try {
       const pPanaRedeemContract = new ethers.Contract(
         addresses[networkID].PPANA_REDEEM_ADDRESS as string,
@@ -106,21 +125,13 @@ export const getBalances = createAsyncThunk(
       handleContractError(e);
     }
 
-    return {
-      balances: {
-        karsha: ethers.utils.formatUnits(karshaBalance, 18),
-        pana: ethers.utils.formatUnits(panaBalance, 18),
-        dai: ethers.utils.formatUnits(daiBalance, 18),
-        pPana: ethers.utils.formatUnits(pPanaBalance, 18),
-        redeemablePpana: ethers.utils.formatUnits(redeemablePpanaBalance, 18),
-      },
-    };
-  },
+    return redeemablePpanaBalance;
+  }
 );
 
 export const getPPanaTerms = createAsyncThunk(
   "account/getPPanaTerms",
-  async ({ address, networkID, provider }: IBaseAddressAsyncThunk): Promise<IUserPPanaTerms | undefined> => {
+  async ({ address, networkID, provider }: IBaseAddressAsyncThunk, { dispatch }): Promise<IUserPPanaTerms | undefined> => {
     let terms;
 
     try {
@@ -132,6 +143,8 @@ export const getPPanaTerms = createAsyncThunk(
     }
 
     if (terms && terms.active) {
+      await dispatch(getPPanaRedeemableFor({ address, networkID, provider }));
+
       const currentTime = Date.now() / 1000;
       let duration = "";
       const seconds = +BigNumber.from(terms.lockExpiry) - currentTime;
@@ -335,6 +348,9 @@ const accountSlice = createSlice({
       .addCase(getPPanaTerms.rejected, (state, { error }) => {
         state.loading = false;
         console.log(error);
+      })
+      .addCase(getPPanaRedeemableFor.fulfilled, (state, action) => {
+        state.balances.redeemablePpana = ethers.utils.formatUnits(action.payload, 18);
       });
     // .addCase(calculateUserBondDetails.pending, state => {
     //   state.loading = true;

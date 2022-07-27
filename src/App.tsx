@@ -31,6 +31,10 @@ import { girth as gTheme } from "./themes/girth.js";
 import { getAllBonds, getUserNotes, getUserOldNotes } from "./slices/BondSlice";
 import RedeemPPana from "./views/Redeem/RedeemPPana";
 import Footer from "./components/Footer/Footer";
+import TokenLaunch from "./views/tokenLaunch/tokenLaunch";
+import Farm from "./views/tokenLaunch/farm";
+import { farms } from "./helpers/tokenLaunch";
+import { getUserPendingPana, getUserPoolBalance } from "./slices/StakingPoolsSlice";
 
 const queryClient = new QueryClient();
 
@@ -123,6 +127,8 @@ function App() {
       dispatch(getUserNotes({ networkID: networkId, address, provider: loadProvider }));
       dispatch(getUserOldNotes({ networkID: networkId, address, provider: loadProvider }));
       dispatch(loadAccountDetails({ networkID: networkId, address, provider: loadProvider }));
+      dispatch(getUserPoolBalance({ networkID: networkId, address, provider: loadProvider }));
+      dispatch(getUserPendingPana({ networkID: networkId, address, provider: loadProvider }));
     },
     [networkId, address, providerInitialized],
   );
@@ -230,6 +236,16 @@ function App() {
               </Route>
               <Route exact key="1" path={`/redeem/ppana`}>
                 <RedeemPPana />
+              </Route>
+              <Route path={`/tokenlaunch`}>
+                {farms.map(farm => {
+                  return (
+                    <Route exact key={farm.index} path={`/tokenlaunch/${farm.index}`}>
+                      <Farm index={farm.index} />
+                    </Route>
+                  );
+                })}
+                <TokenLaunch />
               </Route>
               <Route path="/memorandum">
                 <Memorandum />

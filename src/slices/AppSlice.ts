@@ -8,7 +8,7 @@ import { abi as sPanaAbi } from "../abi/sPana.json";
 import { abi as pairContractAbi } from "../abi/PairContract.json";
 import { addresses, NetworkId } from "../constants";
 import { setAll } from "../helpers";
-import apollo from "../lib/apolloClient";
+
 import { IBaseAsyncThunk } from "./interfaces";
 import { getTokenPrice } from "../helpers";
 
@@ -28,42 +28,11 @@ const getRealNumber = (number: any) => {
 export const loadAppDetails = createAsyncThunk(
   "app/loadAppDetails",
   async ({ networkID, provider }: IBaseAsyncThunk, { dispatch }) => {
-    const protocolMetricsQuery = `
-      query {
-        _meta {
-          block {
-            number
-          }
-        }
-        protocolMetrics(first: 1, orderBy: timestamp, orderDirection: desc) {
-          timestamp
-          
-          totalSupply
-          
-          marketCap
-          totalValueLocked
-          treasuryMarketValue
-          nextEpochRebase
-          
-        }
-      }
-    `;
-    // alert(networkID);
-
-    // if (networkID !== NetworkId.POLYGON_MAINNET) {
-    //   provider = NodeHelper.getMainnetStaticProvider();
-    //   networkID = NetworkId.POLYGON_MAINNET;
-    // }
-    const graphData = await apollo<{ protocolMetrics: IProtocolMetrics[] }>(protocolMetricsQuery);
-
-    if (!graphData || graphData == null) {
-      console.error("Returned a null response when querying TheGraph");
-      return;
-    }
+    
+    
 
     const daiPriceInUSD = (await getTokenPrice("dai")) || 1;
     
-    const stakingTVL = parseFloat(graphData.data.protocolMetrics[0].totalValueLocked);
     // NOTE (appleseed): marketPrice from Graph was delayed, so get CoinGecko price    
     let marketPrice;
     try {
@@ -105,18 +74,18 @@ export const loadAppDetails = createAsyncThunk(
     const marketCap = circSupply * marketPrice;
 
     //const totalSupply = parseFloat(graphData.data.protocolMetrics[0].totalSupply);
-    const treasuryMarketValue = parseFloat(graphData.data.protocolMetrics[0].treasuryMarketValue);
+    //const treasuryMarketValue = parseFloat(graphData.data.protocolMetrics[0].treasuryMarketValue);
     // const currentBlock = parseFloat(graphData.data._meta.block.number);
 
     if (!provider) {
       console.error("failed to connect to provider, please connect your wallet");
       return {
-        stakingTVL,
+       // stakingTVL,
         marketPrice,
         marketCap,
         circSupply,
         totalSupply,
-        treasuryMarketValue,
+        //treasuryMarketValue,
       } as IAppData;
     }
     // Calculating staking
@@ -142,13 +111,13 @@ export const loadAppDetails = createAsyncThunk(
       currentBlock,
       fiveDayRate,
       stakingAPY,
-      stakingTVL,
+      //stakingTVL,
       stakingRebase,
       marketCap,
       marketPrice,
       circSupply,
       totalSupply,
-      treasuryMarketValue,
+      //treasuryMarketValue,
       secondsToEpoch,
     } as IAppData;
   },

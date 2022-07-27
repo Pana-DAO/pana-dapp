@@ -127,6 +127,19 @@ const tokenPaths = {
       />
     </>
   ),
+  wETH: (
+    <>
+      <circle cx="12" cy="12" r="11" fill="white" stroke="url(#paint0_linear)" stroke-width="2"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M 12.1875 15.730469 L 7.5 13.011719 L 12.1875 19.5 L 16.875 13.011719 Z M 12.1875 15.730469" fill="#708B96"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M 12.1875 4.5 L 16.875 12.140625 L 12.1875 10.042969 L 7.5 12.140625 Z M 12.1875 10.046875 L 7.5 12.140625 L 12.1875 14.859375 L 16.875 12.140625 Z M 12.1875 10.046875" fill="#424242"/>
+      <defs>
+        <linearGradient id="paint0_linear" x1="12" y1="0" x2="12" y2="24" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#444243"/>
+          <stop offset="1" stop-color="#708B96"/>
+        </linearGradient>
+      </defs>
+    </>
+  )
 } as const;
 
 export interface PanaTokenProps extends SvgIconProps {

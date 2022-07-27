@@ -3,7 +3,6 @@ import ethereum from "./assets/tokens/wETH.svg";
 import arbitrum_testnet from "./assets/arbitrum_plain.svg";
 import { NodeHelper } from "./helpers/NodeHelper";
 
-export const THE_GRAPH_URL = "https://api.thegraph.com/subgraphs/name/drondin/olympus-protocol-metrics";
 export const EPOCH_INTERVAL = 2200;
 
 // NOTE could get this from an outside source since it changes slightly over time
@@ -83,10 +82,10 @@ export const addresses: IAddresses = {
   },
   [NetworkId.ARBITRUM_TESTNET]: {
     DAI_ADDRESS: "0x327459343E34F4c2Cc3fE6678ea8cA3Cf22fBfC8",
-    PANA_ADDRESS: "0x1709AF1E73225E1A8BAC94D921D03449B9E331C6",
+    PANA_ADDRESS: "0x29F55058BE3104EDE589FA51FF74B2F07EBB46F6",
     SPANA_ADDRESS: "0xE75C7C6C1491B91887FB4B72C4F42B0CD6B6EEBC",
     KARSHA_ADDRESS: "0x44333156C47AC50631236B02C97751583A334F41",
-    PANA_DAI_LP: "0x34E372DB783DE192D78E99452AE0D94DFE8AB040",
+    PANA_DAI_LP: "0x75C78C8F779DE09687629E158AD4F33EE35B5EE1",
     STAKING_ADDRESS: "0x3D0DA0E2C27FE2A14D2BEEA7165F183EBC0CA64A",
 
     DISTRIBUTOR_ADDRESS: "0xA9A0B7CEE748A4C5BDF15EB749947FC5020AABDB",
@@ -99,6 +98,7 @@ export const addresses: IAddresses = {
     PPANA_ADDRESS: "0x404D1F1300F28BFEE5FDED5FE9D5F898B93E65F5",
     PPANA_REDEEM_ADDRESS: "0x32C90D5E7AA30DD15B8AEBBEF565CF0BC732B329",
     DAO_MULTISIG: "0xde9eB6AB368290D17eb207206e2a067C65D98F15",
+    STAKING_POOLS: "0x1Eb60D0f3D36886515aB74e02EE8Be7D836682F2"
   },
 };
 
@@ -191,7 +191,7 @@ export const NETWORKS: { [key: number]: INetwork } = {
     image: polygon,
     imageAltText: "Arbitrum Logo",
     uri: () => NodeHelper.getMainnetURI(NetworkId.ARBITRUM_MAINNET),
-    isOracleIntegrated: true,
+    isOracleIntegrated: false
   },
   [NetworkId.ARBITRUM_TESTNET]: {
     chainName: "Arbitrum Testnet",
@@ -206,7 +206,7 @@ export const NETWORKS: { [key: number]: INetwork } = {
     image: arbitrum_testnet,
     imageAltText: "Arbitrum Testnet",
     uri: () => NodeHelper.getMainnetURI(NetworkId.ARBITRUM_TESTNET),
-    isOracleIntegrated: false,
+    isOracleIntegrated: true
   },
 };
 

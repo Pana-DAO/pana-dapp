@@ -1,6 +1,7 @@
 import { JsonRpcProvider, StaticJsonRpcProvider } from "@ethersproject/providers";
 import { BigNumber, BigNumberish } from "ethers";
 import { NetworkId } from "src/constants";
+import { FarmInfo } from "src/helpers/tokenLaunch";
 import { Bond } from "src/lib/Bond";
 
 import { IBond } from "./BondSlice";
@@ -131,4 +132,9 @@ export interface IRedeemAllBondsAsyncThunk extends IBaseAsyncThunk {
   readonly bonds: Bond[];
   readonly address: string;
   readonly autostake: boolean;
+}
+
+export interface IStakeAssetAsyncThunk extends IBaseAddressAsyncThunk {
+  readonly farm: FarmInfo;
+  readonly amount: BigNumberish;
 }
