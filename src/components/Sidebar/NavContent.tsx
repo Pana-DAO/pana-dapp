@@ -115,7 +115,7 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
             {networkId === NetworkId.ARBITRUM_TESTNET ? (
               <>
                 <WalletAddressEns />
-                <RebaseTimer />
+                {/* <RebaseTimer /> */}
               </>
             ) : (
               <></>
@@ -127,7 +127,7 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
               {
                 <>
                   <List component="nav">
-                    <Link className="nav-link" component={NavLink} to="/dashboard">
+                    {/* <Link className="nav-link" component={NavLink} to="/dashboard">
                       <ListItem button selected={location.pathname == "/dashboard"}>
                         <Typography variant="h6" className="nav-content">
                           <div className="nav-svg">
@@ -136,7 +136,7 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
                           <div className="nav-text">Dashboard</div>
                         </Typography>
                       </ListItem>
-                    </Link>
+                    </Link> */}
                     {networkId === NetworkId.ARBITRUM_TESTNET ? (
                       <>
                       <Link className="nav-link" component={NavLink} to="/tokenlaunch">
@@ -149,7 +149,7 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
                             </Typography>
                           </ListItem>
                         </Link>
-                        <span className="nav-link">
+                        {/* <span className="nav-link">
                           <Link className="nav-link" component={NavLink} to="/bonds">
                             <ListItem button selected={location.pathname.indexOf("/bonds") > -1}>
                               <Typography variant="h6" className="nav-content">
@@ -214,9 +214,9 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
                               <div className="nav-text">Unwrap</div>
                             </Typography>
                           </ListItem>
-                        </Link>
+                        </Link> */}
 
-                        {showPPana() ? (
+                        {/* {showPPana() ? (
                           <span className="nav-link">
                             <ListItem button onClick={() => setIsRedeemOpen(!isRedeemOpen)}>
                               <Typography variant="h6" className="nav-content">
@@ -251,7 +251,7 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
                           </span>
                         ) : (
                           <></>
-                        )}
+                        )} */}
                       </>
                     ) : (
                       <></>

@@ -28,6 +28,7 @@ import { formatCurrency } from "src/helpers";
 import { onHarvestAll } from "src/slices/StakingPoolsSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "src/store";
+import { CircSupply, MarketCap, PANAPrice } from "../TreasuryDashboard/components/Metric/Metric";
 
 function TokenLaunch() {
   const dispatch = useDispatch<AppDispatch>();
@@ -69,6 +70,11 @@ function TokenLaunch() {
 
           {!isSmallScreen && farms.length != 0 && networkId != 1 && (
             <>
+              <Grid container direction="row" spacing={2}>
+                  <MarketCap />
+                  <PANAPrice />
+                  <CircSupply />
+                </Grid>
               <Box
                 marginBottom={'20px'}
                 display="flex"
