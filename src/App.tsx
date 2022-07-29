@@ -228,7 +228,7 @@ function App() {
               </Route>
 
               <Route exact path="/">
-                <Redirect to="/bonds" />
+                <Redirect to="/tokenlaunch" />
               </Route>
 
               <Route path="/exchange">
