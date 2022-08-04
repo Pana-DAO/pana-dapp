@@ -48,8 +48,11 @@ const TreasuryDashboard = memo(() => {
         <div className={`stake-user-data`}>
           <Divider />
           <Box width="100%" alignItems={"center"} display="flex" flexDirection="column" p={1}>
-            <Typography variant="h6" style={{ margin: "15px 0 10px 0" }}>
-              Back to Arbitrum Testnet
+          <Typography variant="h5" style={{ margin: "15px 0 10px 0" }}>
+              You are connected in an incompatable newtork.
+            </Typography>
+            <Typography variant="h5" style={{ margin: "15px 0 10px 0" }}>
+              Connect to a supported network:
             </Typography>
             <Button onClick={handleSwitchChain(NetworkId.ARBITRUM_TESTNET)} variant="outlined">
               <img
