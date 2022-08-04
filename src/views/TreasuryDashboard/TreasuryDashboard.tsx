@@ -49,7 +49,7 @@ const TreasuryDashboard = memo(() => {
           <Divider />
           <Box width="100%" alignItems={"center"} display="flex" flexDirection="column" p={1}>
           <Typography variant="h5" style={{ margin: "15px 0 10px 0" }}>
-              You are connected in an incompatable newtork.
+              You are connected to an incompatable newtork.
             </Typography>
             <Typography variant="h5" style={{ margin: "15px 0 10px 0" }}>
               Connect to a supported network:
