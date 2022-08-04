@@ -10,6 +10,8 @@ export const BLOCK_RATE_SECONDS = 13.14;
 
 export const TOKEN_DECIMALS = 18;
 
+export const SHOW_COUNTDOWN_PAGE = true;
+
 export enum NetworkId {
   TESTNET_GOERLI = 5,
 
