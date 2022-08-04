@@ -92,3 +92,24 @@ a:hover svg {
 .tooltip {
   z-index: 9999999;
 }
+
+.countdown-container {
+  margin-top: 4rem;
+}
+
+.countdown-date {
+  font-size: 2rem;
+}
+
+.countdownListItem {
+  display: inline-block;
+  font-size: 1.5em;
+  list-style-type: none;
+  padding: 1em;
+  text-transform: uppercase;
+}
+
+.countdownListSpan {
+  display: block;
+  font-size: 4.5rem;
+}
