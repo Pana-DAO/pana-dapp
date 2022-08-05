@@ -93,7 +93,7 @@ function FarmData({ networkId, farm }: { networkId: NetworkId, farm: FarmInfo })
 
     function getUserPoolBalanceFormated(index: number) {
         if (userPoolBalance) {
-            return ethers.utils.formatUnits(userPoolBalance[index], farms[index].decimals);
+            return formatCurrency(+ethers.utils.formatUnits(userPoolBalance[index], farms[index].decimals),4);
         }
     }
 
