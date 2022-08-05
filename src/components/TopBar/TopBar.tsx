@@ -7,7 +7,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import { ReactComponent as MenuIcon } from "../../assets/icons/hamburger.svg";
 // import { locales, selectLocale } from "../../locales";
 import ThemeSwitcher from "./ThemeSwitch";
-import LocaleSwitcher from "./LocaleSwitcher";
 
 import Wallet from "./Wallet";
 
@@ -55,7 +54,6 @@ function TopBar({ theme, toggleTheme, handleDrawerToggle }: TopBarProps) {
           <SvgIcon component={MenuIcon} />
         </Button>
         <Box display="flex">
-          <LocaleSwitcher label="change Language" />
           <ThemeSwitcher theme={theme} toggleTheme={toggleTheme} />
           <Wallet />
         </Box>
