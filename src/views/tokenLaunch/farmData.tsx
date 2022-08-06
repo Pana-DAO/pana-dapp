@@ -91,27 +91,27 @@ function FarmData({ networkId, farm }: { networkId: NetworkId, farm: FarmInfo })
         loadFarmLiquidity();
     }, [loadCount]);
 
-    function getUserPoolBalanceFormated(index: number) {
+    function getUserPoolBalanceFormated(pid: number,index: number) {
         if (userPoolBalance) {
-            return formatCurrency(+ethers.utils.formatUnits(userPoolBalance[index], farms[index].decimals),4);
+            return formatCurrency(+ethers.utils.formatUnits(userPoolBalance[pid], farms[index].decimals),4);
         }
     }
 
-    function getFarmRewardsPerDayFormated(index: number) {
-        return formatCurrency(+ethers.utils.formatUnits(farmRewardsPerDay(index), farms[index].decimals), 4, "PANA");
+    function getFarmRewardsPerDayFormated(pid:number, index: number) {
+        return formatCurrency(+ethers.utils.formatUnits(farmRewardsPerDay(pid,index), farms[index].decimals), 4, "PANA");
     }
 
-    function getPendingPanaForUserFormated(index: number) {
+    function getPendingPanaForUserFormated(pid: number) {
         if (pendingPanaForUser) {
-            return formatCurrency(+ethers.utils.formatUnits(pendingPanaForUser[index], 18), 4, "PANA");
+            return formatCurrency(+ethers.utils.formatUnits(pendingPanaForUser[pid], 18), 4, "PANA");
         }
     }
 
-    function farmRewardsPerDay(index: number): BigNumber {
-        if (userPoolBalance && userPoolBalance[index] && farmBalanceData[index]) {
+    function farmRewardsPerDay(pid:number, index: number): BigNumber {
+        if (userPoolBalance && userPoolBalance[pid] && farmBalanceData[index]) {
             const poolTotal = farmBalanceData[index];
             if (poolTotal.gt(0)) {
-                const amount = userPoolBalance[index];
+                const amount = userPoolBalance[pid];
                 const farmPerDay = stakingPoolsConfig.panaPerSecond.mul(86400).mul(farms[index].points).div(totalFarmPoints);
                 return farmPerDay.mul(amount).div(poolTotal);
             }
@@ -156,10 +156,10 @@ function FarmData({ networkId, farm }: { networkId: NetworkId, farm: FarmInfo })
                 <Typography>{getFarmLiquidity(farm.index)}</Typography>
             </TableCell>
             <TableCell align="center">
-                <Typography>{getUserPoolBalanceFormated(farm.pid)}</Typography>
+                <Typography>{getUserPoolBalanceFormated(farm.pid, farm.index)}</Typography>
             </TableCell>
             <TableCell align="center">
-                <Typography>{getFarmRewardsPerDayFormated(farm.pid)}</Typography>
+                <Typography>{getFarmRewardsPerDayFormated(farm.pid,farm.index)}</Typography>
             </TableCell>
             <TableCell align="center">
                 <Typography>{getPendingPanaForUserFormated(farm.pid)}</Typography>
