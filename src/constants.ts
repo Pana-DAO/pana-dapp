@@ -1,4 +1,4 @@
-import polygon from "./assets/tokens/MATIC.svg";
+import polygon from "./assets/tokens/matic.svg";
 import ethereum from "./assets/tokens/wETH.svg";
 import arbitrum_testnet from "./assets/arbitrum_plain.svg";
 import { NodeHelper } from "./helpers/NodeHelper";
