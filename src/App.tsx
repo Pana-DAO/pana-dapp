@@ -32,6 +32,7 @@ import { getAllBonds, getUserNotes, getUserOldNotes } from "./slices/BondSlice";
 import RedeemPPana from "./views/Redeem/RedeemPPana";
 import Footer from "./components/Footer/Footer";
 import TokenLaunch from "./views/tokenLaunch/tokenLaunch";
+import AllTokens from "./views/allTokens/allTokens";
 import Farm from "./views/tokenLaunch/farm";
 import { farms } from "./helpers/tokenLaunch";
 import { getUserPendingPana, getUserPoolBalance } from "./slices/StakingPoolsSlice";
@@ -231,9 +232,13 @@ function App() {
                 <Redirect to="/tokenlaunch" />
               </Route>
 
-              <Route path="/exchange">
-                <Exchange />
-              </Route>
+<Route path="/exchange">
+  <Exchange />
+</Route>
+
+<Route path="/allTokens">
+  <AllTokens />
+</Route>
               <Route exact key="1" path={`/redeem/ppana`}>
                 <RedeemPPana />
               </Route>
