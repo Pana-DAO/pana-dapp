@@ -1,0 +1,73 @@
+#farm-view {
+  .modal-header {
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    position: relative;
+    min-height: 33px;
+    margin-bottom: 10px;
+  }
+  .modalspace {
+    position: relative;
+    padding: 20px 30px 30px 30px;
+    z-index: 5;
+    overflow: hidden;
+    border-radius: 10px;
+    margin-bottom: 1.8rem;
+    margin: auto;
+    top: 5%;
+    @media (min-width: 600px) {
+      max-width: 750px;
+    }
+  }
+
+  .farm-data {
+    margin: 10px 0 0 0;
+  }
+
+  .farm-price-data-row {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+    margin: 23px;
+    h4 {
+      margin-bottom: 0;
+    }
+    h3.price {
+      font-weight: 600 !important;
+    }
+  }
+
+  .pana-input {
+    min-width: 50%;
+    max-width: 408px;
+    margin: 5px;
+    width: 100%;
+    .pana-input-label {
+      top: unset;
+      left: unset;
+      z-index: initial;
+      position: relative;
+      font-size: 16px;
+      transform: inherit;
+      margin-top: 3px;
+      line-height: 24px;
+      margin-bottom: 3px;
+    }
+  }
+
+  .transaction-button {
+    margin-left: 0px !important;
+  }
+
+  .get-token-link {
+    display: flex;
+    align-items: flex-end;
+    padding-left: 1.5rem;
+  }
+
+  #modal-modal-title {
+    margin-bottom: 40px;
+  }
+}

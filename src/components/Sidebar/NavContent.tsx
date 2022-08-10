@@ -25,6 +25,7 @@ import {
   FilterNoneOutlined,
   RedeemOutlined,
   InfoOutlined,
+  BubbleChartOutlined,
 } from "@material-ui/icons";
 
 import React, { useEffect, useState, useRef } from "react";
@@ -46,6 +47,7 @@ import Social from "./Social";
 import RebaseTimer from "../RebaseTimer/RebaseTimer";
 
 import { ReactComponent as PanaDAOIcon } from "../../assets/icons/panadao-nav-header.svg";
+import { getUserPoolBalance, getUserPendingPana } from "src/slices/StakingPoolsSlice";
 
 type NavContentProps = {
   handleDrawerToggle?: () => void;
@@ -84,6 +86,8 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
     const interval = setTimeout(() => {
       dispatch(getAllBonds({ address, networkID: networkId, provider }));
       dispatch(getUserNotes({ address, networkID: networkId, provider }));
+      dispatch(getUserPoolBalance({ networkID: networkId, address, provider }));
+      dispatch(getUserPendingPana({ networkID: networkId, address, provider }));
     }, 60000);
     return () => clearTimeout(interval);
   });
@@ -111,7 +115,7 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
             {networkId === NetworkId.ARBITRUM_TESTNET ? (
               <>
                 <WalletAddressEns />
-                <RebaseTimer />
+                {/* <RebaseTimer /> */}
               </>
             ) : (
               <></>
@@ -123,7 +127,7 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
               {
                 <>
                   <List component="nav">
-                    <Link className="nav-link" component={NavLink} to="/dashboard">
+                    {/* <Link className="nav-link" component={NavLink} to="/dashboard">
                       <ListItem button selected={location.pathname == "/dashboard"}>
                         <Typography variant="h6" className="nav-content">
                           <div className="nav-svg">
@@ -132,10 +136,20 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
                           <div className="nav-text">Dashboard</div>
                         </Typography>
                       </ListItem>
-                    </Link>
+                    </Link> */}
                     {networkId === NetworkId.ARBITRUM_TESTNET ? (
                       <>
-                        <span className="nav-link">
+                      <Link className="nav-link" component={NavLink} to="/tokenlaunch">
+                          <ListItem button selected={location.pathname == "/tokenlaunch"}>
+                            <Typography variant="h6" className="nav-content">
+                              <div className="nav-svg">
+                                <SvgIcon viewBox="0 0 25 25" className="menuicon" component={BubbleChartOutlined} />
+                              </div>
+                              <div className="nav-text">Token Launch</div>
+                            </Typography>
+                          </ListItem>
+                        </Link>
+                        {/* <span className="nav-link">
                           <Link className="nav-link" component={NavLink} to="/bonds">
                             <ListItem button selected={location.pathname.indexOf("/bonds") > -1}>
                               <Typography variant="h6" className="nav-content">
@@ -200,9 +214,9 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
                               <div className="nav-text">Unwrap</div>
                             </Typography>
                           </ListItem>
-                        </Link>
+                        </Link> */}
 
-                        {showPPana() ? (
+                        {/* {showPPana() ? (
                           <span className="nav-link">
                             <ListItem button onClick={() => setIsRedeemOpen(!isRedeemOpen)}>
                               <Typography variant="h6" className="nav-content">
@@ -237,7 +251,7 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
                           </span>
                         ) : (
                           <></>
-                        )}
+                        )} */}
                       </>
                     ) : (
                       <></>

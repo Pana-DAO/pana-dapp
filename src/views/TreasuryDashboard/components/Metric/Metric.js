@@ -60,7 +60,7 @@ export const PANAPrice = () => {
   const marketPrice = useSelector(state => state.app.marketPrice);
   return (
     <MetricContent
-      label={t`PANA Price`}
+      label={t`Pana Price`}
       metric={marketPrice && formatCurrency(marketPrice, 6)}
       isLoading={!marketPrice}
     />
