@@ -1,4 +1,6 @@
 import "./farm.scss";
+import clsx from 'clsx';
+import { makeStyles } from '@material-ui/core/styles';
 import { Box, Button, Fade, FormControl, FormControlLabel, Grid, InputAdornment, InputLabel, Link, Modal, OutlinedInput, Paper, Radio, RadioGroup, Slide, SvgIcon, Typography } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 import { useHistory } from "react-router";
@@ -165,6 +167,62 @@ function Farm({ index }: { index: number }) {
         dispatch(getAssetBalance({ networkID: networkId, address, provider, value: farm.address }));
     }, [address, networkId])
 
+    const useStyles = makeStyles({
+        root: {
+          '&:hover': {
+            backgroundColor: 'transparent',
+          },
+        },
+        icon: {
+          borderRadius: '50%',
+          width: 20,
+          height: 20,
+          boxShadow: 'inset 0 0 0 1px rgba(16,22,26,.2), inset 0 -1px 0 rgba(16,22,26,.1)',
+        //   backgroundColor: '#575757',
+          backgroundImage: 'linear-gradient(180deg,hsla(0,0%,100%,.8),hsla(0,0%,100%,0))',
+          '$root.Mui-focusVisible &': {
+            outline: '2px auto rgba(19,124,189,.6)',
+            outlineOffset: 2,
+          },
+          'input:hover ~ &': {
+            backgroundColor: '#575757',
+          },
+          'input:disabled ~ &': {
+            boxShadow: 'none',
+            background: 'rgba(206,217,224,.5)',
+          },
+        },
+        checkedIcon: {
+          backgroundColor: '#575757',
+          backgroundImage: 'linear-gradient(180deg,hsla(0,0%,100%,.1),hsla(0,0%,100%,0))',
+          '&:before': {
+            display: 'block',
+            width: 20,
+            height: 20,
+            backgroundImage: 'radial-gradient(#fff,#fff 28%,transparent 32%)',
+            content: '""',
+          },
+        //   'input:hover ~ &': {
+        //     backgroundColor: '#575757',
+        //   },
+        },
+      });
+      
+      function StyledRadio(props:any) {
+        const classes = useStyles();
+      
+        return (
+          <Radio
+            className={classes.root}
+            disableRipple
+            color="default"
+            checkedIcon={<span className={clsx(classes.icon, classes.checkedIcon)} />}
+            icon={<span className={classes.icon} />}
+            {...props}
+          />
+        );
+      }
+
     return (
         <Fade in={true} mountOnEnter unmountOnExit>
             <Grid container>
@@ -243,8 +301,8 @@ function Farm({ index }: { index: number }) {
                                                         row
                                                         className="radio-staking-group"
                                                     >
-                                                        <FormControlLabel value="stake" control={<Radio color="primary" />} label="Stake" />
-                                                        <FormControlLabel value="unstake" control={<Radio color="primary" />} label="Unstake" />
+                                                        <FormControlLabel value="stake" control={<StyledRadio color="primary" />} label="Stake" />
+                                                        <FormControlLabel value="unstake" control={<StyledRadio color="primary" />} label="Unstake" />
                                                     </RadioGroup>
                                                 </FormControl>
                                                 {stake == 'stake' ? (

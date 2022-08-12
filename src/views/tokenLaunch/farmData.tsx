@@ -100,7 +100,7 @@ function FarmData({ networkId, farm }: { networkId: NetworkId; farm: FarmInfo })
 
   function getUserPoolBalanceFormated(pid: number,index: number) {
     if (userPoolBalance) {
-      return formatCurrency(+ethers.utils.formatUnits(userPoolBalance[pid], farms[index].decimals), 4,"PANA");
+      return formatCurrency(+ethers.utils.formatUnits(userPoolBalance[pid], farms[index].decimals), 6,"PANA");
     }
   }
 
