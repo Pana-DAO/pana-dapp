@@ -16,7 +16,7 @@ interface IUserBalances {
   balances: {
     karsha: string;
     pana: string;
-    dai: string;
+    usdc: string;
     pPana: string;
     redeemablePpana: string;
   };
@@ -58,7 +58,7 @@ export const getBalances = createAsyncThunk(
   async ({ address, networkID, provider }: IBaseAddressAsyncThunk): Promise<IUserBalances> => {
     let karshaBalance = BigNumber.from("0");
     let panaBalance = BigNumber.from("0");
-    let daiBalance = BigNumber.from("0");
+    let usdcBalance = BigNumber.from("0");
     let pPanaBalance = BigNumber.from("0");
 
     try {
@@ -78,8 +78,8 @@ export const getBalances = createAsyncThunk(
       handleContractError(e);
     }
     try {
-      const daiContract = new ethers.Contract(addresses[networkID].DAI_ADDRESS as string, daiAbi, provider) as DAI;
-      daiBalance = await daiContract.balanceOf(address);
+      const usdcContract = new ethers.Contract(addresses[networkID].USDC_ADDRESS as string, daiAbi, provider) as DAI;
+      usdcBalance = await usdcContract.balanceOf(address);
     } catch (e) {
       handleContractError(e);
     }
@@ -100,7 +100,7 @@ export const getBalances = createAsyncThunk(
       balances: {
         karsha: ethers.utils.formatUnits(karshaBalance, 18),
         pana: ethers.utils.formatUnits(panaBalance, 18),
-        dai: ethers.utils.formatUnits(daiBalance, 18),
+        usdc: ethers.utils.formatUnits(usdcBalance, 6),
         pPana: ethers.utils.formatUnits(pPanaBalance, 18),
         redeemablePpana: ethers.utils.formatUnits(0, 18),
       },
@@ -218,8 +218,8 @@ export const loadAccountDetails = createAsyncThunk(
     }
 
     try {
-      const daiContract = new ethers.Contract(addresses[networkID].DAI_ADDRESS as string, daiAbi, provider) as DAI;
-      pPanaDAIAllowance = await daiContract.allowance(address, addresses[networkID].PPANA_REDEEM_ADDRESS);
+      const usdcContract = new ethers.Contract(addresses[networkID].DAI_ADDRESS as string, daiAbi, provider) as DAI;
+      pPanaDAIAllowance = await usdcContract.allowance(address, addresses[networkID].PPANA_REDEEM_ADDRESS);
     } catch (e) {
       handleContractError(e);
     }
@@ -257,7 +257,7 @@ export interface IAccountSlice extends IUserAccountDetails, IUserBalances {
   balances: {
     karsha: string;
     pana: string;
-    dai: string;
+    usdc: string;
     pPana: string;
     redeemablePpana: string;
   };
@@ -288,7 +288,7 @@ const initialState: IAccountSlice = {
   balances: {
     karsha: "",
     pana: "",
-    dai: "",
+    usdc: "",
     pPana: "",
     redeemablePpana: "",
   },

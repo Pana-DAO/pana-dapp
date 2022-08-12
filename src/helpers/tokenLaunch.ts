@@ -1,7 +1,7 @@
 import { BigNumber, ethers } from "ethers"
 import { addresses, NetworkId } from "src/constants"
 import { PanaTokenStackProps } from "src/lib/PanaTokenStack"
-import { getPanaPriceInDAI } from "src/slices/AppSlice"
+import { getPanaPriceInUSDC } from "src/slices/AppSlice"
 import { getErc20TokenBalance } from "src/slices/StakingPoolsSlice"
 import { IERC20__factory, UniswapV2Lp__factory } from "src/typechain"
 import { getTokenPrice } from "."
@@ -30,9 +30,9 @@ export const stakingPoolsConfig = {
     panaPerSecond: BigNumber.from('18000000000000000000')
 }
 
-export const panaDAILiquidity = async (index: number, provider: ethers.providers.JsonRpcProvider, networkId: NetworkId) => {
+export const panaUSDCLiquidity = async (index: number, provider: ethers.providers.JsonRpcProvider, networkId: NetworkId) => {
     try {
-        const baseContract = UniswapV2Lp__factory.connect(addresses[networkId].PANA_DAI_LP, provider);
+        const baseContract = UniswapV2Lp__factory.connect(addresses[networkId].PANA_USDC_LP, provider);
         const reserves = await baseContract.getReserves();
         const baseContractDec = await baseContract.decimals();
         const totalSupply = +(await baseContract.totalSupply()) / Math.pow(10, baseContractDec);
@@ -40,7 +40,7 @@ export const panaDAILiquidity = async (index: number, provider: ethers.providers
         const token1Address = await baseContract.token1();
         let reserve, tokenContract;
 
-        if (token0Address.toLowerCase() == addresses[networkId].DAI_ADDRESS.toLowerCase()) {
+        if (token0Address.toLowerCase() == addresses[networkId].USDC_ADDRESS.toLowerCase()) {
             reserve = +reserves._reserve0;
             tokenContract = IERC20__factory.connect(token0Address, provider);
         } else {
@@ -48,13 +48,17 @@ export const panaDAILiquidity = async (index: number, provider: ethers.providers
             tokenContract = IERC20__factory.connect(token1Address, provider);
         }
         const tokenDecimals = await tokenContract.decimals();
-        const daiAmount = reserve / Math.pow(10, tokenDecimals);
-        const daiPerLP = 2 * (daiAmount / totalSupply);
+        const usdcAmount = reserve / Math.pow(10, tokenDecimals);
+        const usdcPerLP = 2 * (usdcAmount / totalSupply);
 
         // LPs hold by Staking Pools
-        const lpInFarm = +(await getErc20TokenBalance(farms[index].address, provider, networkId)) / Math.pow(10, baseContractDec);
-
-        return daiPerLP * +lpInFarm;
+        const farm = farms.find(p => p.index == index);
+        if (farm) {
+            const lpInFarm = +(await getErc20TokenBalance(farm.address, provider, networkId)) / Math.pow(10, baseContractDec);
+            return usdcPerLP * +lpInFarm;
+        } else {
+            return 0;
+        }
     } catch (error) {
         console.error(error);
         return 0;
@@ -63,11 +67,16 @@ export const panaDAILiquidity = async (index: number, provider: ethers.providers
 
 export const panaLiquidity = async (index: number, provider: ethers.providers.JsonRpcProvider, networkId: NetworkId) => {
     try {
-        const panaPrice = await getPanaPriceInDAI(provider, networkId);
+        const panaPrice = await getPanaPriceInUSDC(provider, networkId);
 
         // Pana hold by Staking Pool
-        const panaInFarm = +(await getErc20TokenBalance(farms[index].address, provider, networkId)) / Math.pow(10, 18);
-        return panaPrice * +panaInFarm;
+        const farm = farms.find(p => p.index == index);
+        if (farm) {
+            const panaInFarm = +(await getErc20TokenBalance(farm.address, provider, networkId)) / Math.pow(10, 18);
+            return panaPrice * +panaInFarm;
+        } else {
+            return 0;
+        }
     } catch (error) {
         console.error(error);
         return 0;
@@ -85,26 +94,47 @@ export const daiLiquidity = async (index: number, provider: ethers.providers.Jso
     }
 }
 
+export const usdcLiquidity = async (index: number, provider: ethers.providers.JsonRpcProvider, networkId: NetworkId) => {
+    try {
+        // DAI hold by Staking Pool
+        const farm = farms.find(p => p.index == index);
+        if (farm) {
+            return +(await getErc20TokenBalance(farm.address, provider, networkId)) / Math.pow(10, 6);
+        } else {
+            return 0;
+        }
+    } catch (error) {
+        console.error(error);
+        return 0;
+    }
+}
+
 export const wETHLiquidity = async (index: number, provider: ethers.providers.JsonRpcProvider, networkId: NetworkId) => {
     const wethPrice = await getTokenPrice("weth");
     if (wethPrice) {
         try {
             // Pana hold by Staking Pool
-            const wETHInFarm = +(await getErc20TokenBalance(farms[index].address, provider, networkId)) / Math.pow(10, 18);
-            return wethPrice * +wETHInFarm;
+            const farm = farms.find(p => p.index == index);
+            if (farm) {
+                const wETHInFarm = +(await getErc20TokenBalance(farm.address, provider, networkId)) / Math.pow(10, 18);
+                return wethPrice * +wETHInFarm;
+            } else {
+                return 0;
+            }
         } catch (error) {
             console.error(error);
             return 0;
         }
-    }    
+    }
     return 0;
 }
 
 export const farms: FarmInfo[] = [
-    { index: 0, pid: 1, symbol: 'Pana-DAI', name: 'Pana-DAI LP', address: '0x75C78C8F779dE09687629E158Ad4f33EE35b5eE1', decimals: 18, points: 400, icon: ['PANA', 'DAI'], url: 'https://swapr.eth.link/#/swap?chainId=421611', calculateLiquidity: panaDAILiquidity },
-    { index: 1, pid: 0, symbol: 'Pana', name: 'Pana', address: '0x29f55058bE3104EdE589fA51ff74B2F07eBb46F6', decimals: 18, points: 100, icon: ['PANA'], url: 'https://swapr.eth.link/#/swap?chainId=421611', calculateLiquidity: panaLiquidity },
-    { index: 2, pid: 2, symbol: 'DAI', name: 'DAI Stable Coin', address: '0x327459343E34F4c2Cc3fE6678ea8cA3Cf22fBfC8', decimals: 18, points: 10, icon: ['DAI'], url: 'https://swapr.eth.link/#/swap?chainId=421611', calculateLiquidity: daiLiquidity },
-    { index: 3, pid: 3, symbol: 'wETH', name: 'Wrapped ETH', address: '0xB47e6A5f8b33b3F17603C83a0535A9dcD7E32681', decimals: 18, points: 10, icon: ['wETH'], url: 'https://swapr.eth.link/#/swap?chainId=421611', calculateLiquidity: wETHLiquidity }
+    
+    { index: 1, pid: 0, symbol: 'USDC', name: 'USDC Stable Coin', address: '0x91700A0a45bef3Ef488eC11792aE3b3199e0dC4e', decimals: 6, points: 10, icon: ['USDC'], url: 'https://swapr.eth.link/#/swap?chainId=421611', calculateLiquidity: usdcLiquidity },
+    { index: 0, pid: 1, symbol: 'USDC-Pana', name: 'USDC-Pana LP', address: '0x91a2d26e987219E6a266784d5a816ceEf03cB3B8', decimals: 18, points: 400, icon: ['USDC', 'PANA'], url: 'https://swapr.eth.link/#/swap?chainId=421611', calculateLiquidity: panaUSDCLiquidity },
+    // { index: 2, pid: 2, symbol: 'DAI', name: 'DAI Stable Coin', address: '0x327459343E34F4c2Cc3fE6678ea8cA3Cf22fBfC8', decimals: 18, points: 10, icon: ['DAI'], url: 'https://swapr.eth.link/#/swap?chainId=421611', calculateLiquidity: daiLiquidity },
+    // { index: 3, pid: 3, symbol: 'wETH', name: 'Wrapped ETH', address: '0xB47e6A5f8b33b3F17603C83a0535A9dcD7E32681', decimals: 18, points: 10, icon: ['wETH'], url: 'https://swapr.eth.link/#/swap?chainId=421611', calculateLiquidity: wETHLiquidity }
 ]
 
 export const totalFarmPoints = farms.reduce((total, value) => total + value.points, 0);

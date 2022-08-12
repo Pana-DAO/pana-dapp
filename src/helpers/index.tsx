@@ -22,7 +22,7 @@ export async function getTokenPrice(tokenId = "pana"): Promise<number | undefine
   } catch (e) {
     // console.log("coingecko api error: ", e);
     // TODO RESET TO 0
-    if (tokenId == "dai") {
+    if (tokenId == "usdc") {
       return 1;
     } else {
       return undefined;

@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 
 import { addresses, NetworkId, NETWORKS } from "src/constants";
 import { PanaTokenStackProps } from "src/lib/PanaTokenStack";
-import { getPanaPriceInDAI } from "src/slices/AppSlice";
+import { getPanaPriceInUSDC } from "src/slices/AppSlice";
 import { IERC20__factory, UniswapV2Lp__factory, BondDepository__factory } from "../typechain";
 
 const pricingFunctionHelperLP = async (
@@ -62,7 +62,7 @@ const DaiDetails: BondDetails = {
     if (NETWORKS[networkId].isOracleIntegrated) {
       return await getOraclePrice(provider, networkId, index);
     } else {
-      return await getPanaPriceInDAI(provider, networkId);
+      return await getPanaPriceInUSDC(provider, networkId);
     }
   },
   isLP: false,
