@@ -84,7 +84,8 @@ function CountDown() {
 
         today = new Date(mm + "/" + dd + "/" + yyyy);
 
-        const countDown = new Date("2022-08-15T09:00:00.000-05:00").getTime(); // new Date(launchDate).getTime();
+        // const countDown = new Date("2022-08-15T09:00:00.000-05:00").getTime(); // new Date(launchDate).getTime();
+        const countDown = new Date(Date.UTC(2022,7,15,16,0,0,0)).getTime(); //3pm gmt == 11am est
         const x = setInterval(function () {
 
             const now = new Date().getTime(),
