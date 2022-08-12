@@ -57,7 +57,7 @@ function TokenLaunch() {
     dispatch(onHarvestAll({ provider, networkID: networkId, address }));
   };
 
-  const arbitrum_testnet = NETWORKS[NetworkId.ARBITRUM_TESTNET];
+  const arbitrum_mainnet = NETWORKS[NetworkId.ARBITRUM_MAINNET];
 
   const handleSwitchChain = (id: any) => {
     return () => {
@@ -73,7 +73,7 @@ function TokenLaunch() {
 
   return (
     <div id="token-launch-view">
-      {networkId != arbitrum_testnet.chainId ? (
+      {networkId != arbitrum_mainnet.chainId ? (
         <>
           <Box width="100%" alignItems={"center"} display="flex" flexDirection="column" p={1}>
             <Typography variant="h5" style={{ margin: "15px 0 10px 0" }}>
@@ -82,15 +82,15 @@ function TokenLaunch() {
             <Typography variant="h5" style={{ margin: "15px 0 10px 0" }}>
               Connect to a supported network:
             </Typography>
-            <Button onClick={handleSwitchChain(NetworkId.ARBITRUM_TESTNET)} variant="outlined">
+            <Button onClick={handleSwitchChain(NetworkId.ARBITRUM_MAINNET)} variant="outlined">
               <img
                 height="28px"
                 width="28px"
-                src={String(arbitrum_testnet.image)}
-                alt={arbitrum_testnet.imageAltText}
+                src={String(arbitrum_mainnet.image)}
+                alt={arbitrum_mainnet.imageAltText}
               />
               <Typography variant="h6" style={{ marginLeft: "8px" }}>
-                {arbitrum_testnet.chainName}
+                {arbitrum_mainnet.chainName}
               </Typography>
             </Button>
           </Box>
