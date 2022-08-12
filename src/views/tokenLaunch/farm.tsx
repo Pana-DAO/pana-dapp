@@ -22,7 +22,7 @@ function Farm({ index }: { index: number }) {
     const dispatch = useDispatch<AppDispatch>();
     const history = useHistory();
     const { provider, address, networkId } = useWeb3Context();
-    const farm = farms[index];
+    const farm = farms.find(p => p.index == index) || farms[index];
     const [quantity, setQuantity] = useState("");
     const [quantityUnstake, setQuantityUnstake] = useState("");
     const [stake, setStake] = useState('stake');

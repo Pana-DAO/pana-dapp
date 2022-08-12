@@ -31,7 +31,7 @@ export const loadAppDetails = createAsyncThunk(
     
     
 
-    const daiPriceInUSD = (await getTokenPrice("dai")) || 1;
+    const usdcPriceInUSD = (await getTokenPrice("usd")) || 1;
     
     // NOTE (appleseed): marketPrice from Graph was delayed, so get CoinGecko price    
     let marketPrice;
@@ -39,7 +39,7 @@ export const loadAppDetails = createAsyncThunk(
       const originalPromiseResult = await dispatch(
         loadMarketPrice({ networkID: networkID, provider: provider }),
       ).unwrap();
-      marketPrice = originalPromiseResult?.marketPrice * daiPriceInUSD;
+      marketPrice = originalPromiseResult?.marketPrice * usdcPriceInUSD;
     } catch (rejectedValueOrSerializedError) {
       // handle error here
       console.error("Returned a null response from dispatch(loadMarketPrice)");
@@ -172,20 +172,20 @@ const loadMarketPrice = createAsyncThunk("app/loadMarketPrice", async ({ network
   // TODO GET ACTUAL MARKET PRICE
   // const marketPrice = await getTokenPrice("pana")
   return {
-    marketPrice: await getPanaPriceInDAI(provider, networkID),
+    marketPrice: await getPanaPriceInUSDC(provider, networkID),
   };
   
 });
 
-export const getPanaPriceInDAI = async (provider: ethers.providers.JsonRpcProvider, networkID: NetworkId): Promise<number> => {
-  const pairContract = new ethers.Contract(addresses[networkID].PANA_DAI_LP as string, pairContractAbi, provider);
+export const getPanaPriceInUSDC = async (provider: ethers.providers.JsonRpcProvider, networkID: NetworkId): Promise<number> => {
+  const pairContract = new ethers.Contract(addresses[networkID].PANA_USDC_LP as string, pairContractAbi, provider);
 
   const reserves = await pairContract.getReserves();
   const token0 = await pairContract.token0();  
-  if(token0==addresses[networkID].PANA_ADDRESS){
-    return reserves[0] / reserves[1];
+  if (token0 == addresses[networkID].PANA_ADDRESS) {
+    return (reserves[1] * Math.pow(10, 12)) / reserves[0];  
   }
-  return reserves[1] / reserves[0];
+  return reserves[0] / (reserves[1] * Math.pow(10, 12));
 }
 
 export interface IAppData {
