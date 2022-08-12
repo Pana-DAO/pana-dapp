@@ -61,7 +61,7 @@ function FarmData({ networkId, farm }: { networkId: NetworkId; farm: FarmInfo })
 
   useEffect(() => {
     const loadBalanceData = async () => {
-      const promises: Array<Promise<BigNumber>> = Array(10);
+      const promises: Array<Promise<BigNumber>> = Array(farms.length);
       for (let i = 0; i < farms.length; i++) {
         promises[i] = getErc20TokenBalance(farms[i].address, provider, networkId);
       }
@@ -105,7 +105,7 @@ function FarmData({ networkId, farm }: { networkId: NetworkId; farm: FarmInfo })
   }
 
   function getFarmRewardsPerDayFormated(pid:number,index: number) {
-    return formatCurrency(+ethers.utils.formatUnits(farmRewardsPerDay(pid,index), farms[index].decimals), 4, "PANA");
+    return formatCurrency(+ethers.utils.formatUnits(farmRewardsPerDay(pid,index), 18), 4, "PANA");
   }
 
   function getPendingPanaForUserFormated(pid: number) {
@@ -150,7 +150,7 @@ function FarmData({ networkId, farm }: { networkId: NetworkId; farm: FarmInfo })
           <>
             <Typography variant="body1">{farm.symbol}</Typography>
             <Link color="primary" href={farm.url} target="_blank">
-              <Typography variant="body1">
+              <Typography variant="body2">
                 <Trans>Get </Trans>
                 <SvgIcon component={ArrowUp} htmlColor="#A3A3A3" />
               </Typography>

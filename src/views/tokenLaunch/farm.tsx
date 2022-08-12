@@ -212,7 +212,7 @@ function Farm({ index }: { index: number }) {
                                     <Trans>Earned</Trans>
                                 </Typography>
                                 <Typography variant="h3" color="primary" className="price">
-                                    {(pendingPanaForUser && pendingPanaForUser[farm.pid]) ? formatCurrency(+ethers.utils.formatUnits(pendingPanaForUser[farm.pid], farm.decimals), 4, "PANA") + ' Pana' : '-'}
+                                    {(pendingPanaForUser && pendingPanaForUser[farm.pid]) ? formatCurrency(+ethers.utils.formatUnits(pendingPanaForUser[farm.pid], 18), 4, "PANA") + ' Pana' : '-'}
                                 </Typography>
                             </div>
                         </Box>
