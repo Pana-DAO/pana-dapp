@@ -27,7 +27,7 @@ export interface FarmPriceData {
 export const stakingPoolsConfig = {
     startTime: 1656676009,
     endTime: 1688212009,
-    panaPerSecond: BigNumber.from('18000000000000000000')
+    panaPerSecond: BigNumber.from('578703703703700000')
 }
 
 export const panaUSDCLiquidity = async (index: number, provider: ethers.providers.JsonRpcProvider, networkId: NetworkId) => {
@@ -87,7 +87,12 @@ export const panaLiquidity = async (index: number, provider: ethers.providers.Js
 export const daiLiquidity = async (index: number, provider: ethers.providers.JsonRpcProvider, networkId: NetworkId) => {
     try {
         // DAI hold by Staking Pool
-        return +(await getErc20TokenBalance(farms[index].address, provider, networkId)) / Math.pow(10, 18);
+        const farm = farms.find(p => p.index == index);
+        if (farm) {
+            return +(await getErc20TokenBalance(farm.address, provider, networkId)) / Math.pow(10, 18);
+        } else {
+            return 0;
+        }
     } catch (error) {
         console.error(error);
         return 0;
@@ -130,11 +135,10 @@ export const wETHLiquidity = async (index: number, provider: ethers.providers.Js
 }
 
 export const farms: FarmInfo[] = [
-    
-    { index: 1, pid: 0, symbol: 'USDC', name: 'USDC Stable Coin', address: '0x91700A0a45bef3Ef488eC11792aE3b3199e0dC4e', decimals: 6, points: 10, icon: ['USDC'], url: 'https://swapr.eth.link/#/swap?chainId=421611', calculateLiquidity: usdcLiquidity },
     { index: 0, pid: 1, symbol: 'USDC-Pana', name: 'USDC-Pana LP', address: '0x91a2d26e987219E6a266784d5a816ceEf03cB3B8', decimals: 18, points: 400, icon: ['USDC', 'PANA'], url: 'https://swapr.eth.link/#/swap?chainId=421611', calculateLiquidity: panaUSDCLiquidity },
-    // { index: 2, pid: 2, symbol: 'DAI', name: 'DAI Stable Coin', address: '0x327459343E34F4c2Cc3fE6678ea8cA3Cf22fBfC8', decimals: 18, points: 10, icon: ['DAI'], url: 'https://swapr.eth.link/#/swap?chainId=421611', calculateLiquidity: daiLiquidity },
-    // { index: 3, pid: 3, symbol: 'wETH', name: 'Wrapped ETH', address: '0xB47e6A5f8b33b3F17603C83a0535A9dcD7E32681', decimals: 18, points: 10, icon: ['wETH'], url: 'https://swapr.eth.link/#/swap?chainId=421611', calculateLiquidity: wETHLiquidity }
+    { index: 1, pid: 0, symbol: 'USDC', name: 'USDC Stable Coin', address: '0x91700A0a45bef3Ef488eC11792aE3b3199e0dC4e', decimals: 6, points: 10, icon: ['USDC'], url: 'https://swapr.eth.link/#/swap?chainId=421611', calculateLiquidity: usdcLiquidity },
+    { index: 2, pid: 2, symbol: 'DAI', name: 'DAI Stable Coin', address: '0x327459343E34F4c2Cc3fE6678ea8cA3Cf22fBfC8', decimals: 18, points: 10, icon: ['DAI'], url: 'https://swapr.eth.link/#/swap?chainId=421611', calculateLiquidity: daiLiquidity },
+    { index: 3, pid: 3, symbol: 'wETH', name: 'Wrapped ETH', address: '0xB47e6A5f8b33b3F17603C83a0535A9dcD7E32681', decimals: 18, points: 10, icon: ['wETH'], url: 'https://swapr.eth.link/#/swap?chainId=421611', calculateLiquidity: wETHLiquidity }
 ]
 
 export const totalFarmPoints = farms.reduce((total, value) => total + value.points, 0);
