@@ -1,4 +1,4 @@
-import polygon from "./assets/tokens/MATIC.svg";
+import polygon from "./assets/tokens/matic.svg";
 import ethereum from "./assets/tokens/wETH.svg";
 import arbitrum_testnet from "./assets/arbitrum_plain.svg";
 import { NodeHelper } from "./helpers/NodeHelper";
@@ -166,7 +166,7 @@ export const NETWORKS: { [key: number]: INetwork } = {
     },
     rpcUrls: ["https://arb1.arbitrum.io/rpc"],
     blockExplorerUrl: "https://arbiscan.io",
-    image: polygon,
+    image: arbitrum_testnet,
     imageAltText: "Arbitrum Logo",
     uri: () => NodeHelper.getMainnetURI(NetworkId.ARBITRUM_MAINNET),
     isOracleIntegrated: false

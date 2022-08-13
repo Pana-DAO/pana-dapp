@@ -28,7 +28,7 @@ import NotFound from "./views/404/NotFound";
 import { dark as darkTheme } from "./themes/dark.js";
 import { light as lightTheme } from "./themes/light.js";
 import { girth as gTheme } from "./themes/girth.js";
-import { getAllBonds, getUserNotes, getUserOldNotes } from "./slices/BondSlice";
+import { getAllBonds } from "./slices/BondSlice";
 import RedeemPPana from "./views/Redeem/RedeemPPana";
 import Footer from "./components/Footer/Footer";
 import TokenLaunch from "./views/tokenLaunch/tokenLaunch";
@@ -125,8 +125,8 @@ function App() {
       if (!providerInitialized) {
         return;
       }
-      dispatch(getUserNotes({ networkID: networkId, address, provider: loadProvider }));
-      dispatch(getUserOldNotes({ networkID: networkId, address, provider: loadProvider }));
+      // dispatch(getUserNotes({ networkID: networkId, address, provider: loadProvider }));
+      // dispatch(getUserOldNotes({ networkID: networkId, address, provider: loadProvider }));
       dispatch(loadAccountDetails({ networkID: networkId, address, provider: loadProvider }));
       dispatch(getUserPoolBalance({ networkID: networkId, address, provider: loadProvider }));
       dispatch(getUserPendingPana({ networkID: networkId, address, provider: loadProvider }));
