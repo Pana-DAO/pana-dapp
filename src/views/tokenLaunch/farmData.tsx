@@ -4,7 +4,7 @@ import { BigNumber, ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { NavLink, useHistory } from "react-router-dom";
 import { NetworkId } from "src/constants";
-import { formatCurrency } from "src/helpers";
+import { formatCurrency, getAllTokenPrice } from "src/helpers";
 import {
   FarmInfo,
   FarmPriceData,
@@ -83,10 +83,11 @@ function FarmData({ networkId, farm }: { networkId: NetworkId; farm: FarmInfo })
   useEffect(() => {
     const loadFarmLiquidity = async () => {
       const prices = Array(farms.length) as FarmPriceData[];
+      const tokenslist = farms.filter(x=>{if(x.coingeckoId) return true;else false;}).map(x => x.coingeckoId).join(',')
+      const allprice= await getAllTokenPrice(tokenslist);
       for (let i = 0; i < farms.length; i++) {
         const data = { index: farms[i].index, liquidity: 0 } as FarmPriceData;
-
-        const farmLiq = await farms[i].calculateLiquidity(farms[i].index, provider, networkId);
+        const farmLiq = await farms[i].calculateLiquidity(farms[i].index,allprice[farms[i].coingeckoId]?.usd, provider, networkId);
         if (farmLiq > 0) {
           data.liquidity = farmLiq;
         }

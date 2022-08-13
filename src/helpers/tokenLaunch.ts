@@ -17,7 +17,7 @@ export interface FarmInfo {
     readonly points: number,
     readonly icon: PanaTokenStackProps["tokens"],
     readonly url: string
-    readonly calculateLiquidity: (index: number, provider: ethers.providers.JsonRpcProvider, networkId: NetworkId) => Promise<number>
+    readonly calculateLiquidity: (index: number,usd:number, provider: ethers.providers.JsonRpcProvider, networkId: NetworkId) => Promise<number>
 }
 
 export interface FarmPriceData {
@@ -66,7 +66,7 @@ export const panaUSDCLiquidity = async (index: number, provider: ethers.provider
     }
 }
 
-export const panaLiquidity = async (index: number, provider: ethers.providers.JsonRpcProvider, networkId: NetworkId) => {
+export const panaLiquidity = async (index: number,usd:number, provider: ethers.providers.JsonRpcProvider, networkId: NetworkId) => {
     try {
         const panaPrice = await getPanaPriceInUSDC(provider, networkId);
 
@@ -85,7 +85,7 @@ export const panaLiquidity = async (index: number, provider: ethers.providers.Js
 
 }
 
-export const daiLiquidity = async (index: number, provider: ethers.providers.JsonRpcProvider, networkId: NetworkId) => {
+export const daiLiquidity = async (index: number,usd:number, provider: ethers.providers.JsonRpcProvider, networkId: NetworkId) => {
     try {
         // DAI hold by Staking Pool
         const farm = farms.find(p => p.index == index);
@@ -135,10 +135,10 @@ export const wETHLiquidity = async (index: number, provider: ethers.providers.Js
     return 0;
 }
 
-export const defaultLiquidityCal = async (index: number, provider: ethers.providers.JsonRpcProvider, networkId: NetworkId) => {
+export const defaultLiquidityCal = async (index: number,usd:number, provider: ethers.providers.JsonRpcProvider, networkId: NetworkId) => {
     const farm = farms.find(p => p.index == index);
     if(farm) {
-        const usdPrice = await getTokenPrice(farm?.coingeckoId);
+        const usdPrice =usd??usd>0?usd: await getTokenPrice(farm?.coingeckoId);
         if (usdPrice) {
             try {
                 if (farm) {
@@ -163,7 +163,7 @@ export const farms: FarmInfo[] = [
     { index: 2, pid: 2, symbol: 'AAVE', name: 'AAVE', address: '0xba5DdD1f9d7F570dc94a51479a000E3BCE967196', decimals: 18, points: 10,coingeckoId:"aave", icon: ['AAVE'], url: 'https://app.aave.com/', calculateLiquidity: defaultLiquidityCal },
     { index: 3, pid: 3, symbol: 'BIFI', name: 'BIFI', address: '0x99C409E5f62E4bd2AC142f17caFb6810B8F0BAAE', decimals: 18, points: 10,coingeckoId:"beefy-finance", icon: ['BIFI'], url: 'https://app.sushi.com/swap?inputCurrency=ETH&outputCurrency=0x99C409E5f62E4bd2AC142f17caFb6810B8F0BAAE&chainId=42161', calculateLiquidity: defaultLiquidityCal },
     { index: 4, pid: 4, symbol: 'CRV', name: 'CRV', address: '0x11cDb42B0EB46D95f990BeDD4695A6e3fA034978', decimals: 18, points: 10,coingeckoId:"curve-dao-token", icon: ['CRV'], url: 'https://arbitrum.curve.fi/', calculateLiquidity: defaultLiquidityCal },
-    { index: 5, pid: 5, symbol: 'DAI', name: 'DAI', address: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1', decimals: 18, points: 10,coingeckoId:"dai", icon: ['DAI'], url: 'https://app.sushi.com/swap?inputCurrency=ETH&outputCurrency=0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1&chainId=42161', calculateLiquidity: daiLiquidity },
+    { index: 5, pid: 5, symbol: 'DAI', name: 'DAI', address: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1', decimals: 18, points: 10,coingeckoId:"dai", icon: ['DAI'], url: 'https://app.sushi.com/swap?inputCurrency=ETH&outputCurrency=0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1&chainId=42161', calculateLiquidity: defaultLiquidityCal },
     { index: 6, pid: 6, symbol: 'DPX', name: 'DPX', address: '0x6C2C06790b3E3E3c38e12Ee22F8183b37a13EE55', decimals: 18, points: 10,coingeckoId:"dopex", icon: ['DPX'], url: 'https://app.sushi.com/swap?inputCurrency=ETH&outputCurrency=0x6C2C06790b3E3E3c38e12Ee22F8183b37a13EE55&chainId=42161', calculateLiquidity: defaultLiquidityCal },
     { index: 7, pid: 7, symbol: 'GMX', name: 'GMX', address: '0xfc5A1A6EB076a2C7aD06eD22C90d7E710E35ad0a', decimals: 18, points: 10,coingeckoId:"gamex", icon: ['GMX'], url: 'https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0xfc5A1A6EB076a2C7aD06eD22C90d7E710E35ad0a&chain=arbitrum', calculateLiquidity: defaultLiquidityCal },
     { index: 8, pid: 8, symbol: 'GOHM', name: 'GOHM', address: '0x8D9bA570D6cb60C7e3e0F31343Efe75AB8E65FB1', decimals: 18, points: 10,coingeckoId:"governance-ohm", icon: ['OHM'], url: 'https://app.olympusdao.finance/#/dashboard', calculateLiquidity: defaultLiquidityCal },
