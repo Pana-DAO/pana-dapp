@@ -262,7 +262,7 @@ function Farm({ index }: { index: number }) {
                                     <Trans>Staked</Trans>
                                 </Typography>
                                 <Typography variant="h3" color="primary" className="price">
-                                    {(userPoolBalance && userPoolBalance[farm.pid]) ? formatCurrency(+ethers.utils.formatUnits(userPoolBalance[farm.pid], farm.decimals), 4, "PANA") + ' ' + farm.symbol : '-'}
+                                    {(userPoolBalance && userPoolBalance[farm.pid]) ? formatCurrency(+ethers.utils.formatUnits(userPoolBalance[farm.pid], farm.decimals), 6, "PANA") + ' ' + farm.symbol : '-'}
                                 </Typography>
                             </div>
                             <div className="farm-price-data">
