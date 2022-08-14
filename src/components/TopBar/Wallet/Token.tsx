@@ -321,7 +321,7 @@ export const Tokens = () => {
   const isLoading = useAppSelector(s => s.account.loading || s.app.loadingMarketPrice || s.app.loading);
   const [expanded, setExpanded] = useState<string | null>(null);
 
-  const alwaysShowTokens = [tokens.usdc, tokens.karsha, tokens.pana];
+  const alwaysShowTokens = [tokens.usdc, tokens.pana];
 
   const tokenProps = (token: IToken) => ({
     ...token,
