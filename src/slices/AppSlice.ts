@@ -1,10 +1,9 @@
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 import { ethers } from "ethers";
 import { RootState } from "src/store";
-import { Pana, SPana, Staking__factory } from "src/typechain";
+import { Pana, Staking__factory } from "src/typechain";
 
 import { abi as panaAbi } from "../abi/Pana.json";
-import { abi as sPanaAbi } from "../abi/sPana.json";
 import { abi as pairContractAbi } from "../abi/PairContract.json";
 import { addresses, NetworkId } from "../constants";
 import { setAll } from "../helpers";
@@ -31,7 +30,7 @@ export const loadAppDetails = createAsyncThunk(
     
     
 
-    const daiPriceInUSD = (await getTokenPrice("dai")) || 1;
+    const usdcPriceInUSD = (await getTokenPrice("usd")) || 1;
     
     // NOTE (appleseed): marketPrice from Graph was delayed, so get CoinGecko price    
     let marketPrice;
@@ -39,7 +38,7 @@ export const loadAppDetails = createAsyncThunk(
       const originalPromiseResult = await dispatch(
         loadMarketPrice({ networkID: networkID, provider: provider }),
       ).unwrap();
-      marketPrice = originalPromiseResult?.marketPrice * daiPriceInUSD;
+      marketPrice = originalPromiseResult?.marketPrice * usdcPriceInUSD;
     } catch (rejectedValueOrSerializedError) {
       // handle error here
       console.error("Returned a null response from dispatch(loadMarketPrice)");
@@ -57,11 +56,11 @@ export const loadAppDetails = createAsyncThunk(
       provider,
     ) as Pana;
 
-    const sPanaContract = new ethers.Contract(
-      addresses[networkID].SPANA_ADDRESS as string,
-      sPanaAbi,
-      provider,
-    ) as SPana;
+    // const sPanaContract = new ethers.Contract(
+    //   addresses[networkID].SPANA_ADDRESS as string,
+    //   sPanaAbi,
+    //   provider,
+    // ) as SPana;
 
     
     
@@ -69,7 +68,7 @@ export const loadAppDetails = createAsyncThunk(
     const totalSupply = parseFloat(parseFloat(getRealNumber((await panaMainContract.totalSupply()).toBigInt())).toFixed(4));
     const daoPanaBalance = parseFloat(parseFloat(getRealNumber((await panaMainContract.balanceOf(daoMultisig)).toBigInt())).toFixed(4));
     const circSupply = totalSupply-daoPanaBalance;
-    const sPanaCircSupply = Number((await sPanaContract.circulatingSupply()).toString());
+    const sPanaCircSupply = 1; // Number((await sPanaContract.circulatingSupply()).toString());
 
     const marketCap = circSupply * marketPrice;
 
@@ -89,7 +88,7 @@ export const loadAppDetails = createAsyncThunk(
       } as IAppData;
     }
     // Calculating staking
-    const epoch = await stakingContract.epoch();
+    //const epoch = await stakingContract.epoch();
     let secondsToEpoch = 0;
 
     try {
@@ -99,13 +98,13 @@ export const loadAppDetails = createAsyncThunk(
     }
 
     //alert(secondsToEpoch);
-    const stakingReward = epoch.distribute;
+    const stakingReward = 0; //epoch.distribute;
     const stakingRebase = Number(stakingReward.toString()) / sPanaCircSupply;
     const fiveDayRate = Math.pow(1 + stakingRebase, 5 * 3) - 1;
     const stakingAPY = Math.pow(1 + stakingRebase, 365 * 3) - 1;
     
     // Current index
-    const currentIndex = await stakingContract.index();
+    const currentIndex = 1; //await stakingContract.index();
     return {
       currentIndex: ethers.utils.formatUnits(currentIndex, 18),
       currentBlock,
@@ -172,20 +171,20 @@ const loadMarketPrice = createAsyncThunk("app/loadMarketPrice", async ({ network
   // TODO GET ACTUAL MARKET PRICE
   // const marketPrice = await getTokenPrice("pana")
   return {
-    marketPrice: await getPanaPriceInDAI(provider, networkID),
+    marketPrice: await getPanaPriceInUSDC(provider, networkID),
   };
   
 });
 
-export const getPanaPriceInDAI = async (provider: ethers.providers.JsonRpcProvider, networkID: NetworkId): Promise<number> => {
-  const pairContract = new ethers.Contract(addresses[networkID].PANA_DAI_LP as string, pairContractAbi, provider);
+export const getPanaPriceInUSDC = async (provider: ethers.providers.JsonRpcProvider, networkID: NetworkId): Promise<number> => {
+  const pairContract = new ethers.Contract(addresses[networkID].PANA_USDC_LP as string, pairContractAbi, provider);
 
   const reserves = await pairContract.getReserves();
   const token0 = await pairContract.token0();  
-  if(token0==addresses[networkID].PANA_ADDRESS){
-    return reserves[0] / reserves[1];
+  if (token0 == addresses[networkID].PANA_ADDRESS) {
+    return (reserves[1] * Math.pow(10, 12)) / reserves[0];  
   }
-  return reserves[1] / reserves[0];
+  return reserves[0] / (reserves[1] * Math.pow(10, 12));
 }
 
 export interface IAppData {

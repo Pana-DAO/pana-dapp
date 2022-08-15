@@ -28,7 +28,7 @@ const initialState: IStakingPoolsSlice = {
 };
 
 function checkNetwork(networkID: NetworkId) {
-    if (networkID !== 5 && networkID !== 421611) {
+    if (networkID !== 5 && networkID !== 421611 && networkID !== 42161) {
         //ENABLE FOR MAINNET LAUNCH
         throw Error(`Network=${networkID} is not supported for  bonds`);
     }

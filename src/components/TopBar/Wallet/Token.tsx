@@ -284,13 +284,13 @@ export const useWallet = (
       icon: "PANA",
       decimals: 18,
     },
-    dai: {
-      symbol: "DAI",
-      address: addresses[networkId].DAI_ADDRESS,
-      balance: connectedChainBalances.dai,
+    usdc: {
+      symbol: "USDC",
+      address: addresses[networkId].USDC_ADDRESS,
+      balance: connectedChainBalances.usdc,
       price: 1,
-      icon: "DAI",
-      decimals: 18,
+      icon: "USDC",
+      decimals: 6,
     },
   } as Record<string, Omit<IToken, "totalBalance">>;
 
@@ -321,7 +321,7 @@ export const Tokens = () => {
   const isLoading = useAppSelector(s => s.account.loading || s.app.loadingMarketPrice || s.app.loading);
   const [expanded, setExpanded] = useState<string | null>(null);
 
-  const alwaysShowTokens = [tokens.dai, tokens.karsha, tokens.pana];
+  const alwaysShowTokens = [tokens.usdc, tokens.pana];
 
   const tokenProps = (token: IToken) => ({
     ...token,

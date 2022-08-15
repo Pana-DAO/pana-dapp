@@ -12,21 +12,57 @@ import { EnvHelper } from "./Environment";
  */
 export async function getTokenPrice(tokenId = "pana"): Promise<number | undefined> {
   try {
+    const tokenValue = sessionStorage.getItem(tokenId);
+    if (tokenValue) {
+      const jobj = JSON.parse(tokenValue)
+      if ((new Date()).getTime() < jobj["time"] + (15 * 60 * 60)) {
+        return jobj["price"];
+      }
+    }
+    axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
+    axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
     const resp = (await axios.get(
       `https://api.coingecko.com/api/v3/simple/price?ids=${tokenId}&vs_currencies=usd`,
     )) as {
       data: { [id: string]: { usd: number } };
     };
     const tokenPrice: number = resp.data[tokenId].usd;
+    sessionStorage.setItem(tokenId, JSON.stringify({ "time": (new Date()), "price": tokenPrice }));
     return tokenPrice;
   } catch (e) {
     // console.log("coingecko api error: ", e);
     // TODO RESET TO 0
-    if (tokenId == "dai") {
+    if (tokenId == "usdc") {
       return 1;
     } else {
       return undefined;
     }
+  }
+}
+
+
+export async function getAllTokenPrice(tokenIdlist: string): Promise<any | undefined> {
+  try {
+    const tokenValue = sessionStorage.getItem("alltokendata");
+    if (tokenValue) {
+      const jobj = JSON.parse(tokenValue)
+      const expriryin = jobj["time"] + (15 * 60 * 60);
+      const currentTime = (new Date()).getTime();
+      if (expriryin < currentTime)
+        return jobj["data"];
+    }
+    axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
+    axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
+    const resp = (await axios.get(
+      `https://api.coingecko.com/api/v3/simple/price?ids=${tokenIdlist}&vs_currencies=usd`,
+    )) as {
+      data: { [id: string]: { usd: number } };
+    };
+
+    sessionStorage.setItem("alltokendata", JSON.stringify({ "time": (new Date()).getTime(), "data": resp.data }));
+    return resp.data;
+  } catch (e) {
+    return 0;
   }
 }
 
