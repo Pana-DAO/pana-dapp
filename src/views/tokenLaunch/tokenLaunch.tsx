@@ -37,7 +37,7 @@ function TokenLaunch() {
   const history = useHistory();
   const { provider, address, connect, networkId } = useWeb3Context();
   usePathForNetwork({ pathName: "tokenlaunch", networkID: networkId, history });
-  const isSmallScreen = useMediaQuery("(max-width: 733px)"); // change to breakpoint query
+  const isSmallScreen = useMediaQuery("(max-width: 885px)"); // change to breakpoint query
 
   const [zoomed, setZoomed] = useState(false);
 
@@ -102,7 +102,7 @@ function TokenLaunch() {
               {t`Pana Token Launch`}
             </Typography>
 
-            {!isSmallScreen && farms.length != 0 && networkId != 1 && (
+            {farms.length != 0 && networkId != 1 && (
               <>
                 <Grid container direction="row" spacing={2}>
                   <MarketCap />
@@ -140,39 +140,50 @@ function TokenLaunch() {
                     {txnButtonText(pendingTransactions, "farm_harvestAll", t`Harvest All`)}
                   </Button>
                 </Box>
-                <Grid container item className="MuiPaper-root">
-                  <TableContainer>
-                    <Table aria-label="Available bonds">
-                      <TableHead>
-                        <TableRow>
-                          <TableCell align="left">
-                            <Trans>Name</Trans>
-                          </TableCell>
-                          <TableCell align="center">
-                            <Trans>Multiplier</Trans>
-                          </TableCell>
-                          <TableCell align="center">
-                            <Trans>Liquidity</Trans>
-                          </TableCell>
-                          <TableCell align="center">
-                            <Trans>My Stakes</Trans>
-                          </TableCell>
-                          <TableCell align="center">
-                            <Trans>Per Day</Trans>
-                          </TableCell>
-                          <TableCell align="center">
-                            <Trans>Rewards (Pana)</Trans>
-                          </TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {farms.map(farm => {
-                          //if (bond.displayName !== "unknown")
-                          return <FarmData networkId={networkId} key={farm.index} farm={farm} />;
-                        })}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
+                <Grid container className="MuiPaper-root">
+                  {!isSmallScreen ? (
+                    <TableContainer>
+                      <Table aria-label="Available bonds">
+                        <>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell align="left">
+                                <Trans>Name</Trans>
+                              </TableCell>
+                              <TableCell align="center">
+                                <Trans>Multiplier</Trans>
+                              </TableCell>
+                              <TableCell align="center">
+                                <Trans>Liquidity</Trans>
+                              </TableCell>
+                              <TableCell align="center">
+                                <Trans>My Stakes</Trans>
+                              </TableCell>
+                              <TableCell align="center">
+                                <Trans>Per Day</Trans>
+                              </TableCell>
+                              <TableCell align="center">
+                                <Trans>Rewards (Pana)</Trans>
+                              </TableCell>
+                            </TableRow>
+                          </TableHead>
+                        </>
+                        <TableBody>
+                          {farms.map(farm => {
+                            //if (bond.displayName !== "unknown")
+                            return <FarmData networkId={networkId} key={farm.index} farm={farm} />;
+                          })}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  ) : (
+                    <>
+                      {farms.map(farm => {
+                        //if (bond.displayName !== "unknown")
+                        return <FarmData networkId={networkId} key={farm.index} farm={farm} />;
+                      })}
+                    </>
+                  )}
                 </Grid>
               </>
             )}

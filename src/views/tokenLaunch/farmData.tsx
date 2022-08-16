@@ -1,5 +1,5 @@
 import { t, Trans } from "@lingui/macro";
-import { Button, Link, SvgIcon, TableCell, TableRow, Typography } from "@material-ui/core";
+import { Box, Button, Grid, Link, SvgIcon, TableCell, TableRow, Typography, useMediaQuery } from "@material-ui/core";
 import { BigNumber, ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { NavLink, useHistory } from "react-router-dom";
@@ -26,6 +26,7 @@ function FarmData({ networkId, farm }: { networkId: NetworkId; farm: FarmInfo })
   const [farmBalanceData, setFarmBalanceData] = useState(Array(farms.length) as BigNumber[]);
   const [farmLiquidity, setFarmLiquidity] = useState(Array(farms.length) as FarmPriceData[]);
   const { provider, address, connect } = useWeb3Context();
+  const isSmallScreen = useMediaQuery("(max-width: 885px)"); // change to breakpoint query
 
   const userPoolBalance = useAppSelector(state => {
     return state.stakingPools.userPoolBalance && state.stakingPools.userPoolBalance.length > 0
@@ -83,11 +84,22 @@ function FarmData({ networkId, farm }: { networkId: NetworkId; farm: FarmInfo })
   useEffect(() => {
     const loadFarmLiquidity = async () => {
       const prices = Array(farms.length) as FarmPriceData[];
-      const tokenslist = farms.filter(x => { if (x.coingeckoId) return true; else false; }).map(x => x.coingeckoId).join(',')
+      const tokenslist = farms
+        .filter(x => {
+          if (x.coingeckoId) return true;
+          else false;
+        })
+        .map(x => x.coingeckoId)
+        .join(",");
       const allprice = await getAllTokenPrice(tokenslist);
       for (let i = 0; i < farms.length; i++) {
         const data = { index: farms[i].index, liquidity: 0 } as FarmPriceData;
-        const farmLiq = await farms[i].calculateLiquidity(farms[i].index, allprice[farms[i].coingeckoId]?.usd, provider, networkId);
+        const farmLiq = await farms[i].calculateLiquidity(
+          farms[i].index,
+          allprice[farms[i].coingeckoId]?.usd,
+          provider,
+          networkId,
+        );
         if (farmLiq > 0) {
           data.liquidity = farmLiq;
         }
@@ -142,46 +154,93 @@ function FarmData({ networkId, farm }: { networkId: NetworkId; farm: FarmInfo })
   }
 
   return (
-    <TableRow id={`${farm.index}--farm`}>
-      <TableCell align="left" className="farm-name-cell">
-        <div className="farm-asset-icon">
-          <TokenStack tokens={farm.icon} />
-        </div>
-        <div className="farm-name">
-          <>
-            <Typography variant="body1">{farm.symbol}</Typography>
-            <Link color="primary" href={farm.url} target="_blank">
-              <Typography variant="body2">
-                <Trans>Get </Trans>
-                <SvgIcon component={ArrowUp} htmlColor="#A3A3A3" />
-              </Typography>
-            </Link>
-          </>
-        </div>
-      </TableCell>
-      <TableCell align="center">
-        <Typography>{farm.points / 10}x</Typography>
-      </TableCell>
-      <TableCell align="center">
-        <Typography>{getFarmLiquidity(farm.index)}</Typography>
-      </TableCell>
-      <TableCell align="center">
-        <Typography>{getUserPoolBalanceFormated(farm.pid, farm.index)}</Typography>
-      </TableCell>
-      <TableCell align="center">
-        <Typography>{getFarmRewardsPerDayFormated(farm.pid, farm.index)}</Typography>
-      </TableCell>
-      <TableCell align="center">
-        <Typography>{getPendingPanaForUserFormated(farm.pid)}</Typography>
-      </TableCell>
-      <TableCell>
-        <Link component={NavLink} to={`/tokenlaunch/${farm.index}`}>
-          <Button variant="outlined" color="primary" style={{ width: "100%" }}>
-            <Typography variant="h6">{t`Stake/Unstake`}</Typography>
-          </Button>
-        </Link>
-      </TableCell>
-    </TableRow>
+    <>
+      {!isSmallScreen ? (
+        <>
+          <TableRow id={`${farm.index}--farm`}>
+            <TableCell align="left" className="farm-name-cell">
+              <div className="farm-asset-icon">
+                <TokenStack tokens={farm.icon} />
+              </div>
+              <div className="farm-name">
+                <>
+                  <Typography variant="body1">{farm.symbol}</Typography>
+                  <Link color="primary" href={farm.url} target="_blank">
+                    <Typography variant="body2">
+                      <Trans>Get </Trans>
+                      <SvgIcon component={ArrowUp} htmlColor="#A3A3A3" />
+                    </Typography>
+                  </Link>
+                </>
+              </div>
+            </TableCell>
+            <TableCell align="center">
+              <Typography>{farm.points / 10}x</Typography>
+            </TableCell>
+            <TableCell align="center">
+              <Typography>{getFarmLiquidity(farm.index)}</Typography>
+            </TableCell>
+            <TableCell align="center">
+              <Typography>{getUserPoolBalanceFormated(farm.pid, farm.index)}</Typography>
+            </TableCell>
+            <TableCell align="center">
+              <Typography>{getFarmRewardsPerDayFormated(farm.pid, farm.index)}</Typography>
+            </TableCell>
+            <TableCell align="center">
+              <Typography>{getPendingPanaForUserFormated(farm.pid)}</Typography>
+            </TableCell>
+            <TableCell>
+              <Link component={NavLink} to={`/tokenlaunch/${farm.index}`}>
+                <Button variant="outlined" color="primary" style={{ width: "100%" }}>
+                  <Typography variant="h6">{t`Stake/Unstake`}</Typography>
+                </Button>
+              </Link>
+            </TableCell>
+          </TableRow>
+        </>
+      ) : (
+        <>
+          <Box sx={{ paddingBottom: 20 }}>
+            <Grid container spacing={1}>
+              <Grid item xs={3}>
+                <TokenStack tokens={farm.icon} />
+              </Grid>
+              <Grid item xs={9}>
+                <Typography variant="h4">
+                  {farm.symbol} &nbsp;
+                  <Link color="primary" href={farm.url} target="_blank">
+                    <Trans>Get </Trans>
+                    <SvgIcon component={ArrowUp} htmlColor="#A3A3A3" />
+                  </Link>
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography>Multiplier: {farm.points / 10}x</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography>Liquidity: {getFarmLiquidity(farm.index)}</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography>My Stakes: {getUserPoolBalanceFormated(farm.pid, farm.index)}</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography>Per Day: {getFarmRewardsPerDayFormated(farm.pid, farm.index)}</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography>Rewards: {getPendingPanaForUserFormated(farm.pid)}</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Link component={NavLink} to={`/tokenlaunch/${farm.index}`}>
+                  <Button variant="outlined" color="primary" style={{ width: "100%" }}>
+                    <Typography variant="h6">{t`Stake/Unstake`}</Typography>
+                  </Button>
+                </Link>
+              </Grid>
+            </Grid>
+          </Box>
+        </>
+      )}
+    </>
   );
 }
 export default FarmData;
