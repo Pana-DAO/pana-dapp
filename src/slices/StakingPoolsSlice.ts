@@ -7,6 +7,7 @@ import { IBaseAddressAsyncThunk, IJsonRPCError, IStakeAssetAsyncThunk, IValueAsy
 import { abi as Erc20Abi } from "../abi/IERC20.json";
 import { clearPendingTxn, fetchPendingTxns } from "./PendingTxnsSlice";
 import { error, info } from "./MessagesSlice";
+import { getBalances } from "./AccountSlice";
 
 
 interface IStakingPoolsSlice {
@@ -216,6 +217,7 @@ export const onHarvestAll = createAsyncThunk(
                 dispatch(info("Successfully harvested all your farms!"));
                 dispatch(getUserPoolBalance({ networkID, address, provider }));
                 dispatch(getUserPendingPana({ networkID, address, provider }));
+                await dispatch(getBalances({ address, networkID, provider }));
             }
         }
 
