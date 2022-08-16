@@ -19,7 +19,7 @@ import { useHistory } from "react-router";
 import { usePathForNetwork } from "src/hooks/usePathForNetwork";
 import { useWeb3Context } from "src/hooks/web3Context";
 import { useState } from "react";
-import { farms, formatMoney } from "src/helpers/tokenLaunch";
+import { farms } from "src/helpers/tokenLaunch";
 import FarmData from "./farmData";
 import { isPendingTxn, txnButtonText } from "src/slices/PendingTxnsSlice";
 import { useAppSelector } from "src/hooks";
@@ -28,10 +28,9 @@ import { formatCurrency } from "src/helpers";
 import { onHarvestAll } from "src/slices/StakingPoolsSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "src/store";
-import { CircSupply, MarketCap, PANAPrice } from "../TreasuryDashboard/components/Metric/Metric";
+import { CircSupply, MarketCap, PANAPrice, TVLStakingPool } from "../TreasuryDashboard/components/Metric/Metric";
 import { switchNetwork } from "src/helpers/NetworkHelper";
 import { NetworkId, NETWORKS } from "src/constants";
-import { Skeleton } from "@material-ui/lab";
 
 function TokenLaunch() {
   const dispatch = useDispatch<AppDispatch>();
@@ -111,16 +110,7 @@ function TokenLaunch() {
             {farms.length != 0 && networkId != 1 && (
               <>
                 <Grid container direction="row" spacing={1}>
-                  <Grid item xs={12} sm={6} md={3}>
-                    <Grid className="box-dash">
-                      <Typography variant="h6" color="textSecondary">
-                        Total Value Locked
-                      </Typography>
-                      <Typography variant="h5">
-                        <>{!totalLiquidity ? <Skeleton width="100px" /> : formatMoney(totalLiquidity, true)}</>
-                      </Typography>
-                    </Grid>
-                  </Grid>
+                  <TVLStakingPool totalLiquidity={totalLiquidity} />
                   <MarketCap />
                   <PANAPrice />
                   <CircSupply />
