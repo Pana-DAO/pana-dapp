@@ -28,7 +28,7 @@ import { formatCurrency } from "src/helpers";
 import { onHarvestAll } from "src/slices/StakingPoolsSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "src/store";
-import { CircSupply, MarketCap, PANAPrice } from "../TreasuryDashboard/components/Metric/Metric";
+import { CircSupply, MarketCap, PANAPrice, TVLStakingPool } from "../TreasuryDashboard/components/Metric/Metric";
 import { switchNetwork } from "src/helpers/NetworkHelper";
 import { NetworkId, NETWORKS } from "src/constants";
 
@@ -40,6 +40,7 @@ function TokenLaunch() {
   const isSmallScreen = useMediaQuery("(max-width: 885px)"); // change to breakpoint query
 
   const [zoomed, setZoomed] = useState(false);
+  const [totalLiquidity, setTotalLiquidity] = useState(0);
 
   const pendingTransactions = useAppSelector(state => {
     return state.pendingTransactions;
@@ -64,6 +65,10 @@ function TokenLaunch() {
       switchNetwork({ provider: provider, networkId: id });
     };
   };
+
+  const farmLiquidityUpdate = (totalLiq: number) => {
+    setTotalLiquidity(totalLiq);
+  }
 
   modalButton.push(
     <Button variant="contained" color="primary" className="connect-button" onClick={connect} key={1}>
@@ -104,7 +109,8 @@ function TokenLaunch() {
 
             {farms.length != 0 && networkId != 1 && (
               <>
-                <Grid container direction="row" spacing={2}>
+                <Grid container direction="row" spacing={1}>
+                  <TVLStakingPool totalLiquidity={totalLiquidity} />
                   <MarketCap />
                   <PANAPrice />
                   <CircSupply />
@@ -171,7 +177,7 @@ function TokenLaunch() {
                         <TableBody>
                           {farms.map(farm => {
                             //if (bond.displayName !== "unknown")
-                            return <FarmData networkId={networkId} key={farm.index} farm={farm} />;
+                            return <FarmData networkId={networkId} key={farm.index} farm={farm} onFarmLiquidityUpdate={farmLiquidityUpdate} />;
                           })}
                         </TableBody>
                       </Table>
@@ -180,7 +186,7 @@ function TokenLaunch() {
                     <>
                       {farms.map(farm => {
                         //if (bond.displayName !== "unknown")
-                        return <FarmData networkId={networkId} key={farm.index} farm={farm} />;
+                        return <FarmData networkId={networkId} key={farm.index} farm={farm} onFarmLiquidityUpdate={farmLiquidityUpdate} />;
                       })}
                     </>
                   )}

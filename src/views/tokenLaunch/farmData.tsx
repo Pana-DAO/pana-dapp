@@ -18,7 +18,7 @@ import TokenStack from "src/lib/PanaTokenStack";
 import { getErc20TokenBalance } from "src/slices/StakingPoolsSlice";
 import { ReactComponent as ArrowUp } from "../../assets/icons/arrow-up.svg";
 
-function FarmData({ networkId, farm }: { networkId: NetworkId; farm: FarmInfo }) {
+function FarmData({ networkId, farm, onFarmLiquidityUpdate }: { networkId: NetworkId; farm: FarmInfo; onFarmLiquidityUpdate: any }) {
   // const dispatch = useDispatch();
   const history = useHistory();
   const [loadCount, setLoadCount] = useState(0);
@@ -106,6 +106,7 @@ function FarmData({ networkId, farm }: { networkId: NetworkId; farm: FarmInfo })
         prices[i] = data;
       }
       setFarmLiquidity(prices);
+      onFarmLiquidityUpdate(prices.map(p => p.liquidity).reduce((total, p) => total += p));
     };
 
     loadFarmLiquidity();

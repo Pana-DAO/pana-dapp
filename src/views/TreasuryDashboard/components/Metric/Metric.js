@@ -7,6 +7,7 @@ import { ReactElement } from "react";
 import React from "react";
 
 import { formatCurrency, trim } from "../../../../helpers";
+import { formatMoney } from "src/helpers/tokenLaunch";
 
 const sharedProps = {
   labelVariant: "h6",
@@ -29,7 +30,7 @@ const MetricContent = ({
   tooltip?: any,
 }): ReactElement => {
   return (
-    <Grid item xs={12} sm={6} md={4} className={className}>
+    <Grid item xs={12} sm={6} md={3} className={className}>
       <Grid className="box-dash">
         <Typography variant="h6" color="textSecondary">
           {label}
@@ -53,7 +54,11 @@ const MetricContent = ({
 
 export const MarketCap = () => {
   const marketCap = useSelector(state => state.app.marketCap || 0);
-  return <MetricContent label={t`Market Cap`} metric={formatCurrency(marketCap, 0)} isLoading={!marketCap} />;
+  return <MetricContent label={t`Market Cap`} metric={formatMoney(marketCap, true)} isLoading={!marketCap} />;
+};
+
+export const TVLStakingPool = ({totalLiquidity}) => {
+  return <MetricContent label={t`Total Value Locked`} metric={formatMoney(totalLiquidity, true)} isLoading={!totalLiquidity} />;
 };
 
 export const PANAPrice = () => {
