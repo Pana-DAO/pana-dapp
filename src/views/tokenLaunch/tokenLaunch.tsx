@@ -19,7 +19,7 @@ import { useHistory } from "react-router";
 import { usePathForNetwork } from "src/hooks/usePathForNetwork";
 import { useWeb3Context } from "src/hooks/web3Context";
 import { useState } from "react";
-import { farms } from "src/helpers/tokenLaunch";
+import { farms, formatMoney } from "src/helpers/tokenLaunch";
 import FarmData from "./farmData";
 import { isPendingTxn, txnButtonText } from "src/slices/PendingTxnsSlice";
 import { useAppSelector } from "src/hooks";
@@ -31,6 +31,7 @@ import { AppDispatch } from "src/store";
 import { CircSupply, MarketCap, PANAPrice } from "../TreasuryDashboard/components/Metric/Metric";
 import { switchNetwork } from "src/helpers/NetworkHelper";
 import { NetworkId, NETWORKS } from "src/constants";
+import { Skeleton } from "@material-ui/lab";
 
 function TokenLaunch() {
   const dispatch = useDispatch<AppDispatch>();
@@ -40,6 +41,7 @@ function TokenLaunch() {
   const isSmallScreen = useMediaQuery("(max-width: 885px)"); // change to breakpoint query
 
   const [zoomed, setZoomed] = useState(false);
+  const [totalLiquidity, setTotalLiquidity] = useState(0);
 
   const pendingTransactions = useAppSelector(state => {
     return state.pendingTransactions;
@@ -64,6 +66,10 @@ function TokenLaunch() {
       switchNetwork({ provider: provider, networkId: id });
     };
   };
+
+  const farmLiquidityUpdate = (totalLiq: number) => {
+    setTotalLiquidity(totalLiq);
+  }
 
   modalButton.push(
     <Button variant="contained" color="primary" className="connect-button" onClick={connect} key={1}>
@@ -104,7 +110,17 @@ function TokenLaunch() {
 
             {farms.length != 0 && networkId != 1 && (
               <>
-                <Grid container direction="row" spacing={2}>
+                <Grid container direction="row" spacing={1}>
+                  <Grid item xs={12} sm={6} md={3}>
+                    <Grid className="box-dash">
+                      <Typography variant="h6" color="textSecondary">
+                        Total Value Locked
+                      </Typography>
+                      <Typography variant="h5">
+                        <>{!totalLiquidity ? <Skeleton width="100px" /> : formatMoney(totalLiquidity, true)}</>
+                      </Typography>
+                    </Grid>
+                  </Grid>
                   <MarketCap />
                   <PANAPrice />
                   <CircSupply />
@@ -171,7 +187,7 @@ function TokenLaunch() {
                         <TableBody>
                           {farms.map(farm => {
                             //if (bond.displayName !== "unknown")
-                            return <FarmData networkId={networkId} key={farm.index} farm={farm} />;
+                            return <FarmData networkId={networkId} key={farm.index} farm={farm} onFarmLiquidityUpdate={farmLiquidityUpdate} />;
                           })}
                         </TableBody>
                       </Table>
@@ -180,7 +196,7 @@ function TokenLaunch() {
                     <>
                       {farms.map(farm => {
                         //if (bond.displayName !== "unknown")
-                        return <FarmData networkId={networkId} key={farm.index} farm={farm} />;
+                        return <FarmData networkId={networkId} key={farm.index} farm={farm} onFarmLiquidityUpdate={farmLiquidityUpdate} />;
                       })}
                     </>
                   )}
