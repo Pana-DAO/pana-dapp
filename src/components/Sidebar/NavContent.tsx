@@ -112,7 +112,7 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
                 style={{ minWidth: "151px", minHeight: "40px", width: "151px" }}
               />
             </Link>
-            {networkId === NetworkId.ARBITRUM_TESTNET ? (
+            {networkId === NetworkId.ARBITRUM_MAINNET ? (
               <>
                 <WalletAddressEns />
                 {/* <RebaseTimer /> */}
@@ -137,7 +137,7 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
                         </Typography>
                       </ListItem>
                     </Link> */}
-                    {networkId === NetworkId.ARBITRUM_TESTNET ? (
+                    {networkId === NetworkId.ARBITRUM_MAINNET ? (
                       <>
                       <Link className="nav-link" component={NavLink} to="/tokenlaunch">
                           <ListItem button selected={location.pathname == "/tokenlaunch"}>

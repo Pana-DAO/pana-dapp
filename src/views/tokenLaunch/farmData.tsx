@@ -4,7 +4,7 @@ import { BigNumber, ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { NavLink, useHistory } from "react-router-dom";
 import { NetworkId } from "src/constants";
-import { formatCurrency } from "src/helpers";
+import { formatCurrency, getAllTokenPrice } from "src/helpers";
 import {
   FarmInfo,
   FarmPriceData,
@@ -83,10 +83,11 @@ function FarmData({ networkId, farm }: { networkId: NetworkId; farm: FarmInfo })
   useEffect(() => {
     const loadFarmLiquidity = async () => {
       const prices = Array(farms.length) as FarmPriceData[];
+      const tokenslist = farms.filter(x => { if (x.coingeckoId) return true; else false; }).map(x => x.coingeckoId).join(',')
+      const allprice = await getAllTokenPrice(tokenslist);
       for (let i = 0; i < farms.length; i++) {
         const data = { index: farms[i].index, liquidity: 0 } as FarmPriceData;
-
-        const farmLiq = await farms[i].calculateLiquidity(farms[i].index, provider, networkId);
+        const farmLiq = await farms[i].calculateLiquidity(farms[i].index, allprice[farms[i].coingeckoId]?.usd, provider, networkId);
         if (farmLiq > 0) {
           data.liquidity = farmLiq;
         }
@@ -98,14 +99,14 @@ function FarmData({ networkId, farm }: { networkId: NetworkId; farm: FarmInfo })
     loadFarmLiquidity();
   }, [loadCount]);
 
-  function getUserPoolBalanceFormated(pid: number,index: number) {
+  function getUserPoolBalanceFormated(pid: number, index: number) {
     if (userPoolBalance) {
-      return formatCurrency(+ethers.utils.formatUnits(userPoolBalance[pid], farms[index].decimals), 6,"PANA");
+      return formatCurrency(+ethers.utils.formatUnits(userPoolBalance[pid], farms[index].decimals), 6, "PANA");
     }
   }
 
-  function getFarmRewardsPerDayFormated(pid:number,index: number) {
-    return formatCurrency(+ethers.utils.formatUnits(farmRewardsPerDay(pid,index), 18), 4, "PANA");
+  function getFarmRewardsPerDayFormated(pid: number, index: number) {
+    return formatCurrency(+ethers.utils.formatUnits(farmRewardsPerDay(pid, index), 18), 4, "PANA");
   }
 
   function getPendingPanaForUserFormated(pid: number) {
@@ -114,7 +115,7 @@ function FarmData({ networkId, farm }: { networkId: NetworkId; farm: FarmInfo })
     }
   }
 
-  function farmRewardsPerDay(pid:number, index: number): BigNumber {
+  function farmRewardsPerDay(pid: number, index: number): BigNumber {
     if (userPoolBalance && userPoolBalance[pid] && farmBalanceData[index]) {
       const poolTotal = farmBalanceData[index];
       if (poolTotal.gt(0)) {
