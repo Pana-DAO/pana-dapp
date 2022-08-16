@@ -429,7 +429,7 @@ function Farm({ index }: { index: number }) {
                       {isFarmLoading ? (
                         <Skeleton width="100px" />
                       ) : (
-                        `${assetBalance && formatCurrency(+assetBalance, 4, "PANA")} ${farm.symbol}`
+                        `${assetBalance && formatCurrency(+assetBalance, 6, "PANA")} ${farm.symbol}`
                       )}
                     </Typography>
                   </Box>

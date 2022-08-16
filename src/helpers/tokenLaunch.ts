@@ -302,7 +302,7 @@ export const farms: FarmInfo[] = [
     address: "0xfc5A1A6EB076a2C7aD06eD22C90d7E710E35ad0a",
     decimals: 18,
     points: 10,
-    coingeckoId: "gamex",
+    coingeckoId: "gmx",
     icon: ["GMX"],
     url: "https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0xfc5A1A6EB076a2C7aD06eD22C90d7E710E35ad0a&chain=arbitrum",
     calculateLiquidity: defaultLiquidityCal,
@@ -380,7 +380,7 @@ export const farms: FarmInfo[] = [
     address: "0xa684cd057951541187f288294a1e1C2646aA2d24",
     decimals: 18,
     points: 10,
-    coingeckoId: "ventiswap",
+    coingeckoId: "vesta-finance",
     icon: ["VST"],
     url: "https://arbitrum.balancer.fi/#/trade/ether/0xa684cd057951541187f288294a1e1c2646aa2d24",
     calculateLiquidity: defaultLiquidityCal,
@@ -410,9 +410,9 @@ export function parseBigNumber(value: string, decimals: number): BigNumber {
   }
 }
 
-export function formatMoney(value: number, abbreviate = false): string {
+export function formatMoney(value: number, abbreviate = false, hasPrefix = true): string {
   try {
-    const prefix = value < 0 ? "-$" : "$";
+    const prefix = hasPrefix ? value < 0 ? "-$" : "$" : '';
     value = Math.abs(value);
     if (abbreviate) {
       if (value >= 1000) {

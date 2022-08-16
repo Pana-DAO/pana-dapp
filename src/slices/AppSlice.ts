@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { RootState } from "src/store";
 import { Pana, Staking__factory } from "src/typechain";
 
@@ -104,7 +104,7 @@ export const loadAppDetails = createAsyncThunk(
     const stakingAPY = Math.pow(1 + stakingRebase, 365 * 3) - 1;
     
     // Current index
-    const currentIndex = 1; //await stakingContract.index();
+    const currentIndex = BigNumber.from('1000000000000000000'); //await stakingContract.index();
     return {
       currentIndex: ethers.utils.formatUnits(currentIndex, 18),
       currentBlock,
