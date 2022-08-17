@@ -154,6 +154,7 @@ export const onStakeAssets = createAsyncThunk(
                 dispatch(getAssetBalance({ networkID, address, provider, value: farm.address }));
                 dispatch(getUserPoolBalance({ networkID, address, provider }));
                 dispatch(getUserPendingPana({ networkID, address, provider }));
+                await dispatch(getBalances({ address, networkID, provider }));
             }
         }
 
@@ -186,6 +187,7 @@ export const onUnstakeAssets = createAsyncThunk(
                 dispatch(getAssetBalance({ networkID, address, provider, value: farm.address }));
                 dispatch(getUserPoolBalance({ networkID, address, provider }));
                 dispatch(getUserPendingPana({ networkID, address, provider }));
+                await dispatch(getBalances({ address, networkID, provider }));
             }
         }
 
