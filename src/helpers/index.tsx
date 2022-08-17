@@ -48,7 +48,7 @@ export async function getAllTokenPrice(tokenIdlist: string): Promise<any | undef
       const jobj = JSON.parse(tokenValue)
       const expriryin = jobj["time"] + (15 * 60 * 60);
       const currentTime = (new Date()).getTime();
-      if (expriryin < currentTime)
+      if (currentTime < expriryin)
         return jobj["data"];
     }
     axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';

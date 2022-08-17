@@ -73,7 +73,6 @@ function TokenLaunch() {
   };
 
   const farmPanaUpdate = (totalPana: number) => {
-    console.log("totalPana", totalPana);
     setTotalPana(totalPana);
   };
 
