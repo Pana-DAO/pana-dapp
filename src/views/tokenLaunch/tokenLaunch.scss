@@ -47,4 +47,20 @@
   .farm-asset-icon {
     min-width: 4.5rem;
   }
+  .small-box{
+    .box-dash{
+      min-height: 80px;
+    }
+    .fnt-min {
+        .MuiTypography-h5{
+        font-size: 20px;
+      }
+    }
+  }
+  .claimable-balance{
+    margin-top: 10px!important;
+  }
+  .big-box{
+    min-height: 140px;
+  }
 }

@@ -18,7 +18,7 @@ import TokenStack from "src/lib/PanaTokenStack";
 import { getErc20TokenBalance } from "src/slices/StakingPoolsSlice";
 import { ReactComponent as ArrowUp } from "../../assets/icons/arrow-up.svg";
 
-function FarmData({ networkId, farm, onFarmLiquidityUpdate }: { networkId: NetworkId; farm: FarmInfo; onFarmLiquidityUpdate: any }) {
+function FarmData({ networkId, farm, onFarmLiquidityUpdate,onFarmPanaUpdate }: { networkId: NetworkId; farm: FarmInfo; onFarmLiquidityUpdate: any; onFarmPanaUpdate:any }) {
   // const dispatch = useDispatch();
   const history = useHistory();
   const [loadCount, setLoadCount] = useState(0);
@@ -84,6 +84,7 @@ function FarmData({ networkId, farm, onFarmLiquidityUpdate }: { networkId: Netwo
   useEffect(() => {
     const loadFarmLiquidity = async () => {
       const prices = Array(farms.length) as FarmPriceData[];
+      const panaperdaylst = Array(farms.length) as BigNumber[];
       const tokenslist = farms
         .filter(x => {
           if (x.coingeckoId) return true;
@@ -104,9 +105,11 @@ function FarmData({ networkId, farm, onFarmLiquidityUpdate }: { networkId: Netwo
           data.liquidity = farmLiq;
         }
         prices[i] = data;
+        panaperdaylst[i] =farmRewardsPerDay(farms[i].pid, farms[i].index);
       }
       setFarmLiquidity(prices);
       onFarmLiquidityUpdate(prices.map(p => p.liquidity).reduce((total, p) => total += p));
+      onFarmPanaUpdate(panaperdaylst.map(p => p).reduce((total, p) => total= total.add(p)));
     };
 
     loadFarmLiquidity();

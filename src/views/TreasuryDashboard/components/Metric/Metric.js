@@ -106,7 +106,7 @@ export const CircSupply = () => {
   const isDataLoaded = circSupply && totalSupply;
   return (
     <MetricContent
-      label={t`Circulating Supply (total)`}
+      label={t`Circulating Supply (total)`} className="fnt-min"
       metric={isDataLoaded && parseInt(circSupply) + " / " + parseInt(totalSupply)}
       isLoading={!isDataLoaded}
     />
