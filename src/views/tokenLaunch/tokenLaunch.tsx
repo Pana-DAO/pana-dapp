@@ -73,7 +73,6 @@ function TokenLaunch() {
   };
 
   const farmPanaUpdate = (totalPana: number) => {
-    console.log("totalPana", totalPana);
     setTotalPana(totalPana);
   };
 
@@ -123,7 +122,7 @@ function TokenLaunch() {
                   <PANAPrice />
                   <CircSupply />
                 </Grid>
-                <Grid container direction="row" spacing={1}>
+                <Grid container className="bigboxspace" direction="row" spacing={1}>
                   <Grid item xs={12} sm={6}>
                     <Grid className="box-dash big-box">
                       <Typography variant="h5" align="center" className="claimable-balance">
