@@ -74,6 +74,8 @@ const initModal = new Web3Modal({
           137: NETWORKS[137].uri(),
           8001: NETWORKS[80001].uri(),
           5: NETWORKS[5].uri(),
+          42161: NETWORKS[42161].uri(),
+          421611: NETWORKS[421611].uri(),
         },
       },
     },
