@@ -126,11 +126,34 @@ export const changeAssetApproval = createAsyncThunk(
 );
 
 export const onStakeAssets = createAsyncThunk(
-  "stakingpools/onStakeAssets",
-  async ({ provider, networkID, address, farm, amount }: IStakeAssetAsyncThunk, { dispatch }) => {
-    checkNetwork(networkID);
-    const signer = provider.getSigner();
-    const stakingPoolsContract = StakingPools__factory.connect(addresses[networkID].STAKING_POOLS, signer);
+    "stakingpools/onStakeAssets",
+    async ({ provider, networkID, address, farm, amount }: IStakeAssetAsyncThunk, { dispatch }) => {
+        checkNetwork(networkID);
+        const signer = provider.getSigner();
+        const stakingPoolsContract = StakingPools__factory.connect(addresses[networkID].STAKING_POOLS, signer);
+
+        let depositTx: ethers.ContractTransaction | undefined;
+        try {
+            depositTx = await stakingPoolsContract.deposit(farm.pid, amount)
+            const text = `Depositing Asset`;
+            const pendingTxnType = `farm_${farm.index}`;
+            if (depositTx) {
+                dispatch(fetchPendingTxns({ txnHash: depositTx.hash, text, type: pendingTxnType }));
+                await depositTx.wait();
+                dispatch(clearPendingTxn(depositTx.hash));
+            }
+        } catch (e: unknown) {
+            dispatch(error((e as IJsonRPCError).message));
+            return;
+        } finally {
+            if (depositTx) {
+                dispatch(info("Successfully Staked your " + farm.symbol));
+                dispatch(getAssetBalance({ networkID, address, provider, value: farm.address }));
+                dispatch(getUserPoolBalance({ networkID, address, provider }));
+                dispatch(getUserPendingPana({ networkID, address, provider }));
+                await dispatch(getBalances({ address, networkID, provider }));
+            }
+        }
 
     let depositTx: ethers.ContractTransaction | undefined;
     try {
@@ -157,11 +180,34 @@ export const onStakeAssets = createAsyncThunk(
 );
 
 export const onUnstakeAssets = createAsyncThunk(
-  "stakingpools/onUnstakeAssets",
-  async ({ provider, networkID, address, farm, amount }: IStakeAssetAsyncThunk, { dispatch }) => {
-    checkNetwork(networkID);
-    const signer = provider.getSigner();
-    const stakingPoolsContract = StakingPools__factory.connect(addresses[networkID].STAKING_POOLS, signer);
+    "stakingpools/onUnstakeAssets",
+    async ({ provider, networkID, address, farm, amount }: IStakeAssetAsyncThunk, { dispatch }) => {
+        checkNetwork(networkID);
+        const signer = provider.getSigner();
+        const stakingPoolsContract = StakingPools__factory.connect(addresses[networkID].STAKING_POOLS, signer);
+
+        let withdrawTx: ethers.ContractTransaction | undefined;
+        try {
+            withdrawTx = await stakingPoolsContract.withdraw(farm.pid, amount)
+            const text = `Withdrawing Asset`;
+            const pendingTxnType = `farm_${farm.index}`;
+            if (withdrawTx) {
+                dispatch(fetchPendingTxns({ txnHash: withdrawTx.hash, text, type: pendingTxnType }));
+                await withdrawTx.wait();
+                dispatch(clearPendingTxn(withdrawTx.hash));
+            }
+        } catch (e: unknown) {
+            dispatch(error((e as IJsonRPCError).message));
+            return;
+        } finally {
+            if (withdrawTx) {
+                dispatch(info("Successfully Withdrawn your " + farm.symbol));
+                dispatch(getAssetBalance({ networkID, address, provider, value: farm.address }));
+                dispatch(getUserPoolBalance({ networkID, address, provider }));
+                dispatch(getUserPendingPana({ networkID, address, provider }));
+                await dispatch(getBalances({ address, networkID, provider }));
+            }
+        }
 
     let withdrawTx: ethers.ContractTransaction | undefined;
     try {

@@ -92,7 +92,7 @@ export const loadAppDetails = createAsyncThunk(
     let secondsToEpoch = 0;
 
     try {
-      secondsToEpoch = Number(await stakingContract.secondsToNextEpoch());
+      secondsToEpoch = 0; //Number(await stakingContract.secondsToNextEpoch());
     } catch {
       console.error("Returned a null response from stakingContract.secondsToNextEpoch()");
     }
