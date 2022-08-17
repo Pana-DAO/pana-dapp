@@ -83,7 +83,6 @@ export const DaiPanaDetails: BondDetails = {
   lpUrl: {
     [NetworkId.ARBITRUM_TESTNET]: "https://testnet.arbiscan.io/token/0x9b95df83c3341bcdffaa44d4b637158df7ef7a26",
     [NetworkId.ARBITRUM_MAINNET]: "",
-    [NetworkId.TESTNET_GOERLI]: "",
   },
 };
 
@@ -101,15 +100,6 @@ export const UnknownDetails: BondDetails = {
  * DOWNCASE ALL THE ADDRESSES!!! for comparison purposes
  */
 export const BondDetails: { [key: number]: { [key: string]: BondDetails } } = {
-  [NetworkId.TESTNET_GOERLI]: {
-    ["0x327459343e34f4c2cc3fe6678ea8ca3cf22fbfc8"]: DaiDetails,
-  },
-  [NetworkId.POLYGON_MAINNET]: {
-    ["0x327459343e34f4c2cc3fe6678ea8ca3cf22fbfc8"]: DaiDetails,
-  },
-  [NetworkId.MUMBAI_TESTNET]: {
-    ["0x327459343e34f4c2cc3fe6678ea8ca3cf22fbfc8"]: DaiDetails,
-  },
   [NetworkId.ARBITRUM_MAINNET]: {
     ["0x327459343e34f4c2cc3fe6678ea8ca3cf22fbfc8"]: DaiDetails,
   },

@@ -261,7 +261,7 @@ export const useWallet = (
   providerInitialized: boolean,
 ): Record<string, IToken> => {
   // default to mainnet while not initialized
-  const networkId = providerInitialized ? chainId : NetworkId.POLYGON_MAINNET;
+  const networkId = providerInitialized ? chainId : NetworkId.ARBITRUM_MAINNET;
 
   const connectedChainBalances = useAppSelector(s => s.account.balances);
   const panaPrice = useAppSelector(s => s.app.marketPrice);

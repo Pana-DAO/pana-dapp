@@ -1,5 +1,3 @@
-import polygon from "./assets/tokens/MATIC.svg";
-import ethereum from "./assets/tokens/wETH.svg";
 import arbitrum_testnet from "./assets/arbitrum_plain.svg";
 import { NodeHelper } from "./helpers/NodeHelper";
 
@@ -13,11 +11,6 @@ export const TOKEN_DECIMALS = 18;
 export const SHOW_COUNTDOWN_PAGE = false;
 
 export enum NetworkId {
-  TESTNET_GOERLI = 5,
-
-  POLYGON_MAINNET = 137,
-  MUMBAI_TESTNET = 80001,
-
   ARBITRUM_MAINNET = 42161,
   ARBITRUM_TESTNET = 421611,
 
@@ -29,20 +22,6 @@ interface IAddresses {
 }
 
 export const addresses: IAddresses = {
-  [NetworkId.TESTNET_GOERLI]: {
-    USDC_ADDRESS: "0x327459343E34F4c2Cc3fE6678ea8cA3Cf22fBfC8",
-    PANA_ADDRESS: "0x26DB13688182819159642072ce64a7D7287c4853",
-    SPANA_ADDRESS: "0xEB420642878bEed24dA29FA5D53ECF3be59fB322",
-    KARSHA_ADDRESS: "0xd991FF367F08AE4217F9A6A21619674989Ff63Fc",
-    PANA_USDC_LP: "",
-    STAKING_ADDRESS: "0xa8Ba11928B4e15d7d029B1e2C25fba59aBbe194f",
-
-    DISTRIBUTOR_ADDRESS: "0x83DE3FAa1ca69f31E471C99E2a52c5A44DF54F22",
-    BONDINGCALC_ADDRESS: "0xfDB1de0B847785B8827ACf0fA0dc495b099c941B",
-
-    BOND_DEPOSITORY: "0x568DC570a15ACf2E5d3DE6A95D207e5Ae0d993DD",
-    DAO_TREASURY: "0xB31b2D3741C2B7468D7bbAf362e869d2DF8bF75F",
-  },
   [NetworkId.ARBITRUM_MAINNET]: {
     USDC_ADDRESS: "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8",
     PANA_ADDRESS: "0x369eB8197062093a20402935D3a707b4aE414E9D",
@@ -104,58 +83,13 @@ interface INetwork {
 
 // These networks will be available for users to select. Other networks may be functional
 // (e.g. testnets, or mainnets being prepared for launch) but need to be selected directly via the wallet.
-export const USER_SELECTABLE_NETWORKS = [NetworkId.POLYGON_MAINNET];
+export const USER_SELECTABLE_NETWORKS = [NetworkId.ARBITRUM_MAINNET];
 
 // Set this to the chain number of the most recently added network in order to enable the 'Now supporting X network'
 // message in the UI. Set to -1 if we don't want to display the message at the current time.
-export const NEWEST_NETWORK_ID = NetworkId.POLYGON_MAINNET;
+export const NEWEST_NETWORK_ID = NetworkId.ARBITRUM_MAINNET;
 
 export const NETWORKS: { [key: number]: INetwork } = {
-  [NetworkId.TESTNET_GOERLI]: {
-    chainName: "Rinkeby Testnet",
-    chainId: 4,
-    nativeCurrency: {
-      name: "Ethereum",
-      symbol: "ETH",
-      decimals: 18,
-    },
-    rpcUrls: [""],
-    blockExplorerUrl: "https://rinkeby.etherscan.io/#",
-    image: ethereum,
-    imageAltText: "Ethereum Logo",
-    uri: () => NodeHelper.getMainnetURI(NetworkId.TESTNET_GOERLI),
-    isOracleIntegrated: false,
-  },
-  [NetworkId.POLYGON_MAINNET]: {
-    chainName: "Polygon",
-    chainId: 137,
-    nativeCurrency: {
-      name: "Polygon",
-      symbol: "MATIC",
-      decimals: 18,
-    },
-    rpcUrls: ["https://polygon-rpc.com"],
-    blockExplorerUrl: "https://polygonscan.com",
-    image: polygon,
-    imageAltText: "Polygon Logo",
-    uri: () => NodeHelper.getMainnetURI(NetworkId.POLYGON_MAINNET),
-    isOracleIntegrated: false,
-  },
-  [NetworkId.MUMBAI_TESTNET]: {
-    chainName: "Polygon Mumbai Testnet",
-    chainId: 80001,
-    nativeCurrency: {
-      name: "Polygon",
-      symbol: "MATIC",
-      decimals: 18,
-    },
-    rpcUrls: ["https://polygon-rpc.com"],
-    blockExplorerUrl: "https://mumbai.polygonscan.com",
-    image: polygon,
-    imageAltText: "Polygon Logo",
-    uri: () => "", // NodeHelper.getMainnetURI(NetworkId.MUMBAI_TESTNET),
-    isOracleIntegrated: false,
-  },
   [NetworkId.ARBITRUM_MAINNET]: {
     chainName: "Arbitrum",
     chainId: 42161,
@@ -164,7 +98,7 @@ export const NETWORKS: { [key: number]: INetwork } = {
       symbol: "ETH",
       decimals: 18,
     },
-    rpcUrls: ["https://arb1.arbitrum.io/rpc"],
+    rpcUrls: ["https://arb1.arbitrum.io/rpc", "https://arbitrum-mainnet.infura.io/v3"],
     blockExplorerUrl: "https://arbiscan.io",
     image: arbitrum_testnet,
     imageAltText: "Arbitrum Logo",
@@ -201,30 +135,6 @@ interface IViewsForNetwork {
 }
 
 export const VIEWS_FOR_NETWORK: { [key: number]: IViewsForNetwork } = {
-  [NetworkId.TESTNET_GOERLI]: {
-    dashboard: true,
-    stake: true,
-    wrap: true,
-    network: true,
-    bonds: true,
-    pPana: true,
-  },
-  [NetworkId.POLYGON_MAINNET]: {
-    dashboard: true,
-    stake: false,
-    wrap: false,
-    network: false,
-    bonds: false,
-    pPana: false,
-  },
-  [NetworkId.MUMBAI_TESTNET]: {
-    dashboard: true,
-    stake: false,
-    wrap: true,
-    network: true,
-    bonds: false,
-    pPana: false,
-  },
   [NetworkId.ARBITRUM_MAINNET]: {
     dashboard: true,
     stake: false,

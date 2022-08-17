@@ -28,7 +28,7 @@ import NotFound from "./views/404/NotFound";
 import { dark as darkTheme } from "./themes/dark.js";
 import { light as lightTheme } from "./themes/light.js";
 import { girth as gTheme } from "./themes/girth.js";
-import { getAllBonds } from "./slices/BondSlice";
+// import { getAllBonds } from "./slices/BondSlice";
 import RedeemPPana from "./views/Redeem/RedeemPPana";
 import Footer from "./components/Footer/Footer";
 import TokenLaunch from "./views/tokenLaunch/tokenLaunch";
@@ -115,7 +115,7 @@ function App() {
   const loadApp = useCallback(
     loadProvider => {
       dispatch(loadAppDetails({ networkID: networkId, provider: loadProvider }));
-      dispatch(getAllBonds({ provider: loadProvider, networkID: networkId, address }));
+      //dispatch(getAllBonds({ provider: loadProvider, networkID: networkId, address }));
     },
     [networkId, address],
   );

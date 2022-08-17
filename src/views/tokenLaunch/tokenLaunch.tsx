@@ -31,6 +31,7 @@ import { AppDispatch } from "src/store";
 import { CircSupply, MarketCap, PANAPrice, TVLStakingPool } from "../TreasuryDashboard/components/Metric/Metric";
 import { switchNetwork } from "src/helpers/NetworkHelper";
 import { NetworkId, NETWORKS } from "src/constants";
+import { Skeleton } from "@material-ui/lab";
 
 function TokenLaunch() {
   const dispatch = useDispatch<AppDispatch>();
@@ -41,6 +42,7 @@ function TokenLaunch() {
 
   const [zoomed, setZoomed] = useState(false);
   const [totalLiquidity, setTotalLiquidity] = useState(0);
+  const [totalPana, setTotalPana] = useState(0);
 
   const pendingTransactions = useAppSelector(state => {
     return state.pendingTransactions;
@@ -68,7 +70,12 @@ function TokenLaunch() {
 
   const farmLiquidityUpdate = (totalLiq: number) => {
     setTotalLiquidity(totalLiq);
-  }
+  };
+
+  const farmPanaUpdate = (totalPana: number) => {
+    console.log("totalPana", totalPana);
+    setTotalPana(totalPana);
+  };
 
   modalButton.push(
     <Button variant="contained" color="primary" className="connect-button" onClick={connect} key={1}>
@@ -109,43 +116,65 @@ function TokenLaunch() {
 
             {farms.length != 0 && networkId != 1 && (
               <>
-                <Grid container direction="row" spacing={1}>
+                <Grid container direction="row" className="small-box" spacing={1}>
                   <TVLStakingPool totalLiquidity={totalLiquidity} />
+
                   <MarketCap />
                   <PANAPrice />
                   <CircSupply />
                 </Grid>
-                <Box
-                  marginBottom={"20px"}
-                  display="flex"
-                  flexDirection="column"
-                  alignItems="center"
-                  className={`global-claim-buttons ${isSmallScreen ? "small" : ""}`}
-                >
-                  <Typography variant="h5" align="center" className="claimable-balance">
-                    Claimable Rewards (Pana)
-                  </Typography>
-                  <Typography variant="h4" align="center" style={{ marginBottom: "10px" }}>
-                    {totalPendingPanaForUser
-                      ? formatCurrency(+ethers.utils.formatUnits(totalPendingPanaForUser, 18), 4, "PANA")
-                      : "-"}
-                  </Typography>
+                <Grid container direction="row" spacing={1}>
+                  <Grid item xs={12} sm={6}>
+                    <Grid className="box-dash big-box">
+                      <Typography variant="h5" align="center" className="claimable-balance">
+                        Claimable Pana Rewards
+                      </Typography>
+                      <Typography variant="h4" align="center" style={{ marginBottom: "10px" }}>
+                        {totalPendingPanaForUser
+                          ? formatCurrency(+ethers.utils.formatUnits(totalPendingPanaForUser, 18), 4, "PANA")
+                          : "-"}
+                      </Typography>
 
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className="transaction-button"
-                    fullWidth
-                    disabled={
-                      isPendingTxn(pendingTransactions, "farm_harvestAll") ||
-                      !totalPendingPanaForUser ||
-                      (totalPendingPanaForUser && +totalPendingPanaForUser <= 0)
-                    }
-                    onClick={doHarvestAll}
-                  >
-                    {txnButtonText(pendingTransactions, "farm_harvestAll", t`Harvest All`)}
-                  </Button>
-                </Box>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        className="transaction-button"
+                        fullWidth
+                        disabled={
+                          isPendingTxn(pendingTransactions, "farm_harvestAll") ||
+                          !totalPendingPanaForUser ||
+                          (totalPendingPanaForUser && +totalPendingPanaForUser <= 0)
+                        }
+                        onClick={doHarvestAll}
+                      >
+                        {txnButtonText(pendingTransactions, "farm_harvestAll", t`Harvest All`)}
+                      </Button>
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Grid className="box-dash big-box">
+                      <div style={{ margin: "auto" }}>
+                        <Typography variant="h5" align="center" className="claimable-balance">
+                          Expected Pana Rewards
+                        </Typography>
+                        <Typography variant="h5" align="center" className="claimable-balance info-perday">
+                          Per Day
+                        </Typography>
+                        <Typography variant="h4" align="center" style={{ marginBottom: "10px" }}>
+                          <>
+                            {!totalLiquidity ? (
+                              <Skeleton width="200px" />
+                            ) : totalPana ? (
+                              formatCurrency(+ethers.utils.formatUnits(totalPana, 18), 4, "PANA")
+                            ) : (
+                              "-"
+                            )}
+                          </>
+                        </Typography>
+                      </div>
+                    </Grid>
+                  </Grid>
+                </Grid>
                 <Grid container className="MuiPaper-root">
                   {!isSmallScreen ? (
                     <TableContainer>
@@ -177,7 +206,15 @@ function TokenLaunch() {
                         <TableBody>
                           {farms.map(farm => {
                             //if (bond.displayName !== "unknown")
-                            return <FarmData networkId={networkId} key={farm.index} farm={farm} onFarmLiquidityUpdate={farmLiquidityUpdate} />;
+                            return (
+                              <FarmData
+                                networkId={networkId}
+                                key={farm.index}
+                                farm={farm}
+                                onFarmLiquidityUpdate={farmLiquidityUpdate}
+                                onFarmPanaUpdate={farmPanaUpdate}
+                              />
+                            );
                           })}
                         </TableBody>
                       </Table>
@@ -186,7 +223,15 @@ function TokenLaunch() {
                     <>
                       {farms.map(farm => {
                         //if (bond.displayName !== "unknown")
-                        return <FarmData networkId={networkId} key={farm.index} farm={farm} onFarmLiquidityUpdate={farmLiquidityUpdate} />;
+                        return (
+                          <FarmData
+                            networkId={networkId}
+                            key={farm.index}
+                            farm={farm}
+                            onFarmLiquidityUpdate={farmLiquidityUpdate}
+                            onFarmPanaUpdate={farmPanaUpdate}
+                          />
+                        );
                       })}
                     </>
                   )}

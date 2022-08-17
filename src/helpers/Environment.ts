@@ -61,10 +61,10 @@ export class EnvHelper {
     } else {
       INFURA_ID_LIST = [];
     }
-
+    //console.log("INFURA_ID_LIST", INFURA_ID_LIST);
     // now add the uri path
     if (INFURA_ID_LIST.length > 0) {
-      INFURA_ID_LIST = INFURA_ID_LIST.map(infuraID => `https://mainnet.infura.io/v3/${infuraID}`);
+      INFURA_ID_LIST = INFURA_ID_LIST.map(infuraID => `https://arbitrum-mainnet.infura.io/v3/${infuraID}`);
     } else {
       INFURA_ID_LIST = [];
     }
@@ -78,54 +78,25 @@ export class EnvHelper {
    *     - WalletConnect Issue: https://github.com/WalletConnect/walletconnect-monorepo/issues/193
    */
   static getSelfHostedNode(networkId: NetworkId) {
+    //console.log("getSelfHostedNode", NetworkId);
     let URI_LIST: string[] = [];
     switch (networkId) {
-      case NetworkId.POLYGON_MAINNET:
-        if (
-          EnvHelper.env.REACT_APP_POLYGON_MAINNET_SELF_HOSTED_NODE &&
-          EnvHelper.isNotEmpty(EnvHelper.env.REACT_APP_POLYGON_MAINNET_SELF_HOSTED_NODE)
-        ) {
-          URI_LIST = EnvHelper.env.REACT_APP_POLYGON_MAINNET_SELF_HOSTED_NODE.split(
-            new RegExp(EnvHelper.whitespaceRegex),
-          );
-        }
-        break;
-      case NetworkId.TESTNET_GOERLI:
-        if (
-          EnvHelper.env.REACT_APP_POLYGON_MAINNET_SELF_HOSTED_NODE &&
-          EnvHelper.isNotEmpty(EnvHelper.env.REACT_APP_POLYGON_MAINNET_SELF_HOSTED_NODE)
-        ) {
-          URI_LIST = EnvHelper.env.REACT_APP_POLYGON_MAINNET_SELF_HOSTED_NODE.split(
-            new RegExp(EnvHelper.whitespaceRegex),
-          );
-        }
-        break;
-      case NetworkId.MUMBAI_TESTNET:
-        if (
-          EnvHelper.env.REACT_APP_POLYGON_MAINNET_SELF_HOSTED_NODE &&
-          EnvHelper.isNotEmpty(EnvHelper.env.REACT_APP_POLYGON_MAINNET_SELF_HOSTED_NODE)
-        ) {
-          URI_LIST = EnvHelper.env.REACT_APP_POLYGON_MAINNET_SELF_HOSTED_NODE.split(
-            new RegExp(EnvHelper.whitespaceRegex),
-          );
-        }
-        break;
       case NetworkId.ARBITRUM_TESTNET:
         if (
-          EnvHelper.env.REACT_APP_POLYGON_MAINNET_SELF_HOSTED_NODE &&
-          EnvHelper.isNotEmpty(EnvHelper.env.REACT_APP_POLYGON_MAINNET_SELF_HOSTED_NODE)
+          EnvHelper.env.REACT_APP_ARBITRUM_MAINNET_SELF_HOSTED_NODE &&
+          EnvHelper.isNotEmpty(EnvHelper.env.REACT_APP_ARBITRUM_MAINNET_SELF_HOSTED_NODE)
         ) {
-          URI_LIST = EnvHelper.env.REACT_APP_POLYGON_MAINNET_SELF_HOSTED_NODE.split(
+          URI_LIST = EnvHelper.env.REACT_APP_ARBITRUM_MAINNET_SELF_HOSTED_NODE.split(
             new RegExp(EnvHelper.whitespaceRegex),
           );
         }
         break;
       case NetworkId.ARBITRUM_MAINNET:
         if (
-          EnvHelper.env.REACT_APP_POLYGON_MAINNET_SELF_HOSTED_NODE &&
-          EnvHelper.isNotEmpty(EnvHelper.env.REACT_APP_POLYGON_MAINNET_SELF_HOSTED_NODE)
+          EnvHelper.env.REACT_APP_ARBITRUM_MAINNET_SELF_HOSTED_NODE &&
+          EnvHelper.isNotEmpty(EnvHelper.env.REACT_APP_ARBITRUM_MAINNET_SELF_HOSTED_NODE)
         ) {
-          URI_LIST = EnvHelper.env.REACT_APP_POLYGON_MAINNET_SELF_HOSTED_NODE.split(
+          URI_LIST = EnvHelper.env.REACT_APP_ARBITRUM_MAINNET_SELF_HOSTED_NODE.split(
             new RegExp(EnvHelper.whitespaceRegex),
           );
         }
@@ -140,7 +111,9 @@ export class EnvHelper {
    * @returns array of API urls
    */
   static getAPIUris(networkId: NetworkId) {
+    //console.log("getAPIUris", NetworkId);
     let ALL_URIs = EnvHelper.getSelfHostedNode(networkId);
+    //console.log("getAPIUris - ALL_URIs.length", ALL_URIs.length);
     if (ALL_URIs.length === 0) {
       console.warn("API keys must be set in the .env, reverting to fallbacks");
       ALL_URIs = EnvHelper.getFallbackURIs(networkId);
@@ -150,6 +123,7 @@ export class EnvHelper {
 
   static getFallbackURIs(networkId: NetworkId) {
     const ALL_URIs = [...EnvHelper.getInfuraIdList()];
+    //console.log("getFallbackURIs", ALL_URIs);
     return ALL_URIs;
   }
 }
