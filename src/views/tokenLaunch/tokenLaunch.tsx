@@ -137,7 +137,7 @@ function TokenLaunch() {
                     className="box-dash big-box"
                   >
                     <Typography variant="h5" align="center" className="claimable-balance">
-                      Claimable Rewards (Pana)
+                    Claimable Pana Rewards
                     </Typography>
                     <Typography variant="h4" align="center" style={{ marginBottom: "10px" }}>
                       {totalPendingPanaForUser
@@ -167,13 +167,19 @@ function TokenLaunch() {
                   >
                     <div style={{margin:'auto'}}>
                     <Typography variant="h5" align="center" className="claimable-balance">
-                      PANA per Day
+                     Expected Pana Rewards 
+                    </Typography>
+                    <Typography variant="h5" align="center" className="claimable-balance info-perday">
+                      Per Day
                     </Typography>
                     <Typography variant="h4" align="center" style={{ marginBottom: "10px" }}>
-                      {totalPana
+                      <>
+                      {!totalLiquidity ? <Skeleton width="200px" /> : totalPana
                         ? formatCurrency(+ethers.utils.formatUnits(totalPana, 18), 4, "PANA")
                         : "-"}
+                        </>
                     </Typography>
+                    
                     </div>
                   </Grid>
                   </Grid>
