@@ -126,7 +126,7 @@ export class NodeHelper {
    * @returns StaticJsonRpcProvider for querying
    */
   static getMainnetStaticProvider = () => {
-    return new StaticJsonRpcProvider(NodeHelper.getMainnetURI(NetworkId.POLYGON_MAINNET));
+    return new StaticJsonRpcProvider(NodeHelper.getMainnetURI(NetworkId.ARBITRUM_MAINNET));
   };
 
   /**

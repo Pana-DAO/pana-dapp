@@ -8,11 +8,7 @@ const useENS = (address: string) => {
   const { provider, networkId, providerInitialized } = useWeb3Context();
   const [ensName, setENSName] = useState<string | null>(null);
   const [ensAvatar, setENSAvatar] = useState<string | null>(null);
-  const ensSupport: boolean =
-    networkId === NetworkId.POLYGON_MAINNET ||
-    networkId === NetworkId.TESTNET_GOERLI ||
-    networkId === NetworkId.ARBITRUM_MAINNET ||
-    networkId === NetworkId.ARBITRUM_TESTNET;
+  const ensSupport: boolean = networkId === NetworkId.ARBITRUM_MAINNET || networkId === NetworkId.ARBITRUM_TESTNET;
 
   useEffect(() => {
     const resolveENS = async () => {

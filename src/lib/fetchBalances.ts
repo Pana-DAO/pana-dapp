@@ -44,7 +44,7 @@ export const balancesOf = async (address: string, NetworkId: NetworkId): Promise
 };
 
 const Networks = [
-  NetworkId.POLYGON_MAINNET,
+  NetworkId.ARBITRUM_MAINNET,
   // covalent does not support rinkeby
   // ...(process.env.NODE_ENV === "development" ? [NetworkId.AvalancheTestnet, NetworkId.ArbitrumTestnet] : []),
 ];

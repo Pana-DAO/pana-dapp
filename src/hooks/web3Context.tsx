@@ -71,9 +71,6 @@ const initModal = new Web3Modal({
       package: WalletConnectProvider,
       options: {
         rpc: {
-          137: NETWORKS[137].uri(),
-          8001: NETWORKS[80001].uri(),
-          5: NETWORKS[5].uri(),
           42161: NETWORKS[42161].uri(),
           421611: NETWORKS[421611].uri(),
         },
@@ -154,6 +151,8 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({ chil
     // ... see here: https://github.com/Web3Modal/web3modal/blob/2ff929d0e99df5edf6bb9e88cff338ba6d8a3991/example/src/App.tsx#L185
     _initListeners(rawProvider);
 
+    console.log("networkId", networkId);
+    console.log("rawProvider", rawProvider);
     const connectedProvider = new Web3Provider(rawProvider, "any");
     setProvider(connectedProvider);
     const connectedAddress = await connectedProvider.getSigner().getAddress();
