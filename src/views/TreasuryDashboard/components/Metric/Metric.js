@@ -57,6 +57,10 @@ export const MarketCap = () => {
   return <MetricContent label={t`Market Cap`} metric={formatMoney(marketCap, true)} isLoading={!marketCap} />;
 };
 
+export const TVLStakingPool = ({totalLiquidity}) => {
+  return <MetricContent label={t`Total Value Locked`} metric={formatMoney(totalLiquidity, true)} isLoading={!totalLiquidity} />;
+};
+
 export const PANAPrice = () => {
   const marketPrice = useSelector(state => state.app.marketPrice);
   return (
