@@ -7,7 +7,7 @@ import { ReactComponent as DiscordIcon } from "../../assets/icons/discord.svg";
 import { ReactComponent as DocsIcon } from "../../assets/icons/docs.svg";
 const Social: React.FC = () => (
   <div className="social-row">
-    <Link href="https://github.com/PanaDAO" target="_blank">
+    <Link href="https://github.com/Pana-DAO" target="_blank">
       <SvgIcon viewBox="0 0 20 20" component={GitHubIcon} />
     </Link>
     <Link href="https://karshapana.medium.com/" target="_blank">
