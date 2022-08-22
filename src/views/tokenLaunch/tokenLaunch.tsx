@@ -84,7 +84,7 @@ function TokenLaunch() {
 
   return (
     <div id="token-launch-view">
-      {networkId != arbitrum_mainnet.chainId ? (
+      {false ? (
         <>
           <Box width="100%" alignItems={"center"} display="flex" flexDirection="column" p={1}>
             <Typography variant="h5" style={{ margin: "15px 0 10px 0" }}>
@@ -113,7 +113,7 @@ function TokenLaunch() {
               {t`Pana Token Launch`}
             </Typography>
 
-            {farms.length != 0 && networkId != 1 && (
+            {farms.length != 0 && (
               <>
                 <Grid container direction="row" className="small-box" spacing={1}>
                   <TVLStakingPool totalLiquidity={totalLiquidity} />
