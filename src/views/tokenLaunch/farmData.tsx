@@ -104,15 +104,16 @@ function FarmData({
         .join(",");
       const allprice = await getAllTokenPrice(tokenslist);
       for (let i = 0; i < farms.length; i++) {
-        const data = { index: farms[i].index, liquidity: 0 } as FarmPriceData;
+        const data = { index: farms[i].index, liquidity: 0, price: 0 } as FarmPriceData;
         const farmLiq = await farms[i].calculateLiquidity(
           farms[i].index,
           allprice[farms[i].coingeckoId]?.usd,
           provider,
           networkId,
         );
-        if (farmLiq > 0) {
-          data.liquidity = farmLiq;
+        if (farmLiq) {
+          data.liquidity = farmLiq.liquidity > 0 ? farmLiq.liquidity : 0;
+          data.price = farmLiq.price > 0 ? farmLiq.price : 0;
         }
         prices[i] = data;
         panaperdaylst[i] =farmRewardsPerDay(farms[i].pid, farms[i].index);
@@ -128,6 +129,16 @@ function FarmData({
   function getUserPoolBalanceFormated(pid: number, index: number) {
     if (userPoolBalance) {
       return formatCurrency(+ethers.utils.formatUnits(userPoolBalance[pid], farms[index].decimals), 6, "PANA");
+    }
+  }
+
+  function getUserPoolBalanceInUSD(pid: number, index: number) {
+    if (userPoolBalance) {
+      const farmLiq = farmLiquidity.find(p => {
+        return p && p.index === index;
+      });
+      if (farmLiq && farmLiq.price > 0)
+        return '$' + formatCurrency((farmLiq.price * +ethers.utils.formatUnits(userPoolBalance[pid], farms[index].decimals)), 4, "PANA");
     }
   }
 
@@ -196,6 +207,7 @@ function FarmData({
             </TableCell>
             <TableCell align="center">
               <Typography>{getUserPoolBalanceFormated(farm.pid, farm.index)}</Typography>
+              <Typography style={{marginTop: '4px'}} color="textSecondary" variant="body2">{getUserPoolBalanceInUSD(farm.pid, farm.index)}</Typography>
             </TableCell>
             <TableCell align="center">
               <Typography>{getFarmRewardsPerDayFormated(farm.pid, farm.index)}</Typography>

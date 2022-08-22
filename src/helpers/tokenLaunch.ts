@@ -22,12 +22,13 @@ export interface FarmInfo {
     usd: number,
     provider: ethers.providers.JsonRpcProvider,
     networkId: NetworkId,
-  ) => Promise<number>;
+  ) => Promise<{price: number, liquidity: number}>;
 }
 
 export interface FarmPriceData {
   index: number;
   liquidity: number;
+  price: number;
 }
 
 export const stakingPoolsConfig = {
@@ -66,13 +67,22 @@ export const panaUSDCLiquidity = async (
     const farm = farms.find(p => p.index == index);
     if (farm) {
       const lpInFarm = +(await getErc20TokenBalance(farm.address, provider, networkId)) / Math.pow(10, baseContractDec);
-      return usdcPerLP * +lpInFarm;
+      return {
+        liquidity: usdcPerLP * +lpInFarm,
+        price: usdcPerLP
+      }
     } else {
-      return 0;
+      return {
+        liquidity: 0,
+        price: usdcPerLP
+      }
     }
   } catch (error) {
     console.error(error);
-    return 0;
+    return {
+      liquidity: 0,
+      price: 0
+    }
   }
 };
 
@@ -89,13 +99,22 @@ export const panaLiquidity = async (
     const farm = farms.find(p => p.index == index);
     if (farm) {
       const panaInFarm = +(await getErc20TokenBalance(farm.address, provider, networkId)) / Math.pow(10, 18);
-      return panaPrice * +panaInFarm;
+      return {
+        liquidity: panaPrice * +panaInFarm,
+        price: panaPrice
+      }
     } else {
-      return 0;
+      return {
+        liquidity: 0,
+        price: panaPrice
+      }
     }
   } catch (error) {
     console.error(error);
-    return 0;
+    return {
+      liquidity: 0,
+      price: 0
+    }
   }
 };
 
@@ -167,7 +186,7 @@ export const defaultLiquidityCal = async (
   usd: number,
   provider: ethers.providers.JsonRpcProvider,
   networkId: NetworkId,
-) => {
+): Promise<{ price: number, liquidity: number }> => {
   const farm = farms.find(p => p.index == index);
   if (farm) {
     const usdPrice = usd ?? usd > 0 ? usd : await getTokenPrice(farm?.coingeckoId);
@@ -176,17 +195,29 @@ export const defaultLiquidityCal = async (
         if (farm) {
           const balanceInFarm =
             +(await getErc20TokenBalance(farm.address, provider, networkId)) / Math.pow(10, farm.decimals);
-          return usdPrice * +balanceInFarm;
+          return {
+            liquidity: usdPrice * +balanceInFarm,
+            price: usdPrice
+          }
         } else {
-          return 0;
+          return {
+            liquidity: 0,
+            price: usdPrice
+          }
         }
       } catch (error) {
         console.error(error);
-        return 0;
+        return {
+          liquidity: 0,
+          price: usdPrice
+        }
       }
     }
   }
-  return 0;
+  return {
+    liquidity: 0,
+    price: 0
+  }
 };
 
 export const farms: FarmInfo[] = [
