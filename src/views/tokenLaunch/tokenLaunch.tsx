@@ -84,11 +84,11 @@ function TokenLaunch() {
 
   return (
     <div id="token-launch-view">
-      {false ? (
+      { networkId != arbitrum_mainnet.chainId ? (
         <>
           <Box width="100%" alignItems={"center"} display="flex" flexDirection="column" p={1}>
             <Typography variant="h5" style={{ margin: "15px 0 10px 0" }}>
-              You are connected to an incompatible newtork.
+              You are connected to an incompatible network.
             </Typography>
             <Typography variant="h5" style={{ margin: "15px 0 10px 0" }}>
               Connect to a supported network:

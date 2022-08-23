@@ -207,7 +207,7 @@ function FarmData({
             </TableCell>
             <TableCell align="center">
               <Typography>{ connected ? getUserPoolBalanceFormated(farm.pid, farm.index) : '-'}</Typography>
-              <Typography style={{marginTop: '4px'}} color="textSecondary" variant="body2">{getUserPoolBalanceInUSD(farm.pid, farm.index)}</Typography>
+              { connected && <Typography style={{marginTop: '4px'}} color="textSecondary" variant="body2">{getUserPoolBalanceInUSD(farm.pid, farm.index)}</Typography> }
             </TableCell>
             <TableCell align="center">
               <Typography>{ connected ? getFarmRewardsPerDayFormated(farm.pid, farm.index) : '-'}</Typography>
