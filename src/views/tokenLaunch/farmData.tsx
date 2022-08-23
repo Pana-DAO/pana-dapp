@@ -59,7 +59,7 @@ function FarmData({
         } else {
           setLoadProgress((progress += 6.6667));
           if (progress >= 100) {
-            if (document.hasFocus()) {
+            if (!document.hidden) {
               setLoadCount(loadCount => loadCount + 1);
             }
             progress = 0;
@@ -93,8 +93,7 @@ function FarmData({
 
   useEffect(() => {
     const loadFarmLiquidity = async () => {
-      const prices = Array(farms.length) as FarmPriceData[];
-      const panaperdaylst = Array(farms.length) as BigNumber[];
+      const prices = Array(farms.length) as FarmPriceData[];      
       const tokenslist = farms
         .filter(x => {
           if (x.coingeckoId) return true;
@@ -115,15 +114,24 @@ function FarmData({
           data.liquidity = farmLiq.liquidity > 0 ? farmLiq.liquidity : 0;
           data.price = farmLiq.price > 0 ? farmLiq.price : 0;
         }
-        prices[i] = data;
-        panaperdaylst[i] =farmRewardsPerDay(farms[i].pid, farms[i].index);
+        prices[i] = data;        
       }
       setFarmLiquidity(prices);
-      onFarmLiquidityUpdate(prices.map(p => p.liquidity).reduce((total, p) => total += p));
-      onFarmPanaUpdate(panaperdaylst.map(p => p).reduce((total, p) => total= total.add(p)));
+      onFarmLiquidityUpdate(prices.map(p => p.liquidity).reduce((total, p) => total += p));      
     };
 
     loadFarmLiquidity();
+  }, [loadCount]);
+
+  useEffect(() => {
+    const loadPanaPerday = async () => {      
+      const panaperdaylst = Array(farms.length) as BigNumber[];      
+      for (let i = 0; i < farms.length; i++) {        
+        panaperdaylst[i] =farmRewardsPerDay(farms[i].pid, farms[i].index);
+      }      
+      onFarmPanaUpdate(panaperdaylst.map(p => p).reduce((total, p) => total= total.add(p)));
+    };
+    loadPanaPerday();
   }, [loadCount]);
 
   function getUserPoolBalanceFormated(pid: number, index: number) {
