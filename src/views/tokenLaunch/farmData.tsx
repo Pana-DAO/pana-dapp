@@ -59,7 +59,7 @@ function FarmData({
         } else {
           setLoadProgress((progress += 6.6667));
           if (progress >= 100) {
-            if (!document.hidden) {
+            if (document.hasFocus()) {
               setLoadCount(loadCount => loadCount + 1);
             }
             progress = 0;
