@@ -137,7 +137,7 @@ function TokenLaunch() {
                       <Button
                         variant="contained"
                         color="primary"
-                        className="transaction-button launchPg"
+                        className="transaction-button"
                         fullWidth
                         disabled={
                           isPendingTxn(pendingTransactions, "farm_harvestAll") ||
