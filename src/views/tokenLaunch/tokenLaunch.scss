@@ -62,6 +62,10 @@
   }
   .big-box{
     min-height: 148px;
+    text-align: center;
+    .MuiSkeleton-pulse{
+      margin: auto;
+    }
   }
   .info-perday{    
     padding-bottom:15px ;

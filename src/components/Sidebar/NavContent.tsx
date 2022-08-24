@@ -137,8 +137,7 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
                         </Typography>
                       </ListItem>
                     </Link> */}
-                    {networkId === NetworkId.ARBITRUM_MAINNET ? (
-                      <>
+                    {<>
                       <Link className="nav-link" component={NavLink} to="/tokenlaunch">
                           <ListItem button selected={location.pathname == "/tokenlaunch"}>
                             <Typography variant="h6" className="nav-content">
@@ -253,9 +252,7 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
                           <></>
                         )} */}
                       </>
-                    ) : (
-                      <></>
-                    )}
+                      }
                     <Link className="nav-link" component={NavLink} to="/memorandum">
                       <ListItem button selected={location.pathname == "/memorandum"}>
                         <Typography variant="h6" className="nav-content">

@@ -36,7 +36,7 @@ import { Skeleton } from "@material-ui/lab";
 function TokenLaunch() {
   const dispatch = useDispatch<AppDispatch>();
   const history = useHistory();
-  const { provider, address, connect, networkId } = useWeb3Context();
+  const { provider, address, connect, networkId, connected } = useWeb3Context();
   usePathForNetwork({ pathName: "tokenlaunch", networkID: networkId, history });
   const isSmallScreen = useMediaQuery("(max-width: 885px)"); // change to breakpoint query
 
@@ -84,11 +84,11 @@ function TokenLaunch() {
 
   return (
     <div id="token-launch-view">
-      {networkId != arbitrum_mainnet.chainId ? (
+      { networkId != arbitrum_mainnet.chainId ? (
         <>
           <Box width="100%" alignItems={"center"} display="flex" flexDirection="column" p={1}>
             <Typography variant="h5" style={{ margin: "15px 0 10px 0" }}>
-              You are connected to an incompatable newtork.
+              You are connected to an incompatible network.
             </Typography>
             <Typography variant="h5" style={{ margin: "15px 0 10px 0" }}>
               Connect to a supported network:
@@ -113,7 +113,7 @@ function TokenLaunch() {
               {t`Pana Token Launch`}
             </Typography>
 
-            {farms.length != 0 && networkId != 1 && (
+            {farms.length != 0 && (
               <>
                 <Grid container direction="row" className="small-box" spacing={1}>
                   <TVLStakingPool totalLiquidity={totalLiquidity} />
@@ -122,7 +122,7 @@ function TokenLaunch() {
                   <PANAPrice />
                   <CircSupply />
                 </Grid>
-                <Grid container className="bigboxspace" direction="row" spacing={1}>
+                { connected && <Grid container className="bigboxspace" direction="row" spacing={1}>
                   <Grid item xs={12} sm={6}>
                     <Grid className="box-dash big-box">
                       <Typography variant="h5" align="center" className="claimable-balance">
@@ -173,7 +173,7 @@ function TokenLaunch() {
                       </div>
                     </Grid>
                   </Grid>
-                </Grid>
+                </Grid> }
                 <Grid container className="MuiPaper-root">
                   {!isSmallScreen ? (
                     <TableContainer>
