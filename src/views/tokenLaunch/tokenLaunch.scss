@@ -62,21 +62,15 @@
   }
   .big-box{
     min-height: 148px;
+    text-align: center;
+    .MuiSkeleton-pulse{
+      margin: auto;
+    }
   }
   .info-perday{    
     padding-bottom:15px ;
   }
   .bigboxspace{
     margin-bottom: 10px;
-  }
-  @media screen and (min-width: 769px) {
-    .launchPg{
-      left:5px !important;
-    }
-  }
-  @media screen and (max-width: 769px) {
-    .launchPg{
-      left:-5px !important;
-    }
   }
 }
