@@ -62,7 +62,7 @@ export async function getAllTokenPrice(tokenIdlist: string): Promise<any | undef
     sessionStorage.setItem("alltokendata", JSON.stringify({ "time": (new Date()).getTime(), "data": resp.data }));
     return resp.data;
   } catch (e) {
-    return 0;
+    return null;
   }
 }
 

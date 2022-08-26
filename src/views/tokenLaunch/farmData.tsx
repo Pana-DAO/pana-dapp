@@ -15,7 +15,7 @@ import {
 } from "src/helpers/tokenLaunch";
 import { useAppSelector, useWeb3Context } from "src/hooks";
 import TokenStack from "src/lib/PanaTokenStack";
-import { getErc20TokenBalance } from "src/slices/StakingPoolsSlice";
+// import { getErc20TokenBalance } from "src/slices/StakingPoolsSlice";
 import { ReactComponent as ArrowUp } from "../../assets/icons/arrow-up.svg";
 
 function FarmData({
@@ -34,7 +34,10 @@ function FarmData({
   const [loadCount, setLoadCount] = useState(0);
   const [loadProgress, setLoadProgress] = useState(0);
   const [farmBalanceData, setFarmBalanceData] = useState(Array(farms.length) as BigNumber[]);
-  const [farmLiquidity, setFarmLiquidity] = useState(Array(farms.length) as FarmPriceData[]);
+  const [farmLiquidity, setFarmLiquidity] = useState(Array(farms.length) as FarmPriceData[]);  
+  const [farmBalanceSingleData, setFarmBalanceSingleData] = useState(BigNumber.from("0"));
+  const [farmPanaPerDayData, setFarmPanaPerDayData] = useState(BigNumber.from("0"));
+  const [farmLiquiditySingle, setFarmLiquiditySingle] = useState({ index: -1, liquidity: 0, price: 0 } as FarmPriceData);
   const { provider, address, connect, connected } = useWeb3Context();
   const isSmallScreen = useMediaQuery("(max-width: 885px)"); // change to breakpoint query
 
@@ -59,7 +62,7 @@ function FarmData({
         } else {
           setLoadProgress((progress += 6.6667));
           if (progress >= 100) {
-            if (document.hasFocus()) {
+            if (!document.hidden) {
               setLoadCount(loadCount => loadCount + 1);
             }
             progress = 0;
@@ -70,24 +73,27 @@ function FarmData({
     }
   }, [address]);
 
-  useEffect(() => {
-    const loadBalanceData = async () => {
-      const promises: Array<Promise<BigNumber>> = Array(farms.length);
-      for (let i = 0; i < farms.length; i++) {
-        promises[i] = getErc20TokenBalance(farms[i].address, provider, networkId);
-      }
-      setFarmBalanceData(await Promise.all(promises));
-    };
-    loadBalanceData();
-  }, [loadCount]);
+  // useEffect(() => {
+  //   const loadBalanceData = async () => {
+  //     const promises: Array<Promise<BigNumber>> = Array(farms.length);
+  //     for (let i = 0; i < farms.length; i++) {
+  //       promises[i] = getErc20TokenBalance(farms[i].address, provider, networkId);
+  //     }
+  //     setFarmBalanceData(await Promise.all(promises));
+  //   };
+  //   loadBalanceData();
+  // }, [loadCount]);
 
-  function getFarmLiquidity(index: number): string {
-    const farmLiq = farmLiquidity.find(p => {
-      return p && p.index === index;
-    });
-    if (farmLiq && farmLiq.liquidity > 0) {
-      return formatMoney(farmLiq.liquidity, true);
+  function getFarmLiquidity(index: number): string {        
+    if (farmLiquiditySingle && farmLiquiditySingle.liquidity > 0) {
+      return formatMoney(farmLiquiditySingle.liquidity, true);
     }
+    // const farmLiq = farmLiquidity.find(p => {
+    //   return p && p.index === index;
+    // });
+    // if (farmLiq && farmLiq.liquidity > 0) {
+    //   return formatMoney(farmLiq.liquidity, true);
+    // }
     return "-";
   }
 
@@ -101,38 +107,63 @@ function FarmData({
         })
         .map(x => x.coingeckoId)
         .join(",");
-      const allprice = await getAllTokenPrice(tokenslist);
-      for (let i = 0; i < farms.length; i++) {
-        const data = { index: farms[i].index, liquidity: 0, price: 0 } as FarmPriceData;
-        const farmLiq = await farms[i].calculateLiquidity(
-          farms[i].index,
-          allprice[farms[i].coingeckoId]?.usd,
-          provider,
-          networkId,
-        );
-        if (farmLiq) {
-          data.liquidity = farmLiq.liquidity > 0 ? farmLiq.liquidity : 0;
-          data.price = farmLiq.price > 0 ? farmLiq.price : 0;
-        }
-        prices[i] = data;        
+      let allprice = await getAllTokenPrice(tokenslist);
+      let retryCount=0
+      while(allprice==null && farm.index==0 && retryCount<3){
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        allprice = await getAllTokenPrice(tokenslist);
+        retryCount+=1;
       }
-      setFarmLiquidity(prices);
-      onFarmLiquidityUpdate(prices.map(p => p.liquidity).reduce((total, p) => total += p));      
+      // for (let i = 0; i < farms.length; i++) {
+      //   const data = { index: farms[i].index, liquidity: 0, price: 0 } as FarmPriceData;
+      //   const farmLiq = await farms[i].calculateLiquidity(
+      //     farms[i].index,
+      //     allprice[farms[i].coingeckoId]?.usd,
+      //     provider,
+      //     networkId,
+      //   );
+      //   if (farmLiq) {
+      //     data.liquidity = farmLiq.liquidity > 0 ? farmLiq.liquidity : 0;
+      //     data.price = farmLiq.price > 0 ? farmLiq.price : 0;
+      //   }
+      //   prices[i] = data;        
+      // }
+      const data = {balance:BigNumber.from("0"), index: farm.index, liquidity: 0, price: 0,isLoad:false } as FarmPriceData;
+      const farmLiq = await farm.calculateLiquidity(
+        farm.index,
+        allprice[farm.coingeckoId]?.usd,
+        provider,
+        networkId,
+      );
+      if (farmLiq) {
+        data.liquidity = farmLiq.liquidity > 0 ? farmLiq.liquidity : 0;
+        data.price = farmLiq.price > 0 ? farmLiq.price : 0;
+        data.balance = farmLiq.balance
+      }
+      if(farmLiq&&farmLiq.isLoad){
+        const farmpanaperday=farmRewardsFarmPerDay(farm.pid, data.balance,farm.points);      
+        setFarmLiquiditySingle(data);
+        setFarmBalanceSingleData(farmLiq.balance);
+        setFarmPanaPerDayData(farmpanaperday)
+        onFarmPanaUpdate(farm.pid,farm.index,data,farmpanaperday);
+      }
+      // setFarmLiquidity(prices);
+      // onFarmLiquidityUpdate(prices.map(p => p.liquidity).reduce((total, p) => total += p));      
     };
 
     loadFarmLiquidity();
   }, [loadCount]);
 
-  useEffect(() => {
-    const loadPanaPerday = async () => {      
-      const panaperdaylst = Array(farms.length) as BigNumber[];      
-      for (let i = 0; i < farms.length; i++) {        
-        panaperdaylst[i] =farmRewardsPerDay(farms[i].pid, farms[i].index);
-      }      
-      onFarmPanaUpdate(panaperdaylst.map(p => p).reduce((total, p) => total= total.add(p)));
-    };
-    loadPanaPerday();
-  }, [loadCount]);
+  // useEffect(() => {
+  //   const loadPanaPerday = async () => {      
+  //     const panaperdaylst = Array(farms.length) as BigNumber[];      
+  //     for (let i = 0; i < farms.length; i++) {        
+  //       panaperdaylst[i] =farmRewardsPerDay(farms[i].pid, farms[i].index);
+  //     }      
+  //     onFarmPanaUpdate(panaperdaylst.map(p => p).reduce((total, p) => total= total.add(p)));
+  //   };
+  //   loadPanaPerday();
+  // }, [loadCount]);
 
   function getUserPoolBalanceFormated(pid: number, index: number) {
     if (userPoolBalance) {
@@ -142,16 +173,20 @@ function FarmData({
 
   function getUserPoolBalanceInUSD(pid: number, index: number) {
     if (userPoolBalance) {
-      const farmLiq = farmLiquidity.find(p => {
-        return p && p.index === index;
-      });
-      if (farmLiq && farmLiq.price > 0)
-        return '$' + formatCurrency((farmLiq.price * +ethers.utils.formatUnits(userPoolBalance[pid], farms[index].decimals)), 4, "PANA");
+      
+      if (farmLiquiditySingle && farmLiquiditySingle.price > 0)
+        return '$' + formatCurrency((farmLiquiditySingle.price * +ethers.utils.formatUnits(userPoolBalance[pid], farm.decimals)), 4, "PANA");
+      // const farmLiq = farmLiquidity.find(p => {
+      //   return p && p.index === index;
+      // });
+      // if (farmLiq && farmLiq.price > 0)
+      //   return '$' + formatCurrency((farmLiq.price * +ethers.utils.formatUnits(userPoolBalance[pid], farms[index].decimals)), 4, "PANA");
     }
   }
 
   function getFarmRewardsPerDayFormated(pid: number, index: number) {
-    return formatCurrency(+ethers.utils.formatUnits(farmRewardsPerDay(pid, index), 18), 4, "PANA");
+    return formatCurrency(+ethers.utils.formatUnits(farmPanaPerDayData, 18), 4, "PANA");
+    // return formatCurrency(+ethers.utils.formatUnits(farmRewardsPerDay(pid, index), 18), 4, "PANA");
   }
 
   function getPendingPanaForUserFormated(pid: number) {
@@ -160,17 +195,29 @@ function FarmData({
     }
   }
 
-  function farmRewardsPerDay(pid: number, index: number): BigNumber {
-    if (userPoolBalance && userPoolBalance[pid] && farmBalanceData[index]) {
-      const poolTotal = farmBalanceData[index];
+  function farmRewardsFarmPerDay(pid: number, farmBalanceData:any,farmpoints:any): BigNumber {
+    if (userPoolBalance && userPoolBalance[pid] && farmBalanceData) {
+      const poolTotal = farmBalanceData;
       if (poolTotal.gt(0)) {
         const amount = userPoolBalance[pid];
-        const farmPerDay = stakingPoolsConfig.panaPerSecond.mul(86400).mul(farms[index].points).div(totalFarmPoints);
+        const farmPerDay = stakingPoolsConfig.panaPerSecond.mul(86400).mul(farmpoints).div(totalFarmPoints);
         return farmPerDay.mul(amount).div(poolTotal);
       }
     }
     return ethers.constants.Zero;
   }
+
+  // function farmRewardsPerDay(pid: number, index: number): BigNumber {
+  //   if (userPoolBalance && userPoolBalance[pid] && farmBalanceData[index]) {
+  //     const poolTotal = farmBalanceData[index];
+  //     if (poolTotal.gt(0)) {
+  //       const amount = userPoolBalance[pid];
+  //       const farmPerDay = stakingPoolsConfig.panaPerSecond.mul(86400).mul(farms[index].points).div(totalFarmPoints);
+  //       return farmPerDay.mul(amount).div(poolTotal);
+  //     }
+  //   }
+  //   return ethers.constants.Zero;
+  // }
 
   function hoursLeft(date: number): number {
     const diffTime = date - Date.now() / 1000;

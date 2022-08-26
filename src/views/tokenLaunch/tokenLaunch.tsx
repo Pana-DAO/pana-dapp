@@ -19,11 +19,11 @@ import { useHistory } from "react-router";
 import { usePathForNetwork } from "src/hooks/usePathForNetwork";
 import { useWeb3Context } from "src/hooks/web3Context";
 import { useState } from "react";
-import { farms } from "src/helpers/tokenLaunch";
+import { FarmPriceData, farms } from "src/helpers/tokenLaunch";
 import FarmData from "./farmData";
 import { isPendingTxn, txnButtonText } from "src/slices/PendingTxnsSlice";
 import { useAppSelector } from "src/hooks";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { formatCurrency } from "src/helpers";
 import { onHarvestAll } from "src/slices/StakingPoolsSlice";
 import { useDispatch } from "react-redux";
@@ -42,8 +42,9 @@ function TokenLaunch() {
 
   const [zoomed, setZoomed] = useState(false);
   const [totalLiquidity, setTotalLiquidity] = useState(0);
-  const [totalPana, setTotalPana] = useState(0);
-
+  const [totalPana, setTotalPana] = useState(BigNumber.from(0));
+  const [farmPanaPerday, setFarmPanaPerday] = useState(Array(farms.length) as BigNumber[]);
+  const [farmLiquidityData, setfarmLiquidityData] = useState(Array(farms.length) as number[]);
   const pendingTransactions = useAppSelector(state => {
     return state.pendingTransactions;
   });
@@ -69,11 +70,52 @@ function TokenLaunch() {
   };
 
   const farmLiquidityUpdate = (totalLiq: number) => {
-    setTotalLiquidity(totalLiq);
+    // setTotalLiquidity(totalLiq);
   };
 
-  const farmPanaUpdate = (totalPana: number) => {
-    setTotalPana(totalPana);
+  // const farmPanaUpdate = (totalPana: number) => {
+  //   //farm.pid,farm.index,data,farmLiq.balance,farmpanaperday
+  //   setTotalPana(totalPana);
+  // };
+
+  const farmPanaUpdate = (pid: number,index:number,data: FarmPriceData,farmpanaperday:BigNumber) => {
+    //farm.pid,farm.index,data,farmpanaperday
+    let totalP=BigNumber.from("0");
+    let totalLiq=0;
+    let allLoadCount=0;
+    for(let i =0;i<farmPanaPerday.length;i++){
+      if(i==index){
+        if(farmpanaperday){
+          farmPanaPerday[i]=farmpanaperday;
+          totalP=totalP.add(farmpanaperday)
+          setFarmPanaPerday(farmPanaPerday);
+        }
+        else{
+          totalP=totalP.add(farmPanaPerday[i]??0);
+        }
+        if(data.liquidity){
+          totalLiq=totalLiq+data.liquidity;        
+          farmLiquidityData[i]=data.liquidity;          
+          setfarmLiquidityData(farmLiquidityData);
+        }
+        else{
+          totalLiq=totalLiq+(farmLiquidityData[i]??0)
+        }
+      }
+      else{
+        totalP=totalP.add(farmPanaPerday[i]??0);
+        totalLiq=totalLiq+(farmLiquidityData[i]??0)
+        
+      }
+      if(farmLiquidityData[i]){
+         allLoadCount+=1;
+      }
+    }    
+    if(allLoadCount== farms.length)
+    {
+      setTotalPana(totalP);
+      setTotalLiquidity(totalLiq);
+    }
   };
 
   modalButton.push(
