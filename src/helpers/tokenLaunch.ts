@@ -28,9 +28,11 @@ export interface FarmInfo {
 export interface FarmPriceData {
   index: number;
   liquidity: number;
+  liquidityUSD: number;
   price: number;
   balance:BigNumber;
-  isLoad:boolean
+  farmperday:BigNumber;
+  isLoad:boolean;  
 }
 
 export const stakingPoolsConfig = {

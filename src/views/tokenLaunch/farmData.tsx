@@ -1,17 +1,16 @@
 import { t, Trans } from "@lingui/macro";
 import { Box, Button, Grid, Link, SvgIcon, TableCell, TableRow, Typography, useMediaQuery } from "@material-ui/core";
 import { BigNumber, ethers } from "ethers";
-import { useEffect, useState } from "react";
-import { NavLink, useHistory } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { NetworkId } from "src/constants";
-import { formatCurrency, getAllTokenPrice } from "src/helpers";
+import { formatCurrency } from "src/helpers";
 import {
   FarmInfo,
   FarmPriceData,
   farms,
   formatMoney,
-  stakingPoolsConfig,
-  totalFarmPoints,
+  // stakingPoolsConfig,
+  // totalFarmPoints,
 } from "src/helpers/tokenLaunch";
 import { useAppSelector, useWeb3Context } from "src/hooks";
 import TokenStack from "src/lib/PanaTokenStack";
@@ -21,23 +20,14 @@ import { ReactComponent as ArrowUp } from "../../assets/icons/arrow-up.svg";
 function FarmData({
   networkId,
   farm,
-  onFarmLiquidityUpdate,
+  farmLiquidity,
   onFarmPanaUpdate,
 }: {
   networkId: NetworkId;
   farm: FarmInfo;
-  onFarmLiquidityUpdate: any;
+  farmLiquidity?:FarmPriceData;
   onFarmPanaUpdate: any;
 }) {
-  // const dispatch = useDispatch();
-  const history = useHistory();
-  const [loadCount, setLoadCount] = useState(0);
-  const [loadProgress, setLoadProgress] = useState(0);
-  const [farmBalanceData, setFarmBalanceData] = useState(Array(farms.length) as BigNumber[]);
-  const [farmLiquidity, setFarmLiquidity] = useState(Array(farms.length) as FarmPriceData[]);  
-  const [farmBalanceSingleData, setFarmBalanceSingleData] = useState(BigNumber.from("0"));
-  const [farmPanaPerDayData, setFarmPanaPerDayData] = useState(BigNumber.from("0"));
-  const [farmLiquiditySingle, setFarmLiquiditySingle] = useState({ index: -1, liquidity: 0, price: 0 } as FarmPriceData);
   const { provider, address, connect, connected } = useWeb3Context();
   const isSmallScreen = useMediaQuery("(max-width: 885px)"); // change to breakpoint query
 
@@ -53,187 +43,41 @@ function FarmData({
       : null;
   });
 
-  useEffect(() => {
-    if (hoursLeft(stakingPoolsConfig.startTime) <= 0) {
-      let progress = 0;
-      const interval = setInterval(() => {
-        if (!address) {
-          setLoadProgress((progress = 0));
-        } else {
-          setLoadProgress((progress += 6.6667));
-          if (progress >= 100) {
-            if (!document.hidden) {
-              setLoadCount(loadCount => loadCount + 1);
-            }
-            progress = 0;
-          }
-        }
-      }, 1000);
-      return () => clearInterval(interval);
-    }
-  }, [address]);
-
-  // useEffect(() => {
-  //   const loadBalanceData = async () => {
-  //     const promises: Array<Promise<BigNumber>> = Array(farms.length);
-  //     for (let i = 0; i < farms.length; i++) {
-  //       promises[i] = getErc20TokenBalance(farms[i].address, provider, networkId);
-  //     }
-  //     setFarmBalanceData(await Promise.all(promises));
-  //   };
-  //   loadBalanceData();
-  // }, [loadCount]);
-
-  function getFarmLiquidity(index: number): string {        
-    if (farmLiquiditySingle && farmLiquiditySingle.liquidity > 0) {
-      return formatMoney(farmLiquiditySingle.liquidity, true);
-    }
-    // const farmLiq = farmLiquidity.find(p => {
-    //   return p && p.index === index;
-    // });
-    // if (farmLiq && farmLiq.liquidity > 0) {
-    //   return formatMoney(farmLiq.liquidity, true);
-    // }
-    return "-";
-  }
-
-  useEffect(() => {
-    const loadFarmLiquidity = async () => {
-      const prices = Array(farms.length) as FarmPriceData[];      
-      const tokenslist = farms
-        .filter(x => {
-          if (x.coingeckoId) return true;
-          else false;
-        })
-        .map(x => x.coingeckoId)
-        .join(",");
-      let allprice = await getAllTokenPrice(tokenslist);
-      let retryCount=0
-      while(allprice==null && farm.index==0 && retryCount<3){
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        allprice = await getAllTokenPrice(tokenslist);
-        retryCount+=1;
-      }
-      // for (let i = 0; i < farms.length; i++) {
-      //   const data = { index: farms[i].index, liquidity: 0, price: 0 } as FarmPriceData;
-      //   const farmLiq = await farms[i].calculateLiquidity(
-      //     farms[i].index,
-      //     allprice[farms[i].coingeckoId]?.usd,
-      //     provider,
-      //     networkId,
-      //   );
-      //   if (farmLiq) {
-      //     data.liquidity = farmLiq.liquidity > 0 ? farmLiq.liquidity : 0;
-      //     data.price = farmLiq.price > 0 ? farmLiq.price : 0;
-      //   }
-      //   prices[i] = data;        
-      // }
-      const data = {balance:BigNumber.from("0"), index: farm.index, liquidity: 0, price: 0,isLoad:false } as FarmPriceData;
-      const farmLiq = await farm.calculateLiquidity(
-        farm.index,
-        allprice[farm.coingeckoId]?.usd,
-        provider,
-        networkId,
-      );
-      if (farmLiq) {
-        data.liquidity = farmLiq.liquidity > 0 ? farmLiq.liquidity : 0;
-        data.price = farmLiq.price > 0 ? farmLiq.price : 0;
-        data.balance = farmLiq.balance
-      }
-      if(farmLiq&&farmLiq.isLoad){
-        const farmpanaperday=farmRewardsFarmPerDay(farm.pid, data.balance,farm.points);      
-        setFarmLiquiditySingle(data);
-        setFarmBalanceSingleData(farmLiq.balance);
-        setFarmPanaPerDayData(farmpanaperday)
-        onFarmPanaUpdate(farm.pid,farm.index,data,farmpanaperday);
-      }
-      // setFarmLiquidity(prices);
-      // onFarmLiquidityUpdate(prices.map(p => p.liquidity).reduce((total, p) => total += p));      
-    };
-
-    loadFarmLiquidity();
-  }, [loadCount]);
-
-  // useEffect(() => {
-  //   const loadPanaPerday = async () => {      
-  //     const panaperdaylst = Array(farms.length) as BigNumber[];      
-  //     for (let i = 0; i < farms.length; i++) {        
-  //       panaperdaylst[i] =farmRewardsPerDay(farms[i].pid, farms[i].index);
-  //     }      
-  //     onFarmPanaUpdate(panaperdaylst.map(p => p).reduce((total, p) => total= total.add(p)));
-  //   };
-  //   loadPanaPerday();
-  // }, [loadCount]);
-
   function getUserPoolBalanceFormated(pid: number, index: number) {
     if (userPoolBalance) {
       return formatCurrency(+ethers.utils.formatUnits(userPoolBalance[pid], farms[index].decimals), 6, "PANA");
     }
   }
 
-  function getUserPoolBalanceInUSD(pid: number, index: number) {
-    if (userPoolBalance) {
-      
-      if (farmLiquiditySingle && farmLiquiditySingle.price > 0)
-        return '$' + formatCurrency((farmLiquiditySingle.price * +ethers.utils.formatUnits(userPoolBalance[pid], farm.decimals)), 4, "PANA");
-      // const farmLiq = farmLiquidity.find(p => {
-      //   return p && p.index === index;
-      // });
-      // if (farmLiq && farmLiq.price > 0)
-      //   return '$' + formatCurrency((farmLiq.price * +ethers.utils.formatUnits(userPoolBalance[pid], farms[index].decimals)), 4, "PANA");
+  function getUserPoolBalanceInUSD(pid: number, index: number,farmLiq?: FarmPriceData) {
+    if (userPoolBalance) {      
+      if (farmLiq && farmLiq.liquidityUSD > 0)
+        // return '$' + formatCurrency((farmLiq.price * +ethers.utils.formatUnits(userPoolBalance[pid], farm.decimals)), 4, "PANA");     
+        return '$' + formatCurrency(farmLiq.liquidityUSD, 4, "PANA");     
     }
+    return '$' + formatCurrency(0, 4, "PANA");     
   }
 
-  function getFarmRewardsPerDayFormated(pid: number, index: number) {
-    return formatCurrency(+ethers.utils.formatUnits(farmPanaPerDayData, 18), 4, "PANA");
-    // return formatCurrency(+ethers.utils.formatUnits(farmRewardsPerDay(pid, index), 18), 4, "PANA");
+  function getFarmRewardsPerDayFormated(farmLiq?: FarmPriceData): string {        
+    if (farmLiq && farmLiq.farmperday.gt(0)) {
+      return formatCurrency(+ethers.utils.formatUnits(farmLiq?.farmperday, 18), 4, "PANA");
+    }    
+    return formatCurrency(+ethers.utils.formatUnits(BigNumber.from(0), 18), 4, "PANA");
   }
 
   function getPendingPanaForUserFormated(pid: number) {
     if (pendingPanaForUser) {
       return formatCurrency(+ethers.utils.formatUnits(pendingPanaForUser[pid], 18), 4, "PANA");
     }
+  }  
+  function getFarmLiquidity(farmLiq?: FarmPriceData): string {        
+    if (farmLiq && farmLiq.liquidity > 0) {
+      return formatMoney(farmLiq.liquidity, true);
+    }    
+    return formatMoney(0,true);
   }
-
-  function farmRewardsFarmPerDay(pid: number, farmBalanceData:any,farmpoints:any): BigNumber {
-    if (userPoolBalance && userPoolBalance[pid] && farmBalanceData) {
-      const poolTotal = farmBalanceData;
-      if (poolTotal.gt(0)) {
-        const amount = userPoolBalance[pid];
-        const farmPerDay = stakingPoolsConfig.panaPerSecond.mul(86400).mul(farmpoints).div(totalFarmPoints);
-        return farmPerDay.mul(amount).div(poolTotal);
-      }
-    }
-    return ethers.constants.Zero;
-  }
-
-  // function farmRewardsPerDay(pid: number, index: number): BigNumber {
-  //   if (userPoolBalance && userPoolBalance[pid] && farmBalanceData[index]) {
-  //     const poolTotal = farmBalanceData[index];
-  //     if (poolTotal.gt(0)) {
-  //       const amount = userPoolBalance[pid];
-  //       const farmPerDay = stakingPoolsConfig.panaPerSecond.mul(86400).mul(farms[index].points).div(totalFarmPoints);
-  //       return farmPerDay.mul(amount).div(poolTotal);
-  //     }
-  //   }
-  //   return ethers.constants.Zero;
-  // }
-
-  function hoursLeft(date: number): number {
-    const diffTime = date - Date.now() / 1000;
-    if (diffTime < 0) return 0;
-    const diffHours = Math.ceil(diffTime / (60 * 60));
-    return diffHours;
-  }
-
-  function daysLeft(date: number): number {
-    const diffTime = date - Date.now() / 1000;
-    if (diffTime < 0) return 0;
-    const diffDays = Math.ceil(diffTime / (60 * 60 * 24));
-    return diffDays;
-  }
-
-  return (
+  
+  return (    
     <>
       {!isSmallScreen ? (
         <>
@@ -258,14 +102,14 @@ function FarmData({
               <Typography>{farm.points / 10}x</Typography>
             </TableCell>
             <TableCell align="center">
-              <Typography>{getFarmLiquidity(farm.index)}</Typography>
+              <Typography>{getFarmLiquidity(farmLiquidity)}</Typography>
             </TableCell>
             <TableCell align="center">
               <Typography>{ connected ? getUserPoolBalanceFormated(farm.pid, farm.index) : '-'}</Typography>
-              { connected && <Typography style={{marginTop: '4px'}} color="textSecondary" variant="body2">{getUserPoolBalanceInUSD(farm.pid, farm.index)}</Typography> }
+              { connected && <Typography style={{marginTop: '4px'}} color="textSecondary" variant="body2">{getUserPoolBalanceInUSD(farm.pid, farm.index,farmLiquidity)}</Typography> }
             </TableCell>
             <TableCell align="center">
-              <Typography>{ connected ? getFarmRewardsPerDayFormated(farm.pid, farm.index) : '-'}</Typography>
+              <Typography>{ connected ? getFarmRewardsPerDayFormated(farmLiquidity) : '-'}</Typography>
             </TableCell>
             <TableCell align="center">
               <Typography>{ connected ? getPendingPanaForUserFormated(farm.pid) : '-'}</Typography>
@@ -299,13 +143,13 @@ function FarmData({
                 <Typography>Multiplier: {farm.points / 10}x</Typography>
               </Grid>
               <Grid item xs={6}>
-                <Typography>Liquidity: {getFarmLiquidity(farm.index)}</Typography>
+                <Typography>Liquidity: {getFarmLiquidity(farmLiquidity)}</Typography>
               </Grid>
               <Grid item xs={6}>
                 <Typography>My Stakes: {getUserPoolBalanceFormated(farm.pid, farm.index)}</Typography>
               </Grid>
               <Grid item xs={6}>
-                <Typography>Per Day: {getFarmRewardsPerDayFormated(farm.pid, farm.index)}</Typography>
+                <Typography>Per Day: {getFarmRewardsPerDayFormated(farmLiquidity)}</Typography>
               </Grid>
               <Grid item xs={6}>
                 <Typography>Rewards: {getPendingPanaForUserFormated(farm.pid)}</Typography>
