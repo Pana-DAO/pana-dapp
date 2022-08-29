@@ -30,7 +30,7 @@ export const loadAppDetails = createAsyncThunk(
     
     
 
-    const usdcPriceInUSD = (await getTokenPrice("usd-coin")) || 1;
+    
     
     // NOTE (appleseed): marketPrice from Graph was delayed, so get CoinGecko price    
     let marketPrice;
@@ -38,7 +38,7 @@ export const loadAppDetails = createAsyncThunk(
       const originalPromiseResult = await dispatch(
         loadMarketPrice({ networkID: networkID, provider: provider }),
       ).unwrap();
-      marketPrice = originalPromiseResult?.marketPrice * usdcPriceInUSD;
+      marketPrice = originalPromiseResult?.marketPrice;
     } catch (rejectedValueOrSerializedError) {
       // handle error here
       console.error("Returned a null response from dispatch(loadMarketPrice)");
@@ -168,12 +168,14 @@ export const findOrLoadMarketPrice = createAsyncThunk(
  * - updates the App.slice when it runs
  */
 const loadMarketPrice = createAsyncThunk("app/loadMarketPrice", async ({ networkID, provider }: IBaseAsyncThunk) => {
-  // TODO GET ACTUAL MARKET PRICE
-  // const marketPrice = await getTokenPrice("pana")
+  let marketPrice = await getTokenPrice("pana-dao");
+  if (!marketPrice) {
+    const usdcPriceInUSD = (await getTokenPrice("usd-coin")) || 1;
+    marketPrice = (await getPanaPriceInUSDC(provider, networkID)) * usdcPriceInUSD;
+  }
   return {
-    marketPrice: await getPanaPriceInUSDC(provider, networkID),
+    marketPrice: marketPrice,
   };
-  
 });
 
 export const getPanaPriceInUSDC = async (provider: ethers.providers.JsonRpcProvider, networkID: NetworkId): Promise<number> => {
