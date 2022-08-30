@@ -17,12 +17,13 @@ export interface FarmInfo {
   readonly points: number;
   readonly icon: PanaTokenStackProps["tokens"];
   readonly url: string;
+  readonly network: number;
   readonly calculateLiquidity: (
     index: number,
     usd: number,
     provider: ethers.providers.JsonRpcProvider,
     networkId: NetworkId,
-  ) => Promise<{price: number, liquidity: number}>;
+  ) => Promise<{ price: number; liquidity: number }>;
 }
 
 export interface FarmPriceData {
@@ -69,20 +70,20 @@ export const panaUSDCLiquidity = async (
       const lpInFarm = +(await getErc20TokenBalance(farm.address, provider, networkId)) / Math.pow(10, baseContractDec);
       return {
         liquidity: usdcPerLP * +lpInFarm,
-        price: usdcPerLP
-      }
+        price: usdcPerLP,
+      };
     } else {
       return {
         liquidity: 0,
-        price: usdcPerLP
-      }
+        price: usdcPerLP,
+      };
     }
   } catch (error) {
     console.error(error);
     return {
       liquidity: 0,
-      price: 0
-    }
+      price: 0,
+    };
   }
 };
 
@@ -101,40 +102,20 @@ export const panaLiquidity = async (
       const panaInFarm = +(await getErc20TokenBalance(farm.address, provider, networkId)) / Math.pow(10, 18);
       return {
         liquidity: panaPrice * +panaInFarm,
-        price: panaPrice
-      }
+        price: panaPrice,
+      };
     } else {
       return {
         liquidity: 0,
-        price: panaPrice
-      }
+        price: panaPrice,
+      };
     }
   } catch (error) {
     console.error(error);
     return {
       liquidity: 0,
-      price: 0
-    }
-  }
-};
-
-export const daiLiquidity = async (
-  index: number,
-  usd: number,
-  provider: ethers.providers.JsonRpcProvider,
-  networkId: NetworkId,
-) => {
-  try {
-    // DAI hold by Staking Pool
-    const farm = farms.find(p => p.index == index);
-    if (farm) {
-      return +(await getErc20TokenBalance(farm.address, provider, networkId)) / Math.pow(10, 18);
-    } else {
-      return 0;
-    }
-  } catch (error) {
-    console.error(error);
-    return 0;
+      price: 0,
+    };
   }
 };
 
@@ -144,7 +125,7 @@ export const usdcLiquidity = async (
   networkId: NetworkId,
 ) => {
   try {
-    // DAI hold by Staking Pool
+    // USDC hold by Staking Pool
     const farm = farms.find(p => p.index == index);
     if (farm) {
       return +(await getErc20TokenBalance(farm.address, provider, networkId)) / Math.pow(10, 6);
@@ -186,7 +167,7 @@ export const defaultLiquidityCal = async (
   usd: number,
   provider: ethers.providers.JsonRpcProvider,
   networkId: NetworkId,
-): Promise<{ price: number, liquidity: number }> => {
+): Promise<{ price: number; liquidity: number }> => {
   const farm = farms.find(p => p.index == index);
   if (farm) {
     const usdPrice = usd ?? usd > 0 ? usd : await getTokenPrice(farm?.coingeckoId);
@@ -197,27 +178,27 @@ export const defaultLiquidityCal = async (
             +(await getErc20TokenBalance(farm.address, provider, networkId)) / Math.pow(10, farm.decimals);
           return {
             liquidity: usdPrice * +balanceInFarm,
-            price: usdPrice
-          }
+            price: usdPrice,
+          };
         } else {
           return {
             liquidity: 0,
-            price: usdPrice
-          }
+            price: usdPrice,
+          };
         }
       } catch (error) {
         console.error(error);
         return {
           liquidity: 0,
-          price: usdPrice
-        }
+          price: usdPrice,
+        };
       }
     }
   }
   return {
     liquidity: 0,
-    price: 0
-  }
+    price: 0,
+  };
 };
 
 export const farms: FarmInfo[] = [
@@ -233,6 +214,7 @@ export const farms: FarmInfo[] = [
     url: "https://app.sushi.com/legacy/add/0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8/0x369eB8197062093a20402935D3a707b4aE414E9D?chainId=42161",
     coingeckoId: "",
     calculateLiquidity: panaUSDCLiquidity,
+    network: NetworkId.ARBITRUM_MAINNET,
   },
   {
     index: 1,
@@ -246,6 +228,7 @@ export const farms: FarmInfo[] = [
     icon: ["PANA"],
     url: "https://app.sushi.com/swap?inputCurrency=0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8&outputCurrency=0x369eB8197062093a20402935D3a707b4aE414E9D&chainId=42161",
     calculateLiquidity: panaLiquidity,
+    network: NetworkId.ARBITRUM_MAINNET,
   },
   {
     index: 2,
@@ -259,6 +242,7 @@ export const farms: FarmInfo[] = [
     icon: ["USDC"],
     url: "https://app.sushi.com/swap?inputCurrency=ETH&outputCurrency=0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8&chainId=42161",
     calculateLiquidity: defaultLiquidityCal,
+    network: NetworkId.ARBITRUM_MAINNET,
   },
   {
     index: 3,
@@ -272,6 +256,7 @@ export const farms: FarmInfo[] = [
     icon: ["AAVE"],
     url: "https://app.aave.com/",
     calculateLiquidity: defaultLiquidityCal,
+    network: NetworkId.ARBITRUM_MAINNET,
   },
   {
     index: 4,
@@ -285,6 +270,7 @@ export const farms: FarmInfo[] = [
     icon: ["BIFI"],
     url: "https://app.sushi.com/swap?inputCurrency=ETH&outputCurrency=0x99C409E5f62E4bd2AC142f17caFb6810B8F0BAAE&chainId=42161",
     calculateLiquidity: defaultLiquidityCal,
+    network: NetworkId.ARBITRUM_MAINNET,
   },
   {
     index: 5,
@@ -298,6 +284,7 @@ export const farms: FarmInfo[] = [
     icon: ["CRV"],
     url: "https://arbitrum.curve.fi/",
     calculateLiquidity: defaultLiquidityCal,
+    network: NetworkId.ARBITRUM_MAINNET,
   },
   {
     index: 6,
@@ -311,6 +298,7 @@ export const farms: FarmInfo[] = [
     icon: ["DAI"],
     url: "https://app.sushi.com/swap?inputCurrency=ETH&outputCurrency=0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1&chainId=42161",
     calculateLiquidity: defaultLiquidityCal,
+    network: NetworkId.ARBITRUM_MAINNET,
   },
   {
     index: 7,
@@ -324,6 +312,7 @@ export const farms: FarmInfo[] = [
     icon: ["DPX"],
     url: "https://app.sushi.com/swap?inputCurrency=ETH&outputCurrency=0x6C2C06790b3E3E3c38e12Ee22F8183b37a13EE55&chainId=42161",
     calculateLiquidity: defaultLiquidityCal,
+    network: NetworkId.ARBITRUM_MAINNET,
   },
   {
     index: 8,
@@ -337,6 +326,7 @@ export const farms: FarmInfo[] = [
     icon: ["GMX"],
     url: "https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0xfc5A1A6EB076a2C7aD06eD22C90d7E710E35ad0a&chain=arbitrum",
     calculateLiquidity: defaultLiquidityCal,
+    network: NetworkId.ARBITRUM_MAINNET,
   },
   {
     index: 9,
@@ -350,6 +340,7 @@ export const farms: FarmInfo[] = [
     icon: ["OHM"],
     url: "https://app.olympusdao.finance/#/dashboard",
     calculateLiquidity: defaultLiquidityCal,
+    network: NetworkId.ARBITRUM_MAINNET,
   },
   {
     index: 10,
@@ -363,6 +354,7 @@ export const farms: FarmInfo[] = [
     icon: ["JONES"],
     url: "https://app.sushi.com/swap?inputCurrency=ETH&outputCurrency=0x10393c20975cF177a3513071bC110f7962CD67da&chainId=42161",
     calculateLiquidity: defaultLiquidityCal,
+    network: NetworkId.ARBITRUM_MAINNET,
   },
   {
     index: 11,
@@ -376,6 +368,7 @@ export const farms: FarmInfo[] = [
     icon: ["STG"],
     url: "https://stargate.finance/farm",
     calculateLiquidity: defaultLiquidityCal,
+    network: NetworkId.ARBITRUM_MAINNET,
   },
   {
     index: 12,
@@ -389,6 +382,7 @@ export const farms: FarmInfo[] = [
     icon: ["SUSHI"],
     url: "https://app.sushi.com/swap?inputCurrency=ETH&outputCurrency=0xd4d42F0b6DEF4CE0383636770eF773390d85c61A&chainId=42161",
     calculateLiquidity: defaultLiquidityCal,
+    network: NetworkId.ARBITRUM_MAINNET,
   },
   {
     index: 13,
@@ -402,6 +396,7 @@ export const farms: FarmInfo[] = [
     icon: ["SYN"],
     url: "https://synapseprotocol.com/stake",
     calculateLiquidity: defaultLiquidityCal,
+    network: NetworkId.ARBITRUM_MAINNET,
   },
   {
     index: 14,
@@ -415,6 +410,7 @@ export const farms: FarmInfo[] = [
     icon: ["VST"],
     url: "https://arbitrum.balancer.fi/#/trade/ether/0xa684cd057951541187f288294a1e1c2646aa2d24",
     calculateLiquidity: defaultLiquidityCal,
+    network: NetworkId.ARBITRUM_MAINNET,
   },
   {
     index: 15,
@@ -428,6 +424,63 @@ export const farms: FarmInfo[] = [
     icon: ["wETH"],
     url: "https://app.sushi.com/swap?inputCurrency=ETH&outputCurrency=0x82aF49447D8a07e3bd95BD0d56f35241523fBab1&chainId=42161",
     calculateLiquidity: defaultLiquidityCal,
+    network: NetworkId.ARBITRUM_MAINNET,
+  },
+  {
+    index: 16,
+    pid: 0,
+    symbol: "USDC-Pana",
+    name: "USDC-Pana LP",
+    address: "0x91a2d26e987219E6a266784d5a816ceEf03cB3B8",
+    decimals: 18,
+    points: 10,
+    coingeckoId: "",
+    icon: ["USDC", "PANA"],
+    url: "https://swapr.eth.link/#/swap?chainId=421611",
+    calculateLiquidity: defaultLiquidityCal,
+    network: NetworkId.ARBITRUM_TESTNET,
+  },
+  {
+    index: 17,
+    pid: 1,
+    symbol: "Pana",
+    name: "Pana Coin",
+    address: "0x053Bdec0bEC0b010C7dd37E82C2246d107d6B363",
+    decimals: 18,
+    points: 10,
+    coingeckoId: "pana",
+    icon: ["PANA"],
+    url: "https://swapr.eth.link/#/swap?chainId=421611",
+    calculateLiquidity: defaultLiquidityCal,
+    network: NetworkId.ARBITRUM_TESTNET,
+  },
+  {
+    index: 18,
+    pid: 2,
+    symbol: "USDC",
+    name: "USDC Stable Coin",
+    address: "0x91700A0a45bef3Ef488eC11792aE3b3199e0dC4e",
+    decimals: 6,
+    points: 10,
+    coingeckoId: "usdc",
+    icon: ["USDC"],
+    url: "https://swapr.eth.link/#/swap?chainId=421611",
+    calculateLiquidity: defaultLiquidityCal,
+    network: NetworkId.ARBITRUM_TESTNET,
+  },
+  {
+    index: 19,
+    pid: 3,
+    symbol: "wETH",
+    name: "Wrapped ETH",
+    address: "0xB47e6A5f8b33b3F17603C83a0535A9dcD7E32681",
+    decimals: 18,
+    points: 10,
+    coingeckoId: "weth",
+    icon: ["wETH"],
+    url: "https://swapr.eth.link/#/swap?chainId=421611",
+    calculateLiquidity: defaultLiquidityCal,
+    network: NetworkId.ARBITRUM_TESTNET,
   },
 ];
 
@@ -443,7 +496,7 @@ export function parseBigNumber(value: string, decimals: number): BigNumber {
 
 export function formatMoney(value: number, abbreviate = false, hasPrefix = true): string {
   try {
-    const prefix = hasPrefix ? value < 0 ? "-$" : "$" : '';
+    const prefix = hasPrefix ? (value < 0 ? "-$" : "$") : "";
     value = Math.abs(value);
     if (abbreviate) {
       if (value >= 1000) {
