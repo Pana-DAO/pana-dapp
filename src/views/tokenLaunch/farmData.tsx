@@ -116,11 +116,11 @@ function FarmData({
           data.price = farmLiq.price > 0 ? farmLiq.price : 0;
         }
         prices[i] = data;
-        panaperdaylst[i] =farmRewardsPerDay(farms[i].pid, farms[i].index);
+        panaperdaylst[i] = farmRewardsPerDay(farms[i].pid, farms[i].index);
       }
       setFarmLiquidity(prices);
-      onFarmLiquidityUpdate(prices.map(p => p.liquidity).reduce((total, p) => total += p));
-      onFarmPanaUpdate(panaperdaylst.map(p => p).reduce((total, p) => total= total.add(p)));
+      onFarmLiquidityUpdate(prices.map(p => p.liquidity).reduce((total, p) => (total += p)));
+      onFarmPanaUpdate(panaperdaylst.map(p => p).reduce((total, p) => (total = total.add(p))));
     };
 
     loadFarmLiquidity();
@@ -138,7 +138,14 @@ function FarmData({
         return p && p.index === index;
       });
       if (farmLiq && farmLiq.price > 0)
-        return '$' + formatCurrency((farmLiq.price * +ethers.utils.formatUnits(userPoolBalance[pid], farms[index].decimals)), 4, "PANA");
+        return (
+          "$" +
+          formatCurrency(
+            farmLiq.price * +ethers.utils.formatUnits(userPoolBalance[pid], farms[index].decimals),
+            4,
+            "PANA",
+          )
+        );
     }
   }
 
@@ -206,20 +213,26 @@ function FarmData({
               <Typography>{getFarmLiquidity(farm.index)}</Typography>
             </TableCell>
             <TableCell align="center">
-              <Typography>{ connected ? getUserPoolBalanceFormated(farm.pid, farm.index) : '-'}</Typography>
-              { connected && <Typography style={{marginTop: '4px'}} color="textSecondary" variant="body2">{getUserPoolBalanceInUSD(farm.pid, farm.index)}</Typography> }
+              <Typography>{connected ? getUserPoolBalanceFormated(farm.pid, farm.index) : "-"}</Typography>
+              {connected && (
+                <Typography style={{ marginTop: "4px" }} color="textSecondary" variant="body2">
+                  {getUserPoolBalanceInUSD(farm.pid, farm.index)}
+                </Typography>
+              )}
             </TableCell>
             <TableCell align="center">
-              <Typography>{ connected ? getFarmRewardsPerDayFormated(farm.pid, farm.index) : '-'}</Typography>
+              <Typography>{connected ? getFarmRewardsPerDayFormated(farm.pid, farm.index) : "-"}</Typography>
             </TableCell>
             <TableCell align="center">
-              <Typography>{ connected ? getPendingPanaForUserFormated(farm.pid) : '-'}</Typography>
+              <Typography>{connected ? getPendingPanaForUserFormated(farm.pid) : "-"}</Typography>
             </TableCell>
             <TableCell>
               <Link component={NavLink} to={`/tokenlaunch/${farm.index}`}>
-                { <Button disabled={ !connected } variant="outlined" color="primary" style={{ width: "100%" }}>
-                  <Typography variant="h6">{t`Stake/Unstake`}</Typography>
-                </Button> }
+                {
+                  <Button disabled={!connected} variant="outlined" color="primary" style={{ width: "100%" }}>
+                    <Typography variant="h6">{t`Stake/Unstake`}</Typography>
+                  </Button>
+                }
               </Link>
             </TableCell>
           </TableRow>

@@ -101,9 +101,6 @@ export async function getTokenIdByContract(contractAddress: string): Promise<str
 }
 
 export const getEtherscanUrl = ({ bond, networkId }: { bond: IBond; networkId: NetworkId }) => {
-  if (networkId === NetworkId.TESTNET_GOERLI) {
-    return `https://goerli.etherscan.io/address/${bond.quoteToken}`;
-  }
   if (networkId === NetworkId.ARBITRUM_MAINNET) {
     return `https://arbiscan.io/address/${bond.quoteToken}`;
   }

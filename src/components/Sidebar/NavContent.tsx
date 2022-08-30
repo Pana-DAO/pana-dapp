@@ -1,53 +1,32 @@
-/* eslint-disable */
 import "./sidebar.scss";
 
-import { t, Trans } from "@lingui/macro";
-import {
-  Box,
-  Divider,
-  Link,
-  Paper,
-  SvgIcon,
-  Typography,
-  useTheme,
-  ListSubheader,
-  List,
-  ListItem,
-  Collapse,
-} from "@material-ui/core";
+import { Box, Link, Paper, SvgIcon, Typography, ListSubheader, List, ListItem, Collapse } from "@material-ui/core";
 import {
   ExpandLess,
   ExpandMore,
-  Ballot,
   AccountBalanceOutlined,
   DashboardOutlined,
-  FolderOpenOutlined,
   FilterNoneOutlined,
   RedeemOutlined,
   InfoOutlined,
   BubbleChartOutlined,
 } from "@material-ui/icons";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { NavLink, useLocation } from "react-router-dom";
-import { NetworkId } from "src/constants";
-import { EnvHelper } from "src/helpers/Environment";
 import { useAppSelector } from "src/hooks";
 import { useWeb3Context } from "src/hooks/web3Context";
-import { Bond } from "src/lib/Bond";
-import { getAllBonds, getUserNotes } from "src/slices/BondSlice";
 import { DisplayBondDiscount } from "src/views/Bond/Bond";
 
 import karshaCoin from "../../assets/icons/karsha-coin.png";
 // import karshalogo from "../../assets/images/logo.png";
 import WalletAddressEns from "../TopBar/Wallet/WalletAddressEns";
-import externalUrls from "./externalUrls";
-import Social from "./Social";
 import RebaseTimer from "../RebaseTimer/RebaseTimer";
 
 import { ReactComponent as PanaDAOIcon } from "../../assets/icons/panadao-nav-header.svg";
 import { getUserPoolBalance, getUserPendingPana } from "src/slices/StakingPoolsSlice";
+import { checkNetwork, isWalletTestnet } from "src/helpers/NetworkHelper";
 
 type NavContentProps = {
   handleDrawerToggle?: () => void;
@@ -112,10 +91,10 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
                 style={{ minWidth: "151px", minHeight: "40px", width: "151px" }}
               />
             </Link>
-            {networkId === NetworkId.ARBITRUM_MAINNET ? (
+            {checkNetwork(networkId) ? (
               <>
                 <WalletAddressEns />
-                {/* <RebaseTimer /> */}
+                {isWalletTestnet(networkId) ? <RebaseTimer /> : <></>}
               </>
             ) : (
               <></>
@@ -127,83 +106,82 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
               {
                 <>
                   <List component="nav">
-                    {/* <Link className="nav-link" component={NavLink} to="/dashboard">
-                      <ListItem button selected={location.pathname == "/dashboard"}>
+                    {isWalletTestnet(networkId) ? (
+                      <Link className="nav-link" component={NavLink} to="/dashboard">
+                        <ListItem button selected={location.pathname == "/dashboard"}>
+                          <Typography variant="h6" className="nav-content">
+                            <div className="nav-svg">
+                              <SvgIcon viewBox="0 0 25 25" className="menuicon" component={DashboardOutlined} />
+                            </div>
+                            <div className="nav-text">Dashboard</div>
+                          </Typography>
+                        </ListItem>
+                      </Link>
+                    ) : (
+                      <></>
+                    )}
+                    <Link className="nav-link" component={NavLink} to="/tokenlaunch">
+                      <ListItem button selected={location.pathname == "/tokenlaunch"}>
                         <Typography variant="h6" className="nav-content">
                           <div className="nav-svg">
-                            <SvgIcon viewBox="0 0 25 25" className="menuicon" component={DashboardOutlined} />
+                            <SvgIcon viewBox="0 0 25 25" className="menuicon" component={BubbleChartOutlined} />
                           </div>
-                          <div className="nav-text">Dashboard</div>
+                          <div className="nav-text">Token Launch</div>
                         </Typography>
                       </ListItem>
-                    </Link> */}
-                    {<>
-                      <Link className="nav-link" component={NavLink} to="/tokenlaunch">
-                          <ListItem button selected={location.pathname == "/tokenlaunch"}>
+                    </Link>
+                    {isWalletTestnet(networkId) ? (
+                      <>
+                        <Link className="nav-link" component={NavLink} to="/bonds">
+                          <ListItem button selected={location.pathname.indexOf("/bonds") > -1}>
                             <Typography variant="h6" className="nav-content">
                               <div className="nav-svg">
-                                <SvgIcon viewBox="0 0 25 25" className="menuicon" component={BubbleChartOutlined} />
+                                <SvgIcon viewBox="0 0 25 25" className="menuicon" component={AccountBalanceOutlined} />
                               </div>
-                              <div className="nav-text">Token Launch</div>
+                              <div className="nav-text">Bonds</div>
                             </Typography>
                           </ListItem>
                         </Link>
-                        {/* <span className="nav-link">
-                          <Link className="nav-link" component={NavLink} to="/bonds">
-                            <ListItem button selected={location.pathname.indexOf("/bonds") > -1}>
-                              <Typography variant="h6" className="nav-content">
-                                <div className="nav-svg">
-                                  <SvgIcon
-                                    viewBox="0 0 25 25"
-                                    className="menuicon"
-                                    component={AccountBalanceOutlined}
-                                  />
-                                </div>
-                                <div className="nav-text">Bonds</div>
-                              </Typography>
-                            </ListItem>
-                          </Link>
-                          <Collapse in={true} timeout="auto" unmountOnExit>
-                            <List
-                              className="submenu"
-                              subheader={
-                                <ListSubheader onClick={() => setIsOpen(!isOpen)} component="div">
-                                  Highest Discount
-                                  {isOpen ? (
-                                    <ExpandLess className="arrowposition-roi" />
-                                  ) : (
-                                    <ExpandMore className="arrowposition-roi" />
-                                  )}
-                                </ListSubheader>
-                              }
-                              component="div"
-                              disablePadding
-                            >
-                              <Collapse in={isOpen} timeout="auto" unmountOnExit>
-                                <div className="submenulist">
-                                  {sortedBonds.map((bond, i) => {
-                                    return (
-                                      <Link
-                                        component={NavLink}
-                                        to={`/bonds/${bond.index}`}
-                                        key={i}
-                                        className={"bond"}
-                                        onClick={handleDrawerToggle}
-                                      >
-                                        <Typography variant="body2">
-                                          {bond.displayName}
-                                          <span className="bond-pair-roi">
-                                            <DisplayBondDiscount key={bond.index} bond={bond} />
-                                          </span>
-                                        </Typography>
-                                      </Link>
-                                    );
-                                  })}
-                                </div>
-                              </Collapse>
-                            </List>
-                          </Collapse>
-                        </span>
+                        <Collapse in={true} timeout="auto" unmountOnExit>
+                          <List
+                            className="submenu"
+                            subheader={
+                              <ListSubheader onClick={() => setIsOpen(!isOpen)} component="div">
+                                Highest Discount
+                                {isOpen ? (
+                                  <ExpandLess className="arrowposition-roi" />
+                                ) : (
+                                  <ExpandMore className="arrowposition-roi" />
+                                )}
+                              </ListSubheader>
+                            }
+                            component="div"
+                            disablePadding
+                          >
+                            <Collapse in={isOpen} timeout="auto" unmountOnExit>
+                              <div className="submenulist">
+                                {sortedBonds.map((bond, i) => {
+                                  return (
+                                    <Link
+                                      component={NavLink}
+                                      to={`/bonds/${bond.index}`}
+                                      key={i}
+                                      className={"bond"}
+                                      onClick={handleDrawerToggle}
+                                    >
+                                      <Typography variant="body2">
+                                        {bond.displayName}
+                                        <span className="bond-pair-roi">
+                                          <DisplayBondDiscount key={bond.index} bond={bond} />
+                                        </span>
+                                      </Typography>
+                                    </Link>
+                                  );
+                                })}
+                              </div>
+                            </Collapse>
+                          </List>
+                        </Collapse>
                         <Link className="nav-link" component={NavLink} to="/exchange">
                           <ListItem button selected={location.pathname == "/exchange"}>
                             <Typography variant="h6" className="nav-content">
@@ -213,46 +191,47 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
                               <div className="nav-text">Unwrap</div>
                             </Typography>
                           </ListItem>
-                        </Link> */}
-
-                        {/* {showPPana() ? (
-                          <span className="nav-link">
-                            <ListItem button onClick={() => setIsRedeemOpen(!isRedeemOpen)}>
-                              <Typography variant="h6" className="nav-content">
-                                <div className="nav-svg">
-                                  <SvgIcon viewBox="0 0 25 25" className="menuicon" component={RedeemOutlined} />
-                                </div>
-                                <div className="nav-text">Redeem</div>
-                              </Typography>
-                              {isRedeemOpen ? (
-                                <ExpandLess className="arrowposition" />
-                              ) : (
-                                <ExpandMore className="arrowposition" />
-                              )}
-                            </ListItem>
-                            <Collapse in={isRedeemOpen} className="submenu pad0" timeout="auto" unmountOnExit>
-                              <div className="submenulist menu2">
-                                <List>
-                                  {showPPana() ? (
-                                    <Link className="nav-link" component={NavLink} to="/redeem/ppana">
-                                      <ListItem button selected={location.pathname == "/redeem/ppana"}>
-                                        <Typography variant="h6" className="nav-content">
-                                          <div className="nav-text">pPana</div>
-                                        </Typography>
-                                      </ListItem>
-                                    </Link>
-                                  ) : (
-                                    <></>
-                                  )}
-                                </List>
-                              </div>
-                            </Collapse>
-                          </span>
-                        ) : (
-                          <></>
-                        )} */}
+                        </Link>
                       </>
-                      }
+                    ) : (
+                      <></>
+                    )}
+                    {isWalletTestnet(networkId) ? (
+                      <>
+                        <ListItem button onClick={() => setIsRedeemOpen(!isRedeemOpen)}>
+                          <Typography variant="h6" className="nav-content">
+                            <div className="nav-svg">
+                              <SvgIcon viewBox="0 0 25 25" className="menuicon" component={RedeemOutlined} />
+                            </div>
+                            <div className="nav-text">Redeem</div>
+                          </Typography>
+                          {isRedeemOpen ? (
+                            <ExpandLess className="arrowposition" />
+                          ) : (
+                            <ExpandMore className="arrowposition" />
+                          )}
+                        </ListItem>
+                        <Collapse in={isRedeemOpen} className="submenu pad0" timeout="auto" unmountOnExit>
+                          <div className="submenulist menu2">
+                            <List>
+                              {showPPana() ? (
+                                <Link className="nav-link" component={NavLink} to="/redeem/ppana">
+                                  <ListItem button selected={location.pathname == "/redeem/ppana"}>
+                                    <Typography variant="h6" className="nav-content">
+                                      <div className="nav-text">pPana</div>
+                                    </Typography>
+                                  </ListItem>
+                                </Link>
+                              ) : (
+                                <></>
+                              )}
+                            </List>
+                          </div>
+                        </Collapse>
+                      </>
+                    ) : (
+                      <></>
+                    )}
                     <Link className="nav-link" component={NavLink} to="/memorandum">
                       <ListItem button selected={location.pathname == "/memorandum"}>
                         <Typography variant="h6" className="nav-content">

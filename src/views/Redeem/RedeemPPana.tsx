@@ -50,7 +50,7 @@ function RedeemPPana() {
     return state.account.balances && toInteger(state.account.balances.pPana).toString();
   });
   const daiBalance = useAppSelector(state => {
-    return state.account.balances && state.account.balances.dai;
+    return state.account.balances && state.account.balances.usdc;
   });
 
   const pPanaRedeemAllowance = useAppSelector(state => {

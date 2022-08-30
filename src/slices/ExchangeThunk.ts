@@ -1,8 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { BigNumber, ethers } from "ethers";
 import ReactGA from "react-ga";
-import { Karsha, Pana, Staking__factory, PPanaRedeem__factory, DAI } from "src/typechain";
-import { abi as daiABI } from "../abi/DAI.json";
+import { Karsha, Pana, Staking__factory, PPanaRedeem__factory, USDC } from "src/typechain";
+import { abi as usdcABI } from "../abi/USDC.json";
 import { abi as karshaABI } from "../abi/Karsha.json";
 import { abi as panaABI } from "../abi/Pana.json";
 import { abi as pPanaABI } from "../abi/pPana.json";
@@ -32,7 +32,7 @@ function alreadyApprovedToken(
   stakeAllowance: BigNumber,
   exchangeAllowance: BigNumber,
   pPanaAllowance: BigNumber,
-  pPanaDAIAllowance: BigNumber,
+  pPanaUSDCAllowance: BigNumber,
 ) {
   // set defaults
   const bigZero = BigNumber.from("0");
@@ -44,8 +44,8 @@ function alreadyApprovedToken(
     applicableAllowance = exchangeAllowance;
   } else if (token === "pPana") {
     applicableAllowance = pPanaAllowance;
-  } else if (token === "pPanaDAI") {
-    applicableAllowance = pPanaDAIAllowance;
+  } else if (token === "pPanaUSDC") {
+    applicableAllowance = pPanaUSDCAllowance;
   }
 
   // check if allowance exists
@@ -70,16 +70,16 @@ export const changeApproval = createAsyncThunk(
       signer,
     ) as Karsha;
     const pPanaContract = new ethers.Contract(addresses[networkID].PPANA_ADDRESS as string, pPanaABI, signer) as Pana;
-    const daiContract = new ethers.Contract(addresses[networkID].DAI_ADDRESS as string, daiABI, signer) as DAI;
+    const usdcContract = new ethers.Contract(addresses[networkID].USDC_ADDRESS as string, usdcABI, signer) as USDC;
 
     let approveTx;
     let stakeAllowance = await panaContract.allowance(address, addresses[networkID].STAKING_ADDRESS);
     const exchangeAllowance = await karshaContract.allowance(address, addresses[networkID].STAKING_ADDRESS);
     let pPanaRedeemAllowance = await pPanaContract.allowance(address, addresses[networkID].PPANA_REDEEM_ADDRESS);
-    let pPanaDAIAllowance = await daiContract.allowance(address, addresses[networkID].PPANA_REDEEM_ADDRESS);
+    let pPanaUSDCAllowance = await usdcContract.allowance(address, addresses[networkID].PPANA_REDEEM_ADDRESS);
 
     // return early if approval has already happened
-    if (alreadyApprovedToken(token, stakeAllowance, exchangeAllowance, pPanaRedeemAllowance, pPanaDAIAllowance)) {
+    if (alreadyApprovedToken(token, stakeAllowance, exchangeAllowance, pPanaRedeemAllowance, pPanaUSDCAllowance)) {
       dispatch(info("Approval completed."));
       return dispatch(
         fetchAccountSuccess({
@@ -89,7 +89,7 @@ export const changeApproval = createAsyncThunk(
           },
           redeem: {
             pPanaRedeem: +pPanaRedeemAllowance,
-            pPanaDAI: +pPanaDAIAllowance,
+            pPanaUSDC: +pPanaUSDCAllowance,
           },
         }),
       );
@@ -111,8 +111,8 @@ export const changeApproval = createAsyncThunk(
           addresses[networkID].PPANA_REDEEM_ADDRESS,
           ethers.utils.parseUnits("1000000000000000000", "gwei").toString(),
         );
-      } else if (token === "pPanaDAI") {
-        approveTx = await daiContract.approve(
+      } else if (token === "pPanaUSDC") {
+        approveTx = await usdcContract.approve(
           addresses[networkID].PPANA_REDEEM_ADDRESS,
           ethers.utils.parseUnits("1000000000000000000", "gwei").toString(),
         );
@@ -137,7 +137,7 @@ export const changeApproval = createAsyncThunk(
     // go get fresh allowances
     stakeAllowance = await panaContract.allowance(address, addresses[networkID].STAKING_ADDRESS);
     pPanaRedeemAllowance = await pPanaContract.allowance(address, addresses[networkID].PPANA_REDEEM_ADDRESS);
-    pPanaDAIAllowance = await daiContract.allowance(address, addresses[networkID].PPANA_REDEEM_ADDRESS);
+    pPanaUSDCAllowance = await usdcContract.allowance(address, addresses[networkID].PPANA_REDEEM_ADDRESS);
 
     return dispatch(
       fetchAccountSuccess({
@@ -147,7 +147,7 @@ export const changeApproval = createAsyncThunk(
         },
         redeem: {
           pPanaRedeem: +pPanaRedeemAllowance,
-          pPanaDAI: +pPanaDAIAllowance,
+          pPanaUSDC: +pPanaUSDCAllowance,
         },
       }),
     );

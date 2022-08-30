@@ -1,4 +1,4 @@
-import arbitrum_testnet from "./assets/arbitrum_plain.svg";
+import arbitrum_logo from "./assets/arbitrum_plain.svg";
 import { NodeHelper } from "./helpers/NodeHelper";
 
 export const EPOCH_INTERVAL = 2200;
@@ -35,7 +35,7 @@ export const addresses: IAddresses = {
     BOND_DEPOSITORY: "",
     DAO_TREASURY: "",
     DAO_MULTISIG: "0xa178776D7B05931e31b2b955Dd97436F08046cFe",
-    STAKING_POOLS: "0x1288D0bEd4F0a1381A0f63cbC97C7353908623be"
+    STAKING_POOLS: "0x1288D0bEd4F0a1381A0f63cbC97C7353908623be",
   },
   [NetworkId.ARBITRUM_TESTNET]: {
     USDC_ADDRESS: "0x91700A0a45bef3Ef488eC11792aE3b3199e0dC4e",
@@ -55,7 +55,7 @@ export const addresses: IAddresses = {
     PPANA_ADDRESS: "0x404D1F1300F28BFEE5FDED5FE9D5F898B93E65F5",
     PPANA_REDEEM_ADDRESS: "0x32C90D5E7AA30DD15B8AEBBEF565CF0BC732B329",
     DAO_MULTISIG: "0xde9eB6AB368290D17eb207206e2a067C65D98F15",
-    STAKING_POOLS: "0xaffB1cB501DccC274F81D0C6d495DdDbEFE9687F"
+    STAKING_POOLS: "0xaffB1cB501DccC274F81D0C6d495DdDbEFE9687F",
   },
 };
 
@@ -100,8 +100,8 @@ export const NETWORKS: { [key: number]: INetwork } = {
     },
     rpcUrls: ["https://arb1.arbitrum.io/rpc", "https://arbitrum-mainnet.infura.io/v3"],
     blockExplorerUrl: "https://arbiscan.io",
-    image: arbitrum_testnet,
-    imageAltText: "Arbitrum Logo",
+    image: arbitrum_logo,
+    imageAltText: "Arbitrum Mainnet",
     uri: () => NodeHelper.getMainnetURI(NetworkId.ARBITRUM_MAINNET),
     isOracleIntegrated: false
   },
@@ -115,7 +115,7 @@ export const NETWORKS: { [key: number]: INetwork } = {
     },
     rpcUrls: ["https://rinkeby.arbitrum.io/rpc"],
     blockExplorerUrl: "https://rinkeby-explorer.arbitrum.io/#",
-    image: arbitrum_testnet,
+    image: arbitrum_logo,
     imageAltText: "Arbitrum Testnet",
     uri: () => NodeHelper.getMainnetURI(NetworkId.ARBITRUM_TESTNET),
     isOracleIntegrated: true
