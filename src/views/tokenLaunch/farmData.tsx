@@ -51,12 +51,18 @@ function FarmData({
 
   function getUserPoolBalanceInUSD(pid: number, index: number,farmLiq?: FarmPriceData) {
     if (userPoolBalance) {      
-      if (farmLiq && farmLiq.liquidityUSD > 0)
-        // return '$' + formatCurrency((farmLiq.price * +ethers.utils.formatUnits(userPoolBalance[pid], farm.decimals)), 4, "PANA");     
-        return '$' + formatCurrency(farmLiq.liquidityUSD, 4, "PANA");     
+      if (farmLiq && farmLiq.price > 0)
+        return '$' + formatCurrency((farmLiq.price * +ethers.utils.formatUnits(userPoolBalance[pid], farm.decimals)), 4, "PANA");     
     }
-    return '$' + formatCurrency(0, 4, "PANA");     
   }
+  // function getUserPoolBalanceInUSD(pid: number, index: number,farmLiq?: FarmPriceData) {
+  //   if (userPoolBalance) {      
+  //     if (farmLiq && farmLiq.liquidityUSD > 0)
+  //       // return '$' + formatCurrency((farmLiq.price * +ethers.utils.formatUnits(userPoolBalance[pid], farm.decimals)), 4, "PANA");     
+  //       return '$' + formatCurrency(farmLiq.liquidityUSD, 4, "PANA");     
+  //   }
+  //   return '$' + formatCurrency(0, 4, "PANA");     
+  // }
 
   function getFarmRewardsPerDayFormated(farmLiq?: FarmPriceData): string {        
     if (farmLiq && farmLiq.farmperday.gt(0)) {

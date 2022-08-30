@@ -51,6 +51,7 @@ function Farm({ index }: { index: number }) {
   const { provider, address, networkId } = useWeb3Context();
   const farm = farms.find(p => p.index == index) || farms[index];
   const [quantity, setQuantity] = useState("");
+  const [isFarmLoading, setFarmLoading] = useState(false);
   const [quantityUnstake, setQuantityUnstake] = useState("");
   const [stake, setStake] = useState("stake");
   const [panaPerDay, setPanaPerDay] = useState(ethers.constants.Zero);
@@ -63,11 +64,15 @@ function Farm({ index }: { index: number }) {
   // const balance = 1;
 
   useEffect(() => {
+    setFarmLoading(true);
     const promise = getErc20TokenBalance(farm.address, provider, networkId);
-    promise.then(balance => setFarmBalance(balance));
+    promise.then(balance => {
+      setFarmBalance(balance);
+      setFarmLoading(false);
+    });
   }, [farm]);
 
-  const isFarmLoading = false; //useAppSelector<boolean>(state => state.bonding.loading ?? true);
+  //const isFarmLoading = false; //useAppSelector<boolean>(state => state.bonding.loading ?? true);
 
   const pendingPanaForUser = useAppSelector(state => {
     return state.stakingPools.pendingPanaForUser && state.stakingPools.pendingPanaForUser.length > 0

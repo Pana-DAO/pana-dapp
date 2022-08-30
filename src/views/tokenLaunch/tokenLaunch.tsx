@@ -49,7 +49,12 @@ function TokenLaunch() {
   const isSmallScreen = useMediaQuery("(max-width: 885px)"); // change to breakpoint query
   const [loadCount, setLoadCount] = useState(0);  
   const [loadProgress, setLoadProgress] = useState(0);
-  const [checkIsLoading, setCheckIsLoading] = useState(false);  
+  const [checkIsLoading, setCheckIsLoading] = useState(false);    
+  const [zoomed, setZoomed] = useState(false);
+  const [totalLiquidity, setTotalLiquidity] = useState(0);
+  const [totalLiquidityUSD, setTotalLiquidityUSD] = useState(0);
+  const [totalPana, setTotalPana] = useState(BigNumber.from(0));
+  
   const userPoolBalance = useAppSelector(state => {
     return state.stakingPools.userPoolBalance && state.stakingPools.userPoolBalance.length > 0
       ? state.stakingPools.userPoolBalance
@@ -62,10 +67,6 @@ function TokenLaunch() {
       : null;
   });
 
-  const [zoomed, setZoomed] = useState(false);
-  const [totalLiquidity, setTotalLiquidity] = useState(0);
-  const [totalLiquidityUSD, setTotalLiquidityUSD] = useState(0);
-  const [totalPana, setTotalPana] = useState(BigNumber.from(0));
   // const [farmPanaPerday, setFarmPanaPerday] = useState(Array(farms.length) as BigNumber[]);
   // const [farmLiquidityData, setfarmLiquidityData] = useState(Array(farms.length) as number[]);
   const [farmLiquidity, setFarmLiquidity] = useState(Array(farms.length) as FarmPriceData[]); 
@@ -93,7 +94,12 @@ function TokenLaunch() {
     };
   };
 
-  const loadFarmLiquidity = async () => {
+  const loadFarmLiquidity = async (isOnlyTotalValue:boolean) => {
+    //to avoid whole run for totak value alone
+    // if(chcktotalPana){
+    //   await new Promise(resolve => setTimeout(resolve, 5000));
+    //   if(address) return;      
+    // }
     const tokenslist = farms
       .filter(x => {
         if (x.coingeckoId) return true;
@@ -110,7 +116,7 @@ function TokenLaunch() {
     }      
     let totalP=BigNumber.from("0");
     let totalLiq=0;
-    let totalLiqUSD=0;
+    let totalLiqUSD=0;    
     for (let i = 0; i < farms.length; i++) {
       const data = {balance:BigNumber.from("0"), index: farms[i].index,liquidityUSD:0, farmperday:BigNumber.from("0"), liquidity: 0, price: 0,isLoad:false } as FarmPriceData;
       const farmLiq = await farms[i].calculateLiquidity(
@@ -118,7 +124,7 @@ function TokenLaunch() {
         allprice[farms[i].coingeckoId]?.usd,
         provider,
         networkId,
-      );    
+      );
       if (farmLiq) {
         const userpool = userPoolBalance!=null?userPoolBalance[farms[i].pid??0]:0;
         data.liquidity = farmLiq.liquidity > 0 ? farmLiq.liquidity : 0;
@@ -133,19 +139,32 @@ function TokenLaunch() {
           totalLiqUSD=totalLiqUSD+(data.liquidityUSD??0)          
           setFarmLiquidity(farmLiquidity);
         }
-      }    
+      }       
     }
-    setTotalPana(totalP);
-    setTotalLiquidity(totalLiq);
-    setTotalLiquidityUSD(totalLiqUSD);
+    if(isOnlyTotalValue){ 
+      setTotalLiquidity(totalLiq);
+    }
+    else{
+      setTotalLiquidity(totalLiq);
+      setTotalLiquidityUSD(totalLiqUSD);
+      setTotalPana(totalP);
+    }    
   };
  
-  useEffect(() => {    
-    if(loadCount>0 &&userPoolBalance!=null&&checkIsLoading==false){
-      setCheckIsLoading(true)
-      loadFarmLiquidity().finally(()=>setCheckIsLoading(false));
+  useEffect(() => {
+    //&&userPoolBalance!=null        
+    if(checkIsLoading==false && ((address&&userPoolBalance!=null))){         
+      setCheckIsLoading(true);      
+      loadFarmLiquidity(false).finally(()=>setCheckIsLoading(false));
     }
   }, [loadCount]);
+
+  useEffect(() => {
+    if(!address){
+      loadFarmLiquidity(true);
+    }
+  }, [address]);
+  
 
   function farmRewardsFarmPerDay(pid: number, farmBalanceData:any,farmpoints:any): BigNumber {    
     if (userPoolBalance && userPoolBalance[pid] && farmBalanceData) {
@@ -280,13 +299,13 @@ function TokenLaunch() {
                         </Typography>
                         <Typography variant="h4" align="center" style={{ marginBottom: "10px" }}>
                           <>
-                            {!totalLiquidity ? (
-                              <Skeleton width="200px" />
-                            ) : totalPana ? (
-                              formatCurrency(+ethers.utils.formatUnits(totalPana, 18), 4, "PANA")
-                            ) : (
-                              "-"
-                            )}
+                            {(!checkIsLoading||totalPana!=(BigNumber.from("0"))) ? (
+                               totalPana ? (
+                                formatCurrency(+ethers.utils.formatUnits(totalPana, 18), 4, "PANA")
+                              ) : (
+                                "-"
+                              )
+                            ) :<Skeleton width="200px" />}
                           </>
                         </Typography>
                       </div>
