@@ -431,7 +431,7 @@ function Farm({ index }: { index: number }) {
                       </Typography>
                     </Box>
                     <Typography className="price-data">
-                      {isFarmLoading ? (
+                      {isFarmLoading||assetBalance==undefined ? (
                         <Skeleton width="100px" />
                       ) : (
                         `${assetBalance && formatCurrency(+assetBalance, 6, "PANA")} ${farm.symbol}`
