@@ -86,6 +86,10 @@ function TokenLaunch() {
     dispatch(onHarvestAll({ provider, networkID: networkId, address }));
   };
 
+  const checkGreaterZero = (val:BigNumber) => {    
+    return val.gt(BigNumber.from(0));
+  };
+
   const arbitrum_mainnet = NETWORKS[NetworkId.ARBITRUM_MAINNET];
 
   const handleSwitchChain = (id: any) => {
@@ -152,7 +156,7 @@ function TokenLaunch() {
   };
  
   useEffect(() => {
-    //&&userPoolBalance!=null        
+    //&&userPoolBalance!=null 
     if(checkIsLoading==false && ((address&&userPoolBalance!=null))){         
       setCheckIsLoading(true);      
       loadFarmLiquidity(false).finally(()=>setCheckIsLoading(false));
@@ -299,7 +303,7 @@ function TokenLaunch() {
                         </Typography>
                         <Typography variant="h4" align="center" style={{ marginBottom: "10px" }}>
                           <>
-                            {(!checkIsLoading||totalPana!=(BigNumber.from("0"))) ? (
+                            {((totalLiquidity&&!checkIsLoading)||checkGreaterZero(totalPana)) ? (
                                totalPana ? (
                                 formatCurrency(+ethers.utils.formatUnits(totalPana, 18), 4, "PANA")
                               ) : (
