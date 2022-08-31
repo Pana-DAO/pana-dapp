@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 import { BigNumber, ethers } from "ethers";
 import { RootState } from "src/store";
-import { DAI, Karsha, Pana, PPanaRedeem__factory, PPanaRedeem } from "src/typechain";
+import { USDC, Karsha, Pana, PPanaRedeem__factory, PPanaRedeem } from "src/typechain";
 import { prettifySeconds } from "src/helpers";
-import { abi as daiAbi } from "../abi/DAI.json";
+import { abi as usdcAbi } from "../abi/USDC.json";
 import { abi as karshaAbi } from "../abi/Karsha.json";
 import { abi as panaAbi } from "../abi/Pana.json";
 import { abi as pPanaAbi } from "../abi/pPana.json";
@@ -78,7 +78,7 @@ export const getBalances = createAsyncThunk(
       handleContractError(e);
     }
     try {
-      const usdcContract = new ethers.Contract(addresses[networkID].USDC_ADDRESS as string, daiAbi, provider) as DAI;
+      const usdcContract = new ethers.Contract(addresses[networkID].USDC_ADDRESS as string, usdcAbi, provider) as USDC;
       usdcBalance = await usdcContract.balanceOf(address);
     } catch (e) {
       handleContractError(e);
@@ -180,7 +180,7 @@ interface IUserAccountDetails {
 
   redeem: {
     pPanaRedeem: number;
-    pPanaDAI: number;
+    pPanaUSDC: number;
   };
 }
 
@@ -190,7 +190,7 @@ export const loadAccountDetails = createAsyncThunk(
     let stakeAllowance = BigNumber.from("0");
     let exchangeAllowance = BigNumber.from("0");
     let pPanaRedeemAllowance = BigNumber.from("0");
-    let pPanaDAIAllowance = BigNumber.from("0");
+    let pPanaUSDCAllowance = BigNumber.from("0");
 
     try {
       const panaContract = new ethers.Contract(addresses[networkID].PANA_ADDRESS as string, panaAbi, provider) as Pana;
@@ -218,8 +218,8 @@ export const loadAccountDetails = createAsyncThunk(
     }
 
     try {
-      const usdcContract = new ethers.Contract(addresses[networkID].DAI_ADDRESS as string, daiAbi, provider) as DAI;
-      pPanaDAIAllowance = await usdcContract.allowance(address, addresses[networkID].PPANA_REDEEM_ADDRESS);
+      const usdcContract = new ethers.Contract(addresses[networkID].USDC_ADDRESS as string, usdcAbi, provider) as USDC;
+      pPanaUSDCAllowance = await usdcContract.allowance(address, addresses[networkID].PPANA_REDEEM_ADDRESS);
     } catch (e) {
       handleContractError(e);
     }
@@ -234,7 +234,7 @@ export const loadAccountDetails = createAsyncThunk(
       },
       redeem: {
         pPanaRedeem: +pPanaRedeemAllowance,
-        pPanaDAI: +pPanaDAIAllowance,
+        pPanaUSDC: +pPanaUSDCAllowance,
       },
     };
   },
@@ -268,7 +268,7 @@ export interface IAccountSlice extends IUserAccountDetails, IUserBalances {
   };
   redeem: {
     pPanaRedeem: number;
-    pPanaDAI: number;
+    pPanaUSDC: number;
   };
   pPanaTerms?: {
     supplyBased?: boolean;
@@ -302,7 +302,7 @@ const initialState: IAccountSlice = {
     },
   },
   staking: { panaStake: 0, panaUnstake: 0 },
-  redeem: { pPanaRedeem: 0, pPanaDAI: 0 },
+  redeem: { pPanaRedeem: 0, pPanaUSDC: 0 },
   pPanaTerms: undefined,
 };
 

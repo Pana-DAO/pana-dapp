@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import "./tokenLaunch.scss";
 import { t, Trans } from "@lingui/macro";
 import {
@@ -13,7 +14,6 @@ import {
   TableRow,
   TableCell,
   TableBody,
-  Box,
 } from "@material-ui/core";
 import { useAppSelector, useWeb3Context } from "src/hooks";
 import { useHistory } from "react-router";
@@ -28,8 +28,6 @@ import { onHarvestAll } from "src/slices/StakingPoolsSlice";
 import { useDispatch } from "react-redux";
 // import { AppDispatch } from "src/store";
 import { CircSupply, MarketCap, PANAPrice, TVLStakingPool } from "../TreasuryDashboard/components/Metric/Metric";
-import { switchNetwork } from "src/helpers/NetworkHelper";
-import { NetworkId, NETWORKS } from "src/constants";
 import { Skeleton } from "@material-ui/lab";
 import { useEffect } from "react";
 import { getAllTokenPrice } from "src/helpers";
@@ -39,6 +37,7 @@ import {
   stakingPoolsConfig,
   totalFarmPoints,
 } from "src/helpers/tokenLaunch";
+
 
 function TokenLaunch() {
   // const dispatch = useDispatch<AppDispatch>();
@@ -80,7 +79,7 @@ function TokenLaunch() {
       ? state.stakingPools.pendingPanaForUser.reduce((total, val) => total.add(val))
       : null;
   });
-
+  
   const modalButton = [];
 
   const doHarvestAll = () => {
@@ -169,6 +168,7 @@ function TokenLaunch() {
       setTotalLiquidityUSD(totalLiqUSD);
       setTotalPana(totalP);
     }    
+
   };
  
   useEffect(() => {
@@ -211,7 +211,7 @@ function TokenLaunch() {
       <Trans>Connect Wallet</Trans>
     </Button>,
   );
-
+  
   useEffect(() => {
     if (hoursLeft(stakingPoolsConfig.startTime) <= 0) {
       let progress = 0;
@@ -246,27 +246,9 @@ function TokenLaunch() {
   // }
   return (
     <div id="token-launch-view">
-      { networkId != arbitrum_mainnet.chainId ? (
+      { !checkNetwork(networkId).enabledNetwork ? (
         <>
-          <Box width="100%" alignItems={"center"} display="flex" flexDirection="column" p={1}>
-            <Typography variant="h5" style={{ margin: "15px 0 10px 0" }}>
-              You are connected to an incompatible network.
-            </Typography>
-            <Typography variant="h5" style={{ margin: "15px 0 10px 0" }}>
-              Connect to a supported network:
-            </Typography>
-            <Button onClick={handleSwitchChain(NetworkId.ARBITRUM_MAINNET)} variant="outlined">
-              <img
-                height="28px"
-                width="28px"
-                src={String(arbitrum_mainnet.image)}
-                alt={arbitrum_mainnet.imageAltText}
-              />
-              <Typography variant="h6" style={{ marginLeft: "8px" }}>
-                {arbitrum_mainnet.chainName}
-              </Typography>
-            </Button>
-          </Box>
+          <SwitchChain provider={provider} />
         </>
       ) : (
         <Zoom in={true} onEntered={() => setZoomed(true)}>
@@ -365,7 +347,8 @@ function TokenLaunch() {
                           </TableHead>
                         </>
                         <TableBody>
-                          {farms.map((farm,indx) => {
+                          {farms.filter(farm => farm.network == networkId).map((farm,indx) => {
+
                             //if (bond.displayName !== "unknown")
                             return (
                               <FarmData
@@ -382,7 +365,8 @@ function TokenLaunch() {
                     </TableContainer>
                   ) : (
                     <>
-                      {farms.map((farm,indx) => {
+                      {farms.filter(farm => farm.network == networkId).map((farm,indx) => {
+
                         //if (bond.displayName !== "unknown")
                         return (
                           <FarmData

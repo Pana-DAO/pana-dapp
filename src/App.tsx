@@ -232,13 +232,13 @@ function App() {
                 <Redirect to="/tokenlaunch" />
               </Route>
 
-<Route path="/exchange">
-  <Exchange />
-</Route>
+              <Route path="/exchange">
+                <Exchange />
+              </Route>
 
-<Route path="/allTokens">
-  <AllTokens />
-</Route>
+              <Route path="/allTokens">
+                <AllTokens />
+              </Route>
               <Route exact key="1" path={`/redeem/ppana`}>
                 <RedeemPPana />
               </Route>

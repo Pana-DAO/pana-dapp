@@ -43,7 +43,8 @@ function FarmData({
       : null;
   });
 
-  function getUserPoolBalanceFormated(pid: number, index: number) {
+
+function getUserPoolBalanceFormated(pid: number, index: number) {
     if (userPoolBalance) {
       return formatCurrency(+ethers.utils.formatUnits(userPoolBalance[pid], farms[index].decimals), 6, "PANA");
     }
@@ -116,15 +117,18 @@ function FarmData({
             </TableCell>
             <TableCell align="center">
               <Typography>{ connected ? getFarmRewardsPerDayFormated(farmLiquidity) : '-'}</Typography>
+
             </TableCell>
             <TableCell align="center">
-              <Typography>{ connected ? getPendingPanaForUserFormated(farm.pid) : '-'}</Typography>
+              <Typography>{connected ? getPendingPanaForUserFormated(farm.pid) : "-"}</Typography>
             </TableCell>
             <TableCell>
               <Link component={NavLink} to={`/tokenlaunch/${farm.index}`}>
-                { <Button disabled={ !connected } variant="outlined" color="primary" style={{ width: "100%" }}>
-                  <Typography variant="h6">{t`Stake/Unstake`}</Typography>
-                </Button> }
+                {
+                  <Button disabled={!connected} variant="outlined" color="primary" style={{ width: "100%" }}>
+                    <Typography variant="h6">{t`Stake/Unstake`}</Typography>
+                  </Button>
+                }
               </Link>
             </TableCell>
           </TableRow>
