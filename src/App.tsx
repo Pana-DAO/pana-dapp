@@ -243,7 +243,7 @@ function App() {
                 <RedeemPPana />
               </Route>
               <Route path={`/tokenlaunch`}>
-                {farms.map(farm => {
+                {farms.filter(x=>x.network==networkId).map(farm => {
                   return (
                     <Route exact key={farm.index} path={`/tokenlaunch/${farm.index}`}>
                       <Farm index={farm.index} />

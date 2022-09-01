@@ -7,7 +7,7 @@ import { formatCurrency } from "src/helpers";
 import {
   FarmInfo,
   FarmPriceData,
-  farms,
+  // farms,
   formatMoney,
   // stakingPoolsConfig,
   // totalFarmPoints,
@@ -46,7 +46,7 @@ function FarmData({
 
 function getUserPoolBalanceFormated(pid: number, index: number) {
     if (userPoolBalance) {
-      return formatCurrency(+ethers.utils.formatUnits(userPoolBalance[pid], farms[index].decimals), 6, "PANA");
+      return formatCurrency(+ethers.utils.formatUnits(userPoolBalance[pid], farm.decimals), 6, "PANA");
     }
   }
 

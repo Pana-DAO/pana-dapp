@@ -22,7 +22,7 @@ import {
 } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 import { useHistory } from "react-router";
-import { farms, parseBigNumber, stakingPoolsConfig, totalFarmPoints } from "src/helpers/tokenLaunch";
+import { farms, parseBigNumber, stakingPoolsConfig } from "src/helpers/tokenLaunch";
 import TokenStack from "src/lib/PanaTokenStack";
 import { formatCurrency } from "src/helpers";
 import ConnectButton from "src/components/ConnectButton/ConnectButton";
@@ -49,7 +49,7 @@ function Farm({ index }: { index: number }) {
   const dispatch = useDispatch<AppDispatch>();
   const history = useHistory();
   const { provider, address, networkId } = useWeb3Context();
-  const farm = farms.find(p => p.index == index) || farms[index];
+  const farm = farms.filter(x=>x.network==networkId).find(p => p.index == index) || farms.filter(x=>x.network==networkId)[index];
   const [quantity, setQuantity] = useState("");
   const [isFarmLoading, setFarmLoading] = useState(false);
   const [quantityUnstake, setQuantityUnstake] = useState("");
@@ -59,6 +59,8 @@ function Farm({ index }: { index: number }) {
   const onClickAway = (): void => {
     history.push(`/tokenlaunch`);
   };
+  const totalFarmPoints = farms.filter(farm => farm.network == networkId).reduce((total, value) => total + value.points, 0);
+
 
   // const balanceNumber = 1;
   // const balance = 1;

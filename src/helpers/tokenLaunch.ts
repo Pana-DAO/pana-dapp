@@ -70,7 +70,7 @@ export const panaUSDCLiquidity = async (
     const usdcPerLP = 2 * (usdcAmount / totalSupply);
 
     // LPs hold by Staking Pools
-    const farm = farms.find(p => p.index == index);
+    const farm = farms.filter(farm => farm.network == networkId).find(p => p.index == index);
     if (farm) {
       const balance = await getErc20TokenBalance(farm.address, provider, networkId);
       const lpInFarm = +(balance) / Math.pow(10, baseContractDec);
@@ -109,7 +109,7 @@ export const panaLiquidity = async (
     const panaPrice = await getPanaPriceInUSDC(provider, networkId);
 
     // Pana hold by Staking Pool
-    const farm = farms.find(p => p.index == index);
+    const farm = farms.filter(farm => farm.network == networkId).find(p => p.index == index);
     if (farm) {
       const balance = await getErc20TokenBalance(farm.address, provider, networkId);
       const panaInFarm = +(balance) / Math.pow(10, 18);
@@ -146,7 +146,7 @@ export const defaultLiquidityCal = async (
   networkId: NetworkId,
 ): Promise<{balance:BigNumber, price: number, liquidity: number,isLoad:boolean }> => {
 
-  const farm = farms.find(p => p.index == index);
+  const farm = farms.filter(farm => farm.network == networkId).find(p => p.index == index);
   if (farm) {
     const usdPrice = usd ?? usd > 0 ? usd : await getTokenPrice(farm?.coingeckoId);
     if (usdPrice) {
@@ -485,7 +485,7 @@ export const farms: FarmInfo[] = [
   },
 ];
 
-export const totalFarmPoints = farms.reduce((total, value) => total + value.points, 0);
+
 
 export function parseBigNumber(value: string, decimals: number): BigNumber {
   try {

@@ -34,9 +34,10 @@ import { getAllTokenPrice } from "src/helpers";
 import {
   // FarmInfo,
   // formatMoney,
-  stakingPoolsConfig,
-  totalFarmPoints,
+  stakingPoolsConfig
 } from "src/helpers/tokenLaunch";
+import { checkNetwork } from "src/helpers/NetworkHelper";
+import SwitchChain from "src/components/SwitchChain/SwitchChain";
 
 
 function TokenLaunch() {
@@ -55,6 +56,9 @@ function TokenLaunch() {
   const [totalLiquidityUSD, setTotalLiquidityUSD] = useState(0);
   const [totalPana, setTotalPana] = useState(BigNumber.from(0));
   
+  const networkFarms = farms.filter(farm => farm.network == networkId);
+  const totalFarmPoints = farms.filter(farm => farm.network == networkId).reduce((total, value) => total + value.points, 0);
+
   const userPoolBalance = useAppSelector(state => {
     return state.stakingPools.userPoolBalance && state.stakingPools.userPoolBalance.length > 0
       ? state.stakingPools.userPoolBalance
@@ -69,7 +73,7 @@ function TokenLaunch() {
 
   // const [farmPanaPerday, setFarmPanaPerday] = useState(Array(farms.length) as BigNumber[]);
   // const [farmLiquidityData, setfarmLiquidityData] = useState(Array(farms.length) as number[]);
-  const [farmLiquidity, setFarmLiquidity] = useState(Array(farms.length) as FarmPriceData[]); 
+  const [farmLiquidity, setFarmLiquidity] = useState(Array(networkFarms.length) as FarmPriceData[]); 
   const pendingTransactions = useAppSelector(state => {
     return state.pendingTransactions;
   });
@@ -90,13 +94,13 @@ function TokenLaunch() {
     return val.gt(BigNumber.from(0));
   };
 
-  const arbitrum_mainnet = NETWORKS[NetworkId.ARBITRUM_MAINNET];
+  // const arbitrum_mainnet = NETWORKS[NetworkId.ARBITRUM_MAINNET];
 
-  const handleSwitchChain = (id: any) => {
-    return () => {
-      switchNetwork({ provider: provider, networkId: id });
-    };
-  };
+  // const handleSwitchChain = (id: any) => {
+  //   return () => {
+  //     switchNetwork({ provider: provider, networkId: id });
+  //   };
+  // };
 
   const loadFarmLiquidity = async (isOnlyTotalValue:boolean) => {
     //to avoid whole run for totak value alone
@@ -104,7 +108,7 @@ function TokenLaunch() {
     //   await new Promise(resolve => setTimeout(resolve, 5000));
     //   if(address) return;      
     // }
-    const tokenslist = farms
+    const tokenslist = networkFarms
       .filter(x => {
         if (x.coingeckoId) return true;
         else false;
@@ -126,16 +130,16 @@ function TokenLaunch() {
           price: number;
           liquidity: number;
           isLoad: boolean;
-      }>[] = farms.map((farm,indx)=>
-                  farms[indx].calculateLiquidity(
-                  farms[indx].index,
-                  allprice[farms[indx].coingeckoId]?.usd,
+      }>[] = networkFarms.map((farm,indx)=>
+                  networkFarms[indx].calculateLiquidity(
+                  networkFarms[indx].index,
+                  allprice[networkFarms[indx].coingeckoId]?.usd,
                   provider,
                   networkId,
                 ));
     const responses = await Promise.all(calculPromise)
     for (let i = 0; i < responses.length; i++) {
-      const data = {balance:BigNumber.from("0"), index: farms[i].index,liquidityUSD:0, farmperday:BigNumber.from("0"), liquidity: 0, price: 0,isLoad:false } as FarmPriceData;
+      const data = {balance:BigNumber.from("0"), index: networkFarms[i].index,liquidityUSD:0, farmperday:BigNumber.from("0"), liquidity: 0, price: 0,isLoad:false } as FarmPriceData;
       // const farmLiq = await farms[i].calculateLiquidity(
       //   farms[i].index,
       //   allprice[farms[i].coingeckoId]?.usd,
@@ -144,12 +148,13 @@ function TokenLaunch() {
       // );
       const farmLiq = responses[i];
       if (farmLiq) {
-        const userpool = userPoolBalance!=null?userPoolBalance[farms[i].pid??0]:0;
+        const userpool = userPoolBalance!=null?userPoolBalance[networkFarms[i].pid??0]:0;
         data.liquidity = farmLiq.liquidity > 0 ? farmLiq.liquidity : 0;
         data.price = farmLiq.price > 0 ? farmLiq.price : 0;
         data.balance = farmLiq.balance;
-        data.farmperday = farmRewardsFarmPerDay(farms[i].pid,data.balance,farms[i].points);        
-        data.liquidityUSD= data.price * +ethers.utils.formatUnits(userpool, farms[i].decimals);
+        data.farmperday = farmRewardsFarmPerDay(networkFarms[i].pid,data.balance,networkFarms[i].points); 
+          
+        data.liquidityUSD= data.price * +ethers.utils.formatUnits(userpool??0, networkFarms[i].decimals);
         if(farmLiq.isLoad){
           farmLiquidity[i]=data; 
           totalP=totalP.add(data.farmperday??0);
@@ -257,7 +262,7 @@ function TokenLaunch() {
               {t`Pana Token Launch`}
             </Typography>
 
-            {farms.length != 0 && (
+            {networkFarms.length != 0 && (
               <>
                 <Grid container direction="row" className="small-box" spacing={1}>
                   <TVLStakingPool totalLiquidity={totalLiquidity} />
