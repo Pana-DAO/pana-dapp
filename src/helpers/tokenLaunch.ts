@@ -23,13 +23,18 @@ export interface FarmInfo {
     usd: number,
     provider: ethers.providers.JsonRpcProvider,
     networkId: NetworkId,
-  ) => Promise<{ price: number; liquidity: number }>;
+  ) => Promise<{balance:BigNumber,price: number, liquidity: number,isLoad:boolean}>;
+
 }
 
 export interface FarmPriceData {
   index: number;
   liquidity: number;
+  liquidityUSD: number;
   price: number;
+  balance:BigNumber;
+  farmperday:BigNumber;
+  isLoad:boolean;  
 }
 
 export const stakingPoolsConfig = {
@@ -65,25 +70,32 @@ export const panaUSDCLiquidity = async (
     const usdcPerLP = 2 * (usdcAmount / totalSupply);
 
     // LPs hold by Staking Pools
-    const farm = farms.find(p => p.index == index);
+    const farm = farms.filter(farm => farm.network == networkId).find(p => p.index == index);
     if (farm) {
-      const lpInFarm = +(await getErc20TokenBalance(farm.address, provider, networkId)) / Math.pow(10, baseContractDec);
+      const balance = await getErc20TokenBalance(farm.address, provider, networkId);
+      const lpInFarm = +(balance) / Math.pow(10, baseContractDec);
       return {
         liquidity: usdcPerLP * +lpInFarm,
         price: usdcPerLP,
-      };
+        balance:balance,
+        isLoad:true
+      }
     } else {
       return {
         liquidity: 0,
         price: usdcPerLP,
-      };
+        balance:BigNumber.from("0"),
+        isLoad:false
+      }
     }
   } catch (error) {
     console.error(error);
     return {
       liquidity: 0,
       price: 0,
-    };
+      balance:BigNumber.from("0"),
+      isLoad:false
+    }
   }
 };
 
@@ -97,108 +109,83 @@ export const panaLiquidity = async (
     const panaPrice = await getPanaPriceInUSDC(provider, networkId);
 
     // Pana hold by Staking Pool
-    const farm = farms.find(p => p.index == index);
+    const farm = farms.filter(farm => farm.network == networkId).find(p => p.index == index);
     if (farm) {
-      const panaInFarm = +(await getErc20TokenBalance(farm.address, provider, networkId)) / Math.pow(10, 18);
+      const balance = await getErc20TokenBalance(farm.address, provider, networkId);
+      const panaInFarm = +(balance) / Math.pow(10, 18);
       return {
+        balance:balance,
         liquidity: panaPrice * +panaInFarm,
         price: panaPrice,
-      };
+        isLoad:true
+      }
     } else {
       return {
         liquidity: 0,
         price: panaPrice,
-      };
+        balance:BigNumber.from("0"),
+        isLoad:false
+      }
     }
   } catch (error) {
     console.error(error);
     return {
+      balance:BigNumber.from("0"),
       liquidity: 0,
       price: 0,
-    };
+      isLoad:false
+    }
   }
 };
 
-export const usdcLiquidity = async (
-  index: number,
-  provider: ethers.providers.JsonRpcProvider,
-  networkId: NetworkId,
-) => {
-  try {
-    // USDC hold by Staking Pool
-    const farm = farms.find(p => p.index == index);
-    if (farm) {
-      return +(await getErc20TokenBalance(farm.address, provider, networkId)) / Math.pow(10, 6);
-    } else {
-      return 0;
-    }
-  } catch (error) {
-    console.error(error);
-    return 0;
-  }
-};
-
-export const wETHLiquidity = async (
-  index: number,
-  provider: ethers.providers.JsonRpcProvider,
-  networkId: NetworkId,
-) => {
-  const wethPrice = await getTokenPrice("weth");
-  if (wethPrice) {
-    try {
-      // Pana hold by Staking Pool
-      const farm = farms.find(p => p.index == index);
-      if (farm) {
-        const wETHInFarm = +(await getErc20TokenBalance(farm.address, provider, networkId)) / Math.pow(10, 18);
-        return wethPrice * +wETHInFarm;
-      } else {
-        return 0;
-      }
-    } catch (error) {
-      console.error(error);
-      return 0;
-    }
-  }
-  return 0;
-};
 
 export const defaultLiquidityCal = async (
   index: number,
   usd: number,
   provider: ethers.providers.JsonRpcProvider,
   networkId: NetworkId,
-): Promise<{ price: number; liquidity: number }> => {
-  const farm = farms.find(p => p.index == index);
+): Promise<{balance:BigNumber, price: number, liquidity: number,isLoad:boolean }> => {
+
+  const farm = farms.filter(farm => farm.network == networkId).find(p => p.index == index);
   if (farm) {
     const usdPrice = usd ?? usd > 0 ? usd : await getTokenPrice(farm?.coingeckoId);
     if (usdPrice) {
       try {
         if (farm) {
+          const balance =  (await getErc20TokenBalance(farm.address, provider, networkId));
           const balanceInFarm =
-            +(await getErc20TokenBalance(farm.address, provider, networkId)) / Math.pow(10, farm.decimals);
+          +balance / Math.pow(10, farm.decimals);
           return {
+            balance:balance,
             liquidity: usdPrice * +balanceInFarm,
             price: usdPrice,
-          };
+            isLoad:true
+          }
         } else {
           return {
+            balance:BigNumber.from("0"),
             liquidity: 0,
             price: usdPrice,
-          };
+            isLoad:false
+          }
         }
       } catch (error) {
         console.error(error);
         return {
+          balance:BigNumber.from("0"),
           liquidity: 0,
           price: usdPrice,
-        };
+          isLoad:false
+        }
       }
     }
   }
   return {
+    balance:BigNumber.from("0"),
     liquidity: 0,
     price: 0,
-  };
+    isLoad:false
+  }
 };
 
 export const farms: FarmInfo[] = [
@@ -498,7 +485,7 @@ export const farms: FarmInfo[] = [
   },
 ];
 
-export const totalFarmPoints = farms.reduce((total, value) => total + value.points, 0);
+
 
 export function parseBigNumber(value: string, decimals: number): BigNumber {
   try {

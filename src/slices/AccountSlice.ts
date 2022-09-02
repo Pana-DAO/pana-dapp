@@ -59,7 +59,7 @@ export const getBalances = createAsyncThunk(
     let karshaBalance = BigNumber.from("0");
     let panaBalance = BigNumber.from("0");
     let usdcBalance = BigNumber.from("0");
-    let pPanaBalance = BigNumber.from("0");
+    // let pPanaBalance = BigNumber.from("0");
 
     try {
       const karshaContract = new ethers.Contract(
@@ -84,16 +84,16 @@ export const getBalances = createAsyncThunk(
       handleContractError(e);
     }
 
-    try {
-      const pPanaContract = new ethers.Contract(
-        addresses[networkID].PPANA_ADDRESS as string,
-        pPanaAbi,
-        provider,
-      ) as Pana;
-      pPanaBalance = await pPanaContract.balanceOf(address);
-    } catch (e) {
-      handleContractError(e);
-    }
+    // try {
+    //   const pPanaContract = new ethers.Contract(
+    //     addresses[networkID].PPANA_ADDRESS as string,
+    //     pPanaAbi,
+    //     provider,
+    //   ) as Pana;
+    //   pPanaBalance = await pPanaContract.balanceOf(address);
+    // } catch (e) {
+    //   handleContractError(e);
+    // }
     
 
     return {
@@ -101,7 +101,7 @@ export const getBalances = createAsyncThunk(
         karsha: ethers.utils.formatUnits(karshaBalance, 18),
         pana: ethers.utils.formatUnits(panaBalance, 18),
         usdc: ethers.utils.formatUnits(usdcBalance, 6),
-        pPana: ethers.utils.formatUnits(pPanaBalance, 18),
+        pPana: BigNumber.from("0"),//ethers.utils.formatUnits(pPanaBalance, 18),
         redeemablePpana: ethers.utils.formatUnits(0, 18),
       },
     };
@@ -143,7 +143,7 @@ export const getPPanaTerms = createAsyncThunk(
     }
 
     if (terms && terms.active) {
-      await dispatch(getPPanaRedeemableFor({ address, networkID, provider }));
+      // await dispatch(getPPanaRedeemableFor({ address, networkID, provider }));
 
       const currentTime = Date.now() / 1000;
       let duration = "";
@@ -338,20 +338,20 @@ const accountSlice = createSlice({
         state.loading = false;
         console.log(error);
       })
-      .addCase(getPPanaTerms.pending, state => {
-        state.loading = true;
-      })
-      .addCase(getPPanaTerms.fulfilled, (state, action) => {
-        setAll(state, action.payload);
-        state.loading = false;
-      })
-      .addCase(getPPanaTerms.rejected, (state, { error }) => {
-        state.loading = false;
-        console.log(error);
-      })
-      .addCase(getPPanaRedeemableFor.fulfilled, (state, action) => {
-        state.balances.redeemablePpana = ethers.utils.formatUnits(action.payload, 18);
-      });
+      // .addCase(getPPanaTerms.pending, state => {
+      //   state.loading = true;
+      // })
+      // .addCase(getPPanaTerms.fulfilled, (state, action) => {
+      //   setAll(state, action.payload);
+      //   state.loading = false;
+      // })
+      // .addCase(getPPanaTerms.rejected, (state, { error }) => {
+      //   state.loading = false;
+      //   console.log(error);
+      // })
+      // .addCase(getPPanaRedeemableFor.fulfilled, (state, action) => {
+      //   state.balances.redeemablePpana = ethers.utils.formatUnits(action.payload, 18);
+      // });
     // .addCase(calculateUserBondDetails.pending, state => {
     //   state.loading = true;
     // })
