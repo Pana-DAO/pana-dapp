@@ -30,6 +30,7 @@ import { BondDataCard, BondTableData } from "./BondRow";
 import ClaimBonds from "./ClaimBonds";
 import { NetworkId, NETWORKS } from "src/constants";
 import CountDownSmall from "src/CountDownSmall";
+import { CheckBondClock } from "src/helpers/NetworkHelper";
 
 function ChooseBond() {
   const { networkId, address, provider } = useWeb3Context();
@@ -46,14 +47,14 @@ function ChooseBond() {
   const arbitrum_testnet = NETWORKS[NetworkId.ARBITRUM_TESTNET];  
   
   const isShowCountDown = () =>{
-    console.log(networkId,arbitrum_mainnet.chainId);
-    if(networkId == arbitrum_mainnet.chainId){
-      const currentTime = (new Date()).getTime()+((new Date()).getTimezoneOffset()*1000)+(-4*60*1000);
-      console.log(countDown,currentTime);
-      if(currentTime<countDown) return true;
-      return false;
-    }
-    return false;
+    return CheckBondClock();
+    // if(networkId == arbitrum_mainnet.chainId){
+    //   const currentTime = (new Date()).getTime()+((new Date()).getTimezoneOffset()*1000)+(-4*60*1000);
+    //   console.log(countDown,currentTime);
+    //   if(currentTime<countDown) return true;
+    //   return false;
+    // }
+    // return false;
   } 
   const isSmallScreen = useMediaQuery("(max-width: 733px)"); // change to breakpoint query
   const accountNotes: IUserNote[] = useAppSelector(state => state.bonding.notes);
