@@ -96,7 +96,7 @@ function ChooseBond() {
   return (
     <>
     {(isShowCountDown())?
-    (<CountDownSmall countDown={countDown} headerContent={'Bonds Launch (Phase-2)'}></CountDownSmall>):(
+    (<CountDownSmall countDown={countDown} headerContent={'Karsha Bonds Launch (Phase-2)'}></CountDownSmall>):(
     <div id="choose-bond-view">
       {(!isEmpty(accountNotes) || !isEmpty(accountOldNotes) || !isEmpty(v1AccountBonds)) && (
         <ClaimBonds activeNotes={accountNotes} activeOldNotes={accountOldNotes} />
