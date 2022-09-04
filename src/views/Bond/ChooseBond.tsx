@@ -28,17 +28,33 @@ import { Skeleton } from "@material-ui/lab";
 import { formatCurrency } from "../../helpers";
 import { BondDataCard, BondTableData } from "./BondRow";
 import ClaimBonds from "./ClaimBonds";
+import { NetworkId, NETWORKS } from "src/constants";
+import CountDownSmall from "src/CountDownSmall";
 
 function ChooseBond() {
   const { networkId, address, provider } = useWeb3Context();
   const dispatch = useDispatch<AppDispatch>();
   const history = useHistory();
   usePathForNetwork({ pathName: "bonds", networkID: networkId, history });
-
+  
   const bonds = useAppSelector(state => {
     return state.bonding.indexes.map(index => state.bonding.bonds[index]).sort((a, b) => b.discount - a.discount);
   });
-
+  
+  const countDown = new Date(Date.UTC(2022,8,19,16,0,0,0)).getTime(); //3pm gmt == 11am est
+  const arbitrum_mainnet = NETWORKS[NetworkId.ARBITRUM_MAINNET];
+  const arbitrum_testnet = NETWORKS[NetworkId.ARBITRUM_TESTNET];  
+  
+  const isShowCountDown = () =>{
+    console.log(networkId,arbitrum_mainnet.chainId);
+    if(networkId == arbitrum_mainnet.chainId){
+      const currentTime = (new Date()).getTime()+((new Date()).getTimezoneOffset()*1000)+(-4*60*1000);
+      console.log(countDown,currentTime);
+      if(currentTime<countDown) return true;
+      return false;
+    }
+    return false;
+  } 
   const isSmallScreen = useMediaQuery("(max-width: 733px)"); // change to breakpoint query
   const accountNotes: IUserNote[] = useAppSelector(state => state.bonding.notes);
   const accountOldNotes: IUserNote[] = useAppSelector(state => state.bonding.oldNotes);
@@ -76,7 +92,11 @@ function ChooseBond() {
     return withInterestDue;
   });
 
+
   return (
+    <>
+    {(isShowCountDown())?
+    (<CountDownSmall countDown={countDown} headerContent={'Bonds Launch (Phase-2)'}></CountDownSmall>):(
     <div id="choose-bond-view">
       {(!isEmpty(accountNotes) || !isEmpty(accountOldNotes) || !isEmpty(v1AccountBonds)) && (
         <ClaimBonds activeNotes={accountNotes} activeOldNotes={accountOldNotes} />
@@ -166,7 +186,8 @@ function ChooseBond() {
           </Grid>
         </Box>
       )}
-    </div>
+    </div>)}
+    </>
   );
 }
 

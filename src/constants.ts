@@ -140,7 +140,7 @@ export const VIEWS_FOR_NETWORK: { [key: number]: IViewsForNetwork } = {
     stake: false,
     wrap: false,
     network: false,
-    bonds: false,
+    bonds: true,
     pPana: false,
   },
   [NetworkId.ARBITRUM_TESTNET]: {
