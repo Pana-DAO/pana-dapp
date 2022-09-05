@@ -7,7 +7,6 @@ import {
   AccountBalanceOutlined,
   DashboardOutlined,
   FilterNoneOutlined,
-  RedeemOutlined,
   InfoOutlined,
   BubbleChartOutlined,
 } from "@material-ui/icons";
@@ -196,7 +195,7 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
                     ) : (
                       <></>
                     )}
-                    {isWalletTestnet(networkId) ? (
+                    {/* {isWalletTestnet(networkId) ? ( // pPana Redeem is not available in phase-2
                       <>
                         <ListItem button onClick={() => setIsRedeemOpen(!isRedeemOpen)}>
                           <Typography variant="h6" className="nav-content">
@@ -231,7 +230,7 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
                       </>
                     ) : (
                       <></>
-                    )}
+                    )} */}
                     <Link className="nav-link" component={NavLink} to="/memorandum">
                       <ListItem button selected={location.pathname == "/memorandum"}>
                         <Typography variant="h6" className="nav-content">

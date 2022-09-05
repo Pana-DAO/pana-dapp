@@ -257,7 +257,7 @@ function TokenLaunch() {
         </>
       ) : (
         <Zoom in={true} onEntered={() => setZoomed(true)}>
-          <Paper className="paper-format" elevation={0}>
+          <Paper className="paper-format pana-card" elevation={0}>
             <Typography variant="h5" className="card-header" style={{ fontWeight: 600 }}>
               {t`Pana Token Launch`}
             </Typography>
