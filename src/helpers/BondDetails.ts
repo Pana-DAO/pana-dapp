@@ -77,8 +77,8 @@ export const UsdcPanaDetails: BondDetails = {
   },
   isLP: true,
   lpUrl: {
-    [NetworkId.ARBITRUM_TESTNET]: "https://testnet.arbiscan.io/token/0x9b95df83c3341bcdffaa44d4b637158df7ef7a26",
-    [NetworkId.ARBITRUM_MAINNET]: "",
+    [NetworkId.ARBITRUM_TESTNET]: "https://testnet.arbiscan.io/token/0x91a2d26e987219E6a266784d5a816ceEf03cB3B8",
+    [NetworkId.ARBITRUM_MAINNET]: "https://app.sushi.com/legacy/add/0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8/0x369eB8197062093a20402935D3a707b4aE414E9D?chainId=42161",
   },
 };
 
@@ -96,9 +96,10 @@ export const UnknownDetails: BondDetails = {
  * DOWNCASE ALL THE ADDRESSES!!! for comparison purposes
  */
 export const BondDetails: { [key: number]: { [key: string]: BondDetails } } = {
-  [NetworkId.ARBITRUM_MAINNET]: {},
+  [NetworkId.ARBITRUM_MAINNET]: {
+    ["0x300fdd222687db8686ea51847db43fa988b518e0"]: UsdcPanaDetails
+  },
   [NetworkId.ARBITRUM_TESTNET]: {
-    ["0x327459343e34f4c2cc3fe6678ea8ca3cf22fbfc8"]: UsdcDetails,
-    ["0x34e372db783de192d78e99452ae0d94dfe8ab040"]: UsdcPanaDetails,
+    ["0x91a2d26e987219e6a266784d5a816ceef03cb3b8"]: UsdcPanaDetails
   },
 };

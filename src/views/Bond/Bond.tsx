@@ -140,7 +140,7 @@ const Bond = ({ index }: { index: number }) => {
                   <Trans>Market Price</Trans>
                 </Typography>
                 <Typography variant="h3" color="primary" className="price">
-                  {isBondLoading ? <Skeleton /> : formatCurrency(bond.marketPriceInToken, 4, bond.isLP ? "PANA" : "USD") + " LP"}
+                  {isBondLoading ? <Skeleton /> : formatCurrency(bond.marketPriceInToken, 8, bond.isLP ? "PANA" : "USD") + " LP"}
                 </Typography>
               </div>
             </Box>
@@ -160,7 +160,7 @@ export const DisplayBondPrice = ({ bond }: { bond: IBond }): ReactElement => {
 
   return (
     <Fragment>
-      {bond.isLP ? `${trim(bond.priceUSD, 4)} LP` : new Intl.NumberFormat("en-US", {
+      {bond.isLP ? `${trim(bond.priceUSD, 8)} LP` : new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
         maximumFractionDigits: 4,

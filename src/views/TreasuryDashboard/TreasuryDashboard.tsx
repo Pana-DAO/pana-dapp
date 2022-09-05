@@ -82,7 +82,7 @@ const TreasuryDashboard = memo(() => {
           <Paper className="paper-format-treasury pana-card dashboard-metrics">
             {networkId === NetworkId.ARBITRUM_TESTNET ? (
               <>
-                <Grid container direction="row" spacing={2}>
+                <Grid container direction="row" spacing={1}>
                   <MarketCap />
                   <PANAPrice />
                   <KARSHAPrice />
