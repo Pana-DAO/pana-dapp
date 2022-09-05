@@ -32,6 +32,9 @@ export const checkTestnet = () => {
     enabledNetwork: EnvHelper.env.REACT_APP_ARBITRUM_TESTNET_ENABLED === "true",
   };
 };
+export const CheckBondClock = () => {
+  return  EnvHelper.env.REACT_APP_SHOWBONDCLOCK==="true";
+};
 
 export const isWalletTestnet = (networkId: number) => networkId == arbitrum_testnet.chainId;
 

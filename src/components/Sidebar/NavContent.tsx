@@ -129,18 +129,19 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
                         </Typography>
                       </ListItem>
                     </Link>
+                    <Link className="nav-link" component={NavLink} to="/bonds">
+                        <ListItem button selected={location.pathname.indexOf("/bonds") > -1}>
+                          <Typography variant="h6" className="nav-content">
+                            <div className="nav-svg">
+                              <SvgIcon viewBox="0 0 25 25" className="menuicon" component={AccountBalanceOutlined} />
+                            </div>
+                            <div className="nav-text">Bonds</div>
+                          </Typography>
+                        </ListItem>
+                      </Link>
                     {isWalletTestnet(networkId) ? (
                       <>
-                        <Link className="nav-link" component={NavLink} to="/bonds">
-                          <ListItem button selected={location.pathname.indexOf("/bonds") > -1}>
-                            <Typography variant="h6" className="nav-content">
-                              <div className="nav-svg">
-                                <SvgIcon viewBox="0 0 25 25" className="menuicon" component={AccountBalanceOutlined} />
-                              </div>
-                              <div className="nav-text">Bonds</div>
-                            </Typography>
-                          </ListItem>
-                        </Link>
+                        
                         <Collapse in={true} timeout="auto" unmountOnExit>
                           <List
                             className="submenu"
