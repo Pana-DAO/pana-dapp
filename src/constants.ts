@@ -28,7 +28,7 @@ export const addresses: IAddresses = {
     KARSHA_ADDRESS: "",
     PANA_USDC_LP: "0x300fDD222687db8686EA51847Db43fa988b518E0",
     STAKING_ADDRESS: "",
-
+    SPANA_ADDRESS:"",
     DISTRIBUTOR_ADDRESS: "",
     BONDINGCALC_ADDRESS: "",
 

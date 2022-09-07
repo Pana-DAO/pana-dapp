@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { RootState } from "src/store";
 import { Pana, SPana, Staking__factory } from "src/typechain";
 
@@ -48,7 +48,7 @@ export const loadAppDetails = createAsyncThunk(
 
     const currentBlock = await provider.getBlockNumber();
 
-    const stakingContract = Staking__factory.connect(addresses[networkID].STAKING_ADDRESS, provider);
+    const stakingContract =addresses[networkID].STAKING_ADDRESS!=""? Staking__factory.connect(addresses[networkID].STAKING_ADDRESS, provider):null;
     const daoMultisig = addresses[networkID].DAO_MULTISIG;
 
     const panaMainContract = new ethers.Contract(
@@ -57,11 +57,11 @@ export const loadAppDetails = createAsyncThunk(
       provider,
     ) as Pana;
 
-    const sPanaContract = new ethers.Contract(
+    const sPanaContract = addresses[networkID].SPANA_ADDRESS!=""? new ethers.Contract(
       addresses[networkID].SPANA_ADDRESS as string,
       sPanaAbi,
       provider,
-    ) as SPana;
+    ) as SPana:null;
 
     
     
@@ -69,7 +69,7 @@ export const loadAppDetails = createAsyncThunk(
     const totalSupply = parseFloat(parseFloat(getRealNumber((await panaMainContract.totalSupply()).toBigInt())).toFixed(4));
     const daoPanaBalance = parseFloat(parseFloat(getRealNumber((await panaMainContract.balanceOf(daoMultisig)).toBigInt())).toFixed(4));
     const circSupply = totalSupply-daoPanaBalance;
-    const sPanaCircSupply = Number((await sPanaContract.circulatingSupply()).toString());
+    const sPanaCircSupply =sPanaContract!=null? Number((await sPanaContract.circulatingSupply()).toString()):1;
 
     const marketCap = circSupply * marketPrice;
 
@@ -89,23 +89,23 @@ export const loadAppDetails = createAsyncThunk(
       } as IAppData;
     }
     // Calculating staking
-    const epoch = await stakingContract.epoch();
+    const epoch =stakingContract!=null? await stakingContract.epoch():null;
     let secondsToEpoch = 0;
 
     try {
-      secondsToEpoch = Number(await stakingContract.secondsToNextEpoch());
+      secondsToEpoch =stakingContract!=null? Number(await stakingContract.secondsToNextEpoch()):0;
     } catch {
       console.error("Returned a null response from stakingContract.secondsToNextEpoch()");
     }
 
     //alert(secondsToEpoch);
-    const stakingReward = epoch.distribute;
+    const stakingReward = epoch!=null?epoch.distribute:0;
     const stakingRebase = Number(stakingReward.toString()) / sPanaCircSupply;
     const fiveDayRate = Math.pow(1 + stakingRebase, 5 * 3) - 1;
     const stakingAPY = Math.pow(1 + stakingRebase, 365 * 3) - 1;
     
     // Current index
-    const currentIndex = await stakingContract.index();
+    const currentIndex = stakingContract!=null? await stakingContract.index():BigNumber.from('1000000000000000000');
     return {
       currentIndex: ethers.utils.formatUnits(currentIndex, 18),
       currentBlock,

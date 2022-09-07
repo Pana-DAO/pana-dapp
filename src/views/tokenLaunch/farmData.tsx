@@ -16,6 +16,7 @@ import { useAppSelector, useWeb3Context } from "src/hooks";
 import TokenStack from "src/lib/PanaTokenStack";
 // import { getErc20TokenBalance } from "src/slices/StakingPoolsSlice";
 import { ReactComponent as ArrowUp } from "../../assets/icons/arrow-up.svg";
+import { Skeleton } from "@material-ui/lab";
 
 function FarmData({
   networkId,
@@ -109,18 +110,29 @@ function getUserPoolBalanceFormated(pid: number, index: number) {
               <Typography>{farm.points / 10}x</Typography>
             </TableCell>
             <TableCell align="center">
-              <Typography>{getFarmLiquidity(farmLiquidity)}</Typography>
+             {farmLiquidity && farmLiquidity.liquidity? (<Typography>{getFarmLiquidity(farmLiquidity)}</Typography>):
+             (<Skeleton width="50px" />)}
             </TableCell>
             <TableCell align="center">
-              <Typography>{ connected ? getUserPoolBalanceFormated(farm.pid, farm.index) : '-'}</Typography>
-              { connected && <Typography style={{marginTop: '4px'}} color="textSecondary" variant="body2">{getUserPoolBalanceInUSD(farm.pid, farm.index,farmLiquidity)}</Typography> }
+             {userPoolBalance && farm?( 
+              <>
+                <Typography>{ connected ? getUserPoolBalanceFormated(farm.pid, farm.index) : '-'}</Typography>
+                {connected&&<Typography style={{marginTop: '4px'}} color="textSecondary" variant="body2">{ getUserPoolBalanceInUSD(farm.pid, farm.index,farmLiquidity)}</Typography> }
+              </>
+             ):(connected?(<Skeleton width="50px" />):'-')}
             </TableCell>
             <TableCell align="center">
-              <Typography>{ connected ? getFarmRewardsPerDayFormated(farmLiquidity) : '-'}</Typography>
+             {farmLiquidity&&farmLiquidity.farmperday? 
+              (<Typography>{ connected ? getFarmRewardsPerDayFormated(farmLiquidity) : '-'}</Typography>):
+              (connected?(<Skeleton width="50px" />):'-')
+              }
 
             </TableCell>
             <TableCell align="center">
-              <Typography>{connected ? getPendingPanaForUserFormated(farm.pid) : "-"}</Typography>
+             {
+              pendingPanaForUser?(<Typography>{connected ? getPendingPanaForUserFormated(farm.pid) : "-"}</Typography>):
+              (connected?(<Skeleton width="50px" />):'-')
+             }
             </TableCell>
             <TableCell>
               <Link component={NavLink} to={`/tokenlaunch/${farm.index}`}>
@@ -153,16 +165,34 @@ function getUserPoolBalanceFormated(pid: number, index: number) {
                 <Typography>Multiplier: {farm.points / 10}x</Typography>
               </Grid>
               <Grid item xs={6}>
-                <Typography>Liquidity: {getFarmLiquidity(farmLiquidity)}</Typography>
+                <Typography>Liquidity:                 
+                {farmLiquidity && farmLiquidity.liquidity? 
+                  (getFarmLiquidity(farmLiquidity)):
+                  (<Skeleton width="50px" />)
+                }
+                </Typography>
               </Grid>
               <Grid item xs={6}>
-                <Typography>My Stakes: {getUserPoolBalanceFormated(farm.pid, farm.index)}</Typography>
+                <Typography>My Stakes: 
+                {userPoolBalance && farm?( 
+                  getUserPoolBalanceFormated(farm.pid, farm.index)):
+                  (connected?(<Skeleton width="50px" />):'-')}</Typography>
               </Grid>
               <Grid item xs={6}>
-                <Typography>Per Day: {getFarmRewardsPerDayFormated(farmLiquidity)}</Typography>
+                <Typography>Per Day: 
+                {farmLiquidity&&farmLiquidity.farmperday? 
+                    ( connected ? getFarmRewardsPerDayFormated(farmLiquidity) : '-'):
+                    (connected?(<Skeleton width="50px" />):'-')
+                }
+                </Typography>
               </Grid>
               <Grid item xs={6}>
-                <Typography>Rewards: {getPendingPanaForUserFormated(farm.pid)}</Typography>
+                <Typography>Rewards:                   
+                  {
+                    pendingPanaForUser?(connected ? getPendingPanaForUserFormated(farm.pid) : "-"):
+                    (connected?(<Skeleton width="50px" />):'-')
+                  }
+                  </Typography>
               </Grid>
               <Grid item xs={12}>
                 <Link component={NavLink} to={`/tokenlaunch/${farm.index}`}>
