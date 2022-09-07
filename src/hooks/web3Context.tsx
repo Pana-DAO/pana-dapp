@@ -2,6 +2,7 @@ import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 import { IFrameEthereumProvider } from "@ledgerhq/iframe-provider";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import React, { ReactElement, useCallback, useContext, useMemo, useState } from "react";
+import { EnvHelper } from "src/helpers/Environment";
 import { idFromHexString, initNetworkFunc } from "src/helpers/NetworkHelper";
 import { NodeHelper } from "src/helpers/NodeHelper";
 import Web3Modal from "web3modal";
@@ -85,7 +86,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({ chil
   const [address, setAddress] = useState("");
   // NOTE (appleseed): loading eth mainnet as default rpc provider for a non-connected wallet
   const [provider, setProvider] = useState<JsonRpcProvider>(NodeHelper.getMainnetStaticProvider());
-  const [networkId, setNetworkId] = useState(42161);
+  const [networkId, setNetworkId] = useState(parseInt(EnvHelper.env.REACT_APP_DEFAULTNETWORK as string));
   const [networkName, setNetworkName] = useState("");
   const [providerUri, setProviderUri] = useState("");
   const [blockExplorerUrl, setBlockExplorerUrl] = useState("");

@@ -36,8 +36,8 @@ import {
   // formatMoney,
   stakingPoolsConfig
 } from "src/helpers/tokenLaunch";
-import { checkNetwork } from "src/helpers/NetworkHelper";
-import SwitchChain from "src/components/SwitchChain/SwitchChain";
+// import { checkNetwork } from "src/helpers/NetworkHelper";
+// import SwitchChain from "src/components/SwitchChain/SwitchChain";
 
 
 function TokenLaunch() {
@@ -139,7 +139,7 @@ function TokenLaunch() {
       ));
     const responses = await Promise.all(calculPromise)
     for (let i = 0; i < responses.length; i++) {
-      const data = { balance: BigNumber.from("0"), index: networkFarms[i].index, liquidityUSD: 0, farmperday: BigNumber.from("0"), liquidity: 0, price: 0, isLoad: false } as FarmPriceData;
+      const data = { balance: BigNumber.from("0"), index: networkFarms[i].index, liquidityUSD: 0, liquidity: 0, price: 0, isLoad: false } as FarmPriceData;
       // const farmLiq = await farms[i].calculateLiquidity(
       //   farms[i].index,
       //   allprice[farms[i].coingeckoId]?.usd,
@@ -152,12 +152,14 @@ function TokenLaunch() {
         data.liquidity = farmLiq.liquidity > 0 ? farmLiq.liquidity : 0;
         data.price = farmLiq.price > 0 ? farmLiq.price : 0;
         data.balance = farmLiq.balance;
-        data.farmperday = farmRewardsFarmPerDay(networkFarms[i].pid, data.balance, networkFarms[i].points);
+        if (!isOnlyTotalValue)
+          data.farmperday = farmRewardsFarmPerDay(networkFarms[i].pid, data.balance, networkFarms[i].points);
 
         data.liquidityUSD = data.price * +ethers.utils.formatUnits(userpool ?? 0, networkFarms[i].decimals);
         if (farmLiq.isLoad) {
           farmLiquidity[i] = data;
-          totalP = totalP.add(data.farmperday ?? 0);
+          if (!isOnlyTotalValue)
+            totalP = totalP.add(data.farmperday ?? 0);
           totalLiq = totalLiq + (data.liquidity ?? 0);
           totalLiqUSD = totalLiqUSD + (data.liquidityUSD ?? 0)
           setFarmLiquidity(farmLiquidity);
@@ -251,12 +253,7 @@ function TokenLaunch() {
   // }
   return (
     <div id="token-launch-view">
-      {!checkNetwork(networkId).enabledNetwork ? (
-        <>
-          <SwitchChain provider={provider} />
-        </>
-      ) : (
-        <Zoom in={true} onEntered={() => setZoomed(true)}>
+      <Zoom in={true} onEntered={() => setZoomed(true)}>
           <Paper className="paper-format pana-card" elevation={0}>
             <Typography variant="h5" className="card-header" style={{ fontWeight: 600 }}>
               {t`Pana Token Launch`}
@@ -390,7 +387,6 @@ function TokenLaunch() {
             )}
           </Paper>
         </Zoom>
-      )}
     </div>
   );
 }
