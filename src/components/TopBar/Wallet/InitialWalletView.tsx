@@ -152,8 +152,6 @@ function InitialWalletView({ onClose }: { onClose: () => void }) {
 
   const pPanaBalance = useAppSelector(s => s.account.balances && s.account.balances.pPana);
 
-  console.log(networkId);
-
   return (
     <Paper>
       <Box sx={{ padding: theme.spacing(0, 3), display: "flex", flexDirection: "column", minHeight: "100vh" }}>

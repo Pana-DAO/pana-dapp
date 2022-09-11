@@ -115,7 +115,7 @@ export class EnvHelper {
     let ALL_URIs = EnvHelper.getSelfHostedNode(networkId);
     //console.log("getAPIUris - ALL_URIs.length", ALL_URIs.length);
     if (ALL_URIs.length === 0) {
-      console.warn("API keys must be set in the .env, reverting to fallbacks");
+      //console.warn("API keys must be set in the .env, reverting to fallbacks");
       ALL_URIs = EnvHelper.getFallbackURIs(networkId);
     }
     return ALL_URIs;

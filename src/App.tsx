@@ -36,6 +36,7 @@ import AllTokens from "./views/allTokens/allTokens";
 import Farm from "./views/tokenLaunch/farm";
 import { farms } from "./helpers/tokenLaunch";
 import { getUserPendingPana, getUserPoolBalance } from "./slices/StakingPoolsSlice";
+import { getAllBonds, getUserNotes } from "./slices/BondSlice";
 
 const queryClient = new QueryClient();
 
@@ -115,7 +116,7 @@ function App() {
   const loadApp = useCallback(
     loadProvider => {
       dispatch(loadAppDetails({ networkID: networkId, provider: loadProvider }));
-      //dispatch(getAllBonds({ provider: loadProvider, networkID: networkId, address }));
+      dispatch(getAllBonds({ provider: loadProvider, networkID: networkId, address }));
     },
     [networkId, address],
   );
@@ -125,8 +126,8 @@ function App() {
       if (!providerInitialized) {
         return;
       }
-      // dispatch(getUserNotes({ networkID: networkId, address, provider: loadProvider }));
-      // dispatch(getUserOldNotes({ networkID: networkId, address, provider: loadProvider }));
+      dispatch(getUserNotes({ networkID: networkId, address, provider: loadProvider }));
+      //dispatch(getUserOldNotes({ networkID: networkId, address, provider: loadProvider }));
       dispatch(loadAccountDetails({ networkID: networkId, address, provider: loadProvider }));
       dispatch(getUserPoolBalance({ networkID: networkId, address, provider: loadProvider }));
       dispatch(getUserPendingPana({ networkID: networkId, address, provider: loadProvider }));
@@ -229,21 +230,21 @@ function App() {
               </Route>
 
               <Route exact path="/">
-                <Redirect to="/tokenlaunch" />
+                <Redirect to="/bonds" />
               </Route>
 
-<Route path="/exchange">
-  <Exchange />
-</Route>
+              <Route path="/exchange">
+                <Exchange />
+              </Route>
 
-<Route path="/allTokens">
-  <AllTokens />
-</Route>
+              <Route path="/allTokens">
+                <AllTokens />
+              </Route>
               <Route exact key="1" path={`/redeem/ppana`}>
                 <RedeemPPana />
               </Route>
               <Route path={`/tokenlaunch`}>
-                {farms.map(farm => {
+                {farms.filter(x=>x.network==networkId).map(farm => {
                   return (
                     <Route exact key={farm.index} path={`/tokenlaunch/${farm.index}`}>
                       <Farm index={farm.index} />

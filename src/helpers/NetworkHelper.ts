@@ -1,11 +1,48 @@
 import { JsonRpcProvider, StaticJsonRpcProvider } from "@ethersproject/providers";
 
-import { NETWORKS } from "../constants";
+import { NetworkId, NETWORKS } from "../constants";
 import { NodeHelper } from "../helpers/NodeHelper";
+import { EnvHelper } from "./Environment";
+
+const arbitrum_mainnet = NETWORKS[NetworkId.ARBITRUM_MAINNET];
+const arbitrum_testnet = NETWORKS[NetworkId.ARBITRUM_TESTNET];
 
 interface IGetCurrentNetwork {
   provider: StaticJsonRpcProvider | JsonRpcProvider;
 }
+
+export const checkNetwork = (networkId: number) => {
+  return {
+    enabledNetwork:
+      (networkId == arbitrum_mainnet.chainId && checkMainnet().enabledNetwork) ||
+      (networkId == arbitrum_testnet.chainId && checkTestnet().enabledNetwork),
+  };
+};
+
+export const checkMainnet = () => {
+  return {
+    enabledNetwork: EnvHelper.env.REACT_APP_ARBITRUM_MAINNET_ENABLED === "true",
+  };
+};
+
+export const isWalletMainnet = (networkId: number) => networkId == arbitrum_mainnet.chainId;
+
+export const checkTestnet = () => {
+  return {
+    enabledNetwork: EnvHelper.env.REACT_APP_ARBITRUM_TESTNET_ENABLED === "true",
+  };
+};
+export const CheckBondClock = () => {
+  return  EnvHelper.env.REACT_APP_SHOWBONDCLOCK==="true";
+};
+
+export const isWalletTestnet = (networkId: number) => networkId == arbitrum_testnet.chainId;
+
+export const handleSwitchChain = (id: any, provider: StaticJsonRpcProvider | JsonRpcProvider) => {
+  return () => {
+    switchNetwork({ provider: provider, networkId: id });
+  };
+};
 
 export const initNetworkFunc = async ({ provider }: IGetCurrentNetwork) => {
   try {
