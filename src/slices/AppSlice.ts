@@ -81,10 +81,10 @@ export const loadAppDetails = createAsyncThunk(
       console.error("failed to connect to provider, please connect your wallet");
       return {
        // stakingTVL,
-        marketPrice,
-        marketCap,
-        circSupply,
-        totalSupply,
+       marketPrice:marketPrice,
+       marketCap:marketCap,
+       circSupply:circSupply,
+       totalSupply:totalSupply,
         //treasuryMarketValue,
       } as IAppData;
     }
@@ -108,17 +108,17 @@ export const loadAppDetails = createAsyncThunk(
     const currentIndex = stakingContract!=null? await stakingContract.index():BigNumber.from('1000000000000000000');
     return {
       currentIndex: ethers.utils.formatUnits(currentIndex, 18),
-      currentBlock,
-      fiveDayRate,
-      stakingAPY,
+      currentBlock:currentBlock,
+      fiveDayRate:fiveDayRate,
+      stakingAPY:stakingAPY,
       //stakingTVL,
-      stakingRebase,
-      marketCap,
-      marketPrice,
-      circSupply,
-      totalSupply,
+      stakingRebase:stakingRebase,
+      marketCap:marketCap,
+      marketPrice:marketPrice,
+      circSupply:circSupply,
+      totalSupply:totalSupply,
       //treasuryMarketValue,
-      secondsToEpoch,
+      secondsToEpoch:secondsToEpoch,
     } as IAppData;
   },
 );

@@ -13,7 +13,7 @@ import { useWeb3Context } from "src/hooks/web3Context";
 //   RunwayAvailableGraph,
 //   TotalValueDepositedGraph,
 // } from "./components/Graph/Graph";
-import { CurrentIndex, KARSHAPrice, PANAPrice, ExchangeAPY, CircSupply, MarketCap } from "./components/Metric/Metric";
+import { CurrentIndex, KARSHAPrice, PANAPrice, ExchangeAPY, CircSupply, MarketCap, FullyDillutedMarketCap } from "./components/Metric/Metric";
 import { switchNetwork } from "src/helpers/NetworkHelper";
 import { NetworkId, NETWORKS } from "src/constants";
 import ConnectButton from "src/components/ConnectButton/ConnectButton";
@@ -83,13 +83,17 @@ const TreasuryDashboard = memo(() => {
             {networkId === NetworkId.ARBITRUM_TESTNET ? (
               <>
                 <Grid container direction="row" spacing={1}>
-                  <MarketCap />
+                  <MarketCap colSize={4}/>
+                  <FullyDillutedMarketCap/>
+                  <CircSupply colSize={4}/>
                   <PANAPrice />
                   <KARSHAPrice />
-                  {<CircSupply />}
-                  {/* <BackingPerPANA /> */}
-                  <ExchangeAPY />
                   <CurrentIndex />
+                  <ExchangeAPY />
+                  {/* <BackingPerPANA /> */}
+                  
+                  
+                  
                   {/* <FiveDayRate />
                   <NextRewardYield /> */}
                 </Grid>
