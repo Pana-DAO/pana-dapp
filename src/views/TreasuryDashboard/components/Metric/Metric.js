@@ -66,13 +66,8 @@ export const FullyDillutedMarketCap = () => {
 
 
 export const MarketCap = ({colSize}) => {
-  // const marketCap = useSelector(state => state.app.marketCap || 0);
-  // return <MetricContent2 label={t`Market Cap`} metric={formatMoney(marketCap, true)} isLoading={!marketCap} />;
-  const circSupply = useSelector(state => state.app.circSupply);
-  const marketPrice = useSelector(state => state.app.marketPrice);  
-  const isDataLoaded = marketPrice && circSupply;
-  
-  return <MetricContent colSize={colSize} label={t`Market Cap`} metric={formatMoney((circSupply * marketPrice), true)} isLoading={!isDataLoaded} />;
+  const marketCap = useSelector(state => state.app.marketCap || 0);
+  return <MetricContent colSize={colSize} label={t`Market Cap`} metric={formatMoney(marketCap, true)} isLoading={!marketCap} />;  
 };
 
 export const TVLStakingPool = ({totalLiquidity}) => {
