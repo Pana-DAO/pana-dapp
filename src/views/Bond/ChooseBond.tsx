@@ -42,7 +42,7 @@ function ChooseBond() {
     return state.bonding.indexes.map(index => state.bonding.bonds[index]).sort((a, b) => b.discount - a.discount);
   });
   
-  const countDown = new Date(Date.UTC(2022,8,19,16,0,0,0)).getTime(); //3pm gmt == 11am est
+  const countDown = new Date(Date.UTC(2022,8,27,16,0,0,0)).getTime(); //3pm gmt == 11am est
   const arbitrum_mainnet = NETWORKS[NetworkId.ARBITRUM_MAINNET];
   const arbitrum_testnet = NETWORKS[NetworkId.ARBITRUM_TESTNET];  
   
