@@ -90,7 +90,7 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
                 style={{ minWidth: "151px", minHeight: "40px", width: "151px" }}
               />
             </Link>
-            {checkNetwork(networkId) ? (
+            {checkNetwork(networkId) && checkNetwork(networkId).enabledNetwork ? (
               <>
                 <WalletAddressEns />
                 {isWalletTestnet(networkId) && checkNetwork(networkId).enabledNetwork ? <RebaseTimer /> : <></>}
