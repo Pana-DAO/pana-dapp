@@ -90,7 +90,7 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
                 style={{ minWidth: "151px", minHeight: "40px", width: "151px" }}
               />
             </Link>
-            {checkNetwork(networkId) ? (
+            {checkNetwork(networkId) && checkNetwork(networkId).enabledNetwork ? (
               <>
                 <WalletAddressEns />
                 {isWalletTestnet(networkId) ? <RebaseTimer /> : <></>}
@@ -105,7 +105,7 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
               {
                 <>
                   <List component="nav">
-                    {isWalletTestnet(networkId) ? (
+                    {isWalletTestnet(networkId) && checkNetwork(networkId).enabledNetwork ? (
                       <Link className="nav-link" component={NavLink} to="/dashboard">
                         <ListItem button selected={location.pathname == "/dashboard"}>
                           <Typography variant="h6" className="nav-content">
@@ -139,7 +139,7 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
                           </Typography>
                         </ListItem>
                       </Link>
-                    {isWalletTestnet(networkId) ? (
+                    {isWalletTestnet(networkId) && checkNetwork(networkId).enabledNetwork ? (
                       <>
                         
                         <Collapse in={true} timeout="auto" unmountOnExit>
