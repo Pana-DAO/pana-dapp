@@ -34,7 +34,7 @@ const pricingFunctionHelperLP = async (
 
 const getOraclePrice = async (provider: ethers.providers.JsonRpcProvider, networkId: NetworkId, index: number) => {
   const depositoryContract = BondDepository__factory.connect(addresses[networkId].BOND_DEPOSITORY, provider);
-  const oraclePrice = await depositoryContract.getOraclePrice(index);
+  const oraclePrice = await depositoryContract.getOraclePriceView(index);
   return +oraclePrice / Math.pow(10, 18);
 };
 
