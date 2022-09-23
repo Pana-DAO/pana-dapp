@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 import { BigNumber, ethers } from "ethers";
 import { RootState } from "src/store";
-import { Pana, SPana, Staking__factory } from "src/typechain";
+import { Distributor__factory, Pana, SPana, Staking__factory } from "src/typechain";
 
 import { abi as panaAbi } from "../abi/Pana.json";
 import { abi as sPanaAbi } from "../abi/sPana.json";
@@ -51,6 +51,7 @@ export const loadAppDetails = createAsyncThunk(
     const stakingContract =addresses[networkID].STAKING_ADDRESS!=""? Staking__factory.connect(addresses[networkID].STAKING_ADDRESS, provider):null;
     const daoMultisig = addresses[networkID].DAO_MULTISIG;
 
+    const distribute = addresses[networkID].DISTRIBUTOR_ADDRESS!=""? Distributor__factory.connect(addresses[networkID].DISTRIBUTOR_ADDRESS, provider):null;
     const panaMainContract = new ethers.Contract(
       addresses[networkID].PANA_ADDRESS as string,
       panaAbi,
@@ -71,7 +72,7 @@ export const loadAppDetails = createAsyncThunk(
     const circSupply = totalSupply-daoPanaBalance;    
     const stakedCircSupply =stakingContract!=null? Number((await stakingContract.stakingSupply()).toString()):1;    
     const marketCap = circSupply * marketPrice;
-
+    
     //const totalSupply = parseFloat(graphData.data.protocolMetrics[0].totalSupply);
     //const treasuryMarketValue = parseFloat(graphData.data.protocolMetrics[0].treasuryMarketValue);
     // const currentBlock = parseFloat(graphData.data._meta.block.number);
@@ -100,7 +101,23 @@ export const loadAppDetails = createAsyncThunk(
     const stakingReward = epoch!=null?epoch.distribute:0;
     const stakingRebase = stakedCircSupply>0?(Number(stakingReward.toString()) / stakedCircSupply):0;
     const fiveDayRate = Math.pow(1 + stakingRebase, 5 * 3) - 1;
-    const stakingAPY = Math.pow(1 + stakingRebase, 365 * 3) - 1;
+    // const stakingAPY = Math.pow(1 + stakingRebase, 365 * 3) - 1;
+    let infos:any;
+    try{
+    infos =  (await distribute?.info(0));
+    }
+    catch(ee){infos=null;}
+    let indx=0;
+    if(infos && infos.recipient.toLowerCase()!=addresses[networkID].STAKING_ADDRESS.toLowerCase()){
+      indx=indx+1;
+      infos =  (await distribute?.info(indx));
+    }
+    const inforate = infos?Number(infos?.rate):0;
+    // const info = infos?.find(x=>x.recipient.toLowerCase()==addresses[networkID].STAKING_ADDRESS.toLowerCase());    
+    // const stakingAPY = inforate? (Math.pow(1 + (inforate/1e6)/(365 * 3), 365 * 3) - 1):"-";    
+    const stakingAPY = inforate? (Math.pow((1 + (inforate/1e6)), 365 * 3) - 1):"-";    
+    
+    //APY = ((1+RR/N)^N)- 1
     
     // Current index
     const currentIndex = stakingContract!=null? await stakingContract.index():BigNumber.from('1000000000000000000');
@@ -108,7 +125,7 @@ export const loadAppDetails = createAsyncThunk(
       currentIndex: ethers.utils.formatUnits(currentIndex, 18),
       currentBlock:currentBlock,
       fiveDayRate:fiveDayRate,
-      stakingAPY:(stakingAPY==0?0.01:stakingAPY),//sending default as 0.01(1 percentage)
+      stakingAPY:stakingAPY,
       //stakingTVL,
       stakingRebase:stakingRebase,
       marketCap:marketCap,

@@ -98,6 +98,11 @@ export const FiveDayRate = () => {
 
 export const ExchangeAPY = () => {
   const stakingAPY = useSelector(state => state.app.stakingAPY);
+  if(isNaN(stakingAPY)){
+    return (
+      <MetricContent label={t`APY`} metric={`-`} isLoading={!stakingAPY} />
+    );
+  }
   const trimmedExchangingAPY = trim(stakingAPY * 100, 1);
   const formattedTrimmedExchangingAPY = new Intl.NumberFormat("en-US").format(Number(trimmedExchangingAPY));
   return (
