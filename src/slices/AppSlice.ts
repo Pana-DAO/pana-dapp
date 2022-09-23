@@ -68,9 +68,8 @@ export const loadAppDetails = createAsyncThunk(
 
     const totalSupply = parseFloat(parseFloat(getRealNumber((await panaMainContract.totalSupply()).toBigInt())).toFixed(4));
     const daoPanaBalance = parseFloat(parseFloat(getRealNumber((await panaMainContract.balanceOf(daoMultisig)).toBigInt())).toFixed(4));
-    const circSupply = totalSupply-daoPanaBalance;
-    const sPanaCircSupply =sPanaContract!=null? Number((await sPanaContract.circulatingSupply()).toString()):1;
-
+    const circSupply = totalSupply-daoPanaBalance;    
+    const stakedCircSupply =stakingContract!=null? Number((await stakingContract.stakingSupply()).toString()):1;    
     const marketCap = circSupply * marketPrice;
 
     //const totalSupply = parseFloat(graphData.data.protocolMetrics[0].totalSupply);
@@ -94,13 +93,12 @@ export const loadAppDetails = createAsyncThunk(
 
     try {
       secondsToEpoch =stakingContract!=null? Number(await stakingContract.secondsToNextEpoch()):0;
-    } catch {
+    } catch(ee) {
       console.error("Returned a null response from stakingContract.secondsToNextEpoch()");
     }
 
-    //alert(secondsToEpoch);
     const stakingReward = epoch!=null?epoch.distribute:0;
-    const stakingRebase = Number(stakingReward.toString()) / sPanaCircSupply;
+    const stakingRebase = stakedCircSupply>0?(Number(stakingReward.toString()) / stakedCircSupply):0;
     const fiveDayRate = Math.pow(1 + stakingRebase, 5 * 3) - 1;
     const stakingAPY = Math.pow(1 + stakingRebase, 365 * 3) - 1;
     
@@ -110,7 +108,7 @@ export const loadAppDetails = createAsyncThunk(
       currentIndex: ethers.utils.formatUnits(currentIndex, 18),
       currentBlock:currentBlock,
       fiveDayRate:fiveDayRate,
-      stakingAPY:stakingAPY,
+      stakingAPY:(stakingAPY==0?0.01:stakingAPY),//sending default as 0.01(1 percentage)
       //stakingTVL,
       stakingRebase:stakingRebase,
       marketCap:marketCap,
