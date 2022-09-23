@@ -264,9 +264,9 @@ function TokenLaunch() {
                 <Grid container direction="row" className="small-box" spacing={1}>
                   <TVLStakingPool totalLiquidity={totalLiquidity} />
 
-                  <MarketCap />
+                  <MarketCap colSize={3}/>
                   <PANAPrice />
-                  <CircSupply />
+                  <CircSupply colSize={3}/>
                 </Grid>
                 {connected && <Grid container className="bigboxspace" direction="row" spacing={1}>
                   <Grid item xs={12} sm={6}>
