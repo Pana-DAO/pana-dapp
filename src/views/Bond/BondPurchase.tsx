@@ -72,7 +72,7 @@ function BondPurchase({
           } KARSHA. Click Max to autocomplete.`,
         ),
       );
-    } else {
+    } else {      
       dispatch(
         purchaseBond({
           amount: ethers.utils.parseUnits(quantity, bond.quoteDecimals),
@@ -86,6 +86,9 @@ function BondPurchase({
     }
   }
 
+  const updateInput = (value:any) => {
+    setQuantity(getCorrectPercision(value,bond.quoteDecimals));
+  };
   const clearInput = () => {
     setQuantity("");
   };
@@ -94,11 +97,16 @@ function BondPurchase({
     return +balance?.allowance > 0;
   }, [balance]);
 
+  const getCorrectPercision = (value:any,decimal:number)=>{
+    const vals= String(value).split('.');
+    if(vals.length==2) return vals[0]+"."+vals[1].substring(0,decimal);
+    return value;
+  }
   const setMax = () => {
     let maxQ: string;
     const maxBondableNumber = maxBondable * 0.999;
     if (balanceNumber > maxBondableNumber) {
-      maxQ = maxBondableNumber.toString();
+      maxQ = getCorrectPercision(maxBondableNumber,bond.quoteDecimals);
     } else {
       maxQ = ethers.utils.formatUnits(balance.balance, bond.quoteDecimals);
     }
@@ -157,7 +165,7 @@ function BondPurchase({
                       id="outlined-adornment-amount"
                       type="number"
                       value={quantity}
-                      onChange={e => setQuantity(e.target.value)}
+                      onChange={e => updateInput(e.target.value)}
                       endAdornment={<InputAdornment onClick={setMax} position="end">{t`Max`}</InputAdornment>}
                       aria-describedby="outlined-weight-helper-text"
                       inputProps={{
@@ -218,7 +226,7 @@ function BondPurchase({
               </Typography>
             </Box>
             <Typography className="price-data">
-              {isBondLoading ? <Skeleton width="100px" /> : `${trim(balanceNumber, 4)} ${bond.displayName}`}
+              {isBondLoading ? <Skeleton width="100px" /> : `${trim(balanceNumber,(bond.isLP?6:4))} ${bond.displayName}`}
             </Typography>
           </Box>
           <Box display="flex" flexDirection="row" justifyContent="space-between">
@@ -250,8 +258,8 @@ function BondPurchase({
               {isBondLoading ? (
                 <Skeleton width="100px" />
               ) : (
-                `${trim(+bond.maxPayoutOrCapacityInBase / +currentIndex, 4) || "0"} KARSHA (≈${
-                  trim(+bond.maxPayoutOrCapacityInQuote, 4) || "0"
+                `${trim(+bond.maxPayoutOrCapacityInBase / +currentIndex, 6) || "0"} KARSHA (≈${
+                  trim(+bond.maxPayoutOrCapacityInQuote, 6) || "0"
                 } ${bond.displayName})`
               )}
             </Typography>
