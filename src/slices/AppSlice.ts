@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 import { BigNumber, ethers } from "ethers";
 import { RootState } from "src/store";
-import { Distributor__factory, Pana, SPana, Staking__factory } from "src/typechain";
+import { Distributor__factory, IERC20__factory, Pana, SPana, Staking__factory, UniswapV2Lp__factory } from "src/typechain";
 
 import { abi as panaAbi } from "../abi/Pana.json";
 import { abi as sPanaAbi } from "../abi/sPana.json";
@@ -11,6 +11,7 @@ import { setAll } from "../helpers";
 
 import { IBaseAsyncThunk } from "./interfaces";
 import { getTokenPrice } from "../helpers";
+import { abi as Erc20Abi } from "../abi/IERC20.json";
 
 interface IProtocolMetrics {
   readonly timestamp: string;
@@ -21,6 +22,8 @@ interface IProtocolMetrics {
   readonly nextEpochRebase: string;
 }
 
+let usdcPriceInUSD = 1;
+
 const getRealNumber = (number: any) => {
   return ethers.utils.formatUnits(ethers.BigNumber.from(number).toBigInt(), 18);
 }
@@ -28,11 +31,11 @@ const getRealNumber = (number: any) => {
 export const loadAppDetails = createAsyncThunk(
   "app/loadAppDetails",
   async ({ networkID, provider }: IBaseAsyncThunk, { dispatch }) => {
-    
-    
+    usdcPriceInUSD = (await getTokenPrice("usd-coin")) || 1;
 
-    
-    
+
+
+
     // NOTE (appleseed): marketPrice from Graph was delayed, so get CoinGecko price    
     let marketPrice;
     try {
@@ -48,92 +51,94 @@ export const loadAppDetails = createAsyncThunk(
 
     const currentBlock = await provider.getBlockNumber();
 
-    const stakingContract =addresses[networkID].STAKING_ADDRESS!=""? Staking__factory.connect(addresses[networkID].STAKING_ADDRESS, provider):null;
+    const stakingContract = addresses[networkID].STAKING_ADDRESS != "" ? Staking__factory.connect(addresses[networkID].STAKING_ADDRESS, provider) : null;
     const daoMultisig = addresses[networkID].DAO_MULTISIG;
 
-    const distribute = addresses[networkID].DISTRIBUTOR_ADDRESS!=""? Distributor__factory.connect(addresses[networkID].DISTRIBUTOR_ADDRESS, provider):null;
+    const distribute = addresses[networkID].DISTRIBUTOR_ADDRESS != "" ? Distributor__factory.connect(addresses[networkID].DISTRIBUTOR_ADDRESS, provider) : null;
     const panaMainContract = new ethers.Contract(
       addresses[networkID].PANA_ADDRESS as string,
       panaAbi,
       provider,
     ) as Pana;
 
-    const sPanaContract = addresses[networkID].SPANA_ADDRESS!=""? new ethers.Contract(
+    const sPanaContract = addresses[networkID].SPANA_ADDRESS != "" ? new ethers.Contract(
       addresses[networkID].SPANA_ADDRESS as string,
       sPanaAbi,
       provider,
-    ) as SPana:null;
+    ) as SPana : null;
 
-    
-    
+
+
 
     const totalSupply = parseFloat(parseFloat(getRealNumber((await panaMainContract.totalSupply()).toBigInt())).toFixed(4));
     const daoPanaBalance = parseFloat(parseFloat(getRealNumber((await panaMainContract.balanceOf(daoMultisig)).toBigInt())).toFixed(4));
-    const circSupply = totalSupply-daoPanaBalance;    
-    const stakedCircSupply =stakingContract!=null? Number((await stakingContract.stakingSupply()).toString()):1;    
+    const circSupply = totalSupply - daoPanaBalance;
+    const stakedCircSupply = stakingContract != null ? Number((await stakingContract.stakingSupply()).toString()) : 1;
     const marketCap = circSupply * marketPrice;
     
     //const totalSupply = parseFloat(graphData.data.protocolMetrics[0].totalSupply);
-    //const treasuryMarketValue = parseFloat(graphData.data.protocolMetrics[0].treasuryMarketValue);
+    const lpPriceInUSDC = await getLPPriceInUSDC(provider, networkID);
+    const LPInTreasury = await getLPInTreasury(provider, networkID);
+    const treasuryMarketValue = LPInTreasury * lpPriceInUSDC * usdcPriceInUSD;
     // const currentBlock = parseFloat(graphData.data._meta.block.number);
 
     if (!provider) {
       console.error("failed to connect to provider, please connect your wallet");
       return {
-       // stakingTVL,
-       marketPrice:marketPrice,
-       marketCap:marketCap,
-       circSupply:circSupply,
-       totalSupply:totalSupply,
-        //treasuryMarketValue,
+        // stakingTVL,
+        marketPrice: marketPrice,
+        marketCap: marketCap,
+        circSupply: circSupply,
+        totalSupply: totalSupply,
+        treasuryMarketValue,
       } as IAppData;
     }
     // Calculating staking
-    const epoch =stakingContract!=null? await stakingContract.epoch():null;
+    const epoch = stakingContract != null ? await stakingContract.epoch() : null;
     let secondsToEpoch = 0;
 
     try {
-      secondsToEpoch =stakingContract!=null? Number(await stakingContract.secondsToNextEpoch()):0;
-    } catch(ee) {
+      secondsToEpoch = stakingContract != null ? Number(await stakingContract.secondsToNextEpoch()) : 0;
+    } catch (ee) {
       console.error("Returned a null response from stakingContract.secondsToNextEpoch()");
     }
 
-    const stakingReward = epoch!=null?epoch.distribute:0;
-    const stakingRebase = stakedCircSupply>0?(Number(stakingReward.toString()) / stakedCircSupply):0;
+    const stakingReward = epoch != null ? epoch.distribute : 0;
+    const stakingRebase = stakedCircSupply > 0 ? (Number(stakingReward.toString()) / stakedCircSupply) : 0;
     const fiveDayRate = Math.pow(1 + stakingRebase, 5 * 3) - 1;
     // const stakingAPY = Math.pow(1 + stakingRebase, 365 * 3) - 1;
-    let infos:any;
-    try{
-    infos =  (await distribute?.info(0));
+    let infos: any;
+    try {
+      infos = (await distribute?.info(0));
     }
-    catch(ee){infos=null;}
-    let indx=0;
-    if(infos && infos.recipient.toLowerCase()!=addresses[networkID].STAKING_ADDRESS.toLowerCase()){
-      indx=indx+1;
-      infos =  (await distribute?.info(indx));
+    catch (ee) { infos = null; }
+    let indx = 0;
+    if (infos && infos.recipient.toLowerCase() != addresses[networkID].STAKING_ADDRESS.toLowerCase()) {
+      indx = indx + 1;
+      infos = (await distribute?.info(indx));
     }
-    const inforate = infos?Number(infos?.rate):0;
+    const inforate = infos ? Number(infos?.rate) : 0;
     // const info = infos?.find(x=>x.recipient.toLowerCase()==addresses[networkID].STAKING_ADDRESS.toLowerCase());    
     // const stakingAPY = inforate? (Math.pow(1 + (inforate/1e6)/(365 * 3), 365 * 3) - 1):"-";    
-    const stakingAPY = inforate? (Math.pow((1 + (inforate/1e6)), 365 * 3) - 1):"-";    
-    
+    const stakingAPY = inforate ? (Math.pow((1 + (inforate / 1e6)), 365 * 3) - 1) : "-";
+
     //APY = ((1+RR/N)^N)- 1
-    
+
     // Current index
-    const currentIndex = stakingContract!=null? await stakingContract.index():BigNumber.from('1000000000000000000');
+    const currentIndex = stakingContract != null ? await stakingContract.index() : BigNumber.from('1000000000000000000');
     return {
       currentIndex: ethers.utils.formatUnits(currentIndex, 18),
-      currentBlock:currentBlock,
-      fiveDayRate:fiveDayRate,
-      stakingAPY:stakingAPY,
+      currentBlock: currentBlock,
+      fiveDayRate: fiveDayRate,
+      stakingAPY: stakingAPY,
       //stakingTVL,
-      stakingRebase:stakingRebase,
-      marketCap:marketCap,
-      marketPrice:marketPrice,
-      circSupply:circSupply,
-      totalSupply:totalSupply,
-      //treasuryMarketValue,
-      secondsToEpoch:secondsToEpoch,
+      stakingRebase: stakingRebase,
+      marketCap: marketCap,
+      marketPrice: marketPrice,
+      circSupply: circSupply,
+      totalSupply: totalSupply,
+      treasuryMarketValue,
+      secondsToEpoch: secondsToEpoch,
     } as IAppData;
   },
 );
@@ -186,7 +191,7 @@ export const findOrLoadMarketPrice = createAsyncThunk(
 const loadMarketPrice = createAsyncThunk("app/loadMarketPrice", async ({ networkID, provider }: IBaseAsyncThunk) => {
   let marketPrice = await getTokenPrice("pana-dao");
   if (!marketPrice) {
-    const usdcPriceInUSD = (await getTokenPrice("usd-coin")) || 1;
+    
     marketPrice = (await getPanaPriceInUSDC(provider, networkID)) * usdcPriceInUSD;
   }
   return {
@@ -198,11 +203,50 @@ export const getPanaPriceInUSDC = async (provider: ethers.providers.JsonRpcProvi
   const pairContract = new ethers.Contract(addresses[networkID].PANA_USDC_LP as string, pairContractAbi, provider);
 
   const reserves = await pairContract.getReserves();
-  const token0 = await pairContract.token0();  
+  const token0 = await pairContract.token0();
   if (token0 == addresses[networkID].PANA_ADDRESS) {
-    return (reserves[1] * Math.pow(10, 12)) / reserves[0];  
+    return (reserves[1] * Math.pow(10, 12)) / reserves[0];
   }
   return reserves[0] / (reserves[1] * Math.pow(10, 12));
+}
+
+
+const getLPPriceInUSDC = async (
+  provider: ethers.providers.JsonRpcProvider,
+  networkId: NetworkId,
+) => {
+  const baseContract = UniswapV2Lp__factory.connect(addresses[networkId].PANA_USDC_LP, provider);
+  const reserves = await baseContract.getReserves();
+  const totalSupply = +(await baseContract.totalSupply()) / Math.pow(10, await baseContract.decimals());
+  const token0Address = await baseContract.token0();
+  const token1Address = await baseContract.token1();
+  let reserve, tokenContract;
+
+  if (token0Address.toLowerCase() == addresses[networkId].PANA_ADDRESS.toLowerCase()) {
+    reserve = +reserves._reserve1;
+    tokenContract = IERC20__factory.connect(token1Address, provider);
+  } else {
+    reserve = +reserves._reserve0;
+    tokenContract = IERC20__factory.connect(token0Address, provider);
+  }
+  const tokenDecimals = await tokenContract.decimals();
+
+  const usdcAmount = reserve / Math.pow(10, tokenDecimals);
+
+  // Price in terms of LP token for a single Pana
+  return (2 * usdcAmount) / totalSupply;
+};
+
+export async function getLPInTreasury(provider: any, networkID: NetworkId): Promise<number> {
+  try {
+    const account = addresses[networkID].DAO_TREASURY;
+    const contract = new ethers.Contract(addresses[networkID].PANA_USDC_LP, Erc20Abi, provider);
+    const result = await contract.balanceOf(account);
+    return +result / Math.pow(10, 18);
+  } catch (error) {
+    console.error("getErc20TokenBalance", error);
+  }
+  return 0;
 }
 
 export interface IAppData {
