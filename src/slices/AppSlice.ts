@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 import { BigNumber, ethers } from "ethers";
 import { RootState } from "src/store";
-import { Distributor__factory, Pana, SPana, Staking__factory } from "src/typechain";
+import { Distributor__factory, IERC20__factory, Pana, SPana, Staking__factory, UniswapV2Lp__factory } from "src/typechain";
 
 import { abi as panaAbi } from "../abi/Pana.json";
 import { abi as sPanaAbi } from "../abi/sPana.json";
@@ -11,6 +11,7 @@ import { setAll } from "../helpers";
 
 import { IBaseAsyncThunk } from "./interfaces";
 import { getTokenPrice } from "../helpers";
+import { abi as Erc20Abi } from "../abi/IERC20.json";
 
 interface IProtocolMetrics {
   readonly timestamp: string;
@@ -21,6 +22,8 @@ interface IProtocolMetrics {
   readonly nextEpochRebase: string;
 }
 
+let usdcPriceInUSD = 1;
+
 const getRealNumber = (number: any) => {
   return ethers.utils.formatUnits(ethers.BigNumber.from(number).toBigInt(), 18);
 }
@@ -28,7 +31,7 @@ const getRealNumber = (number: any) => {
 export const loadAppDetails = createAsyncThunk(
   "app/loadAppDetails",
   async ({ networkID, provider }: IBaseAsyncThunk, { dispatch }) => {
-
+    usdcPriceInUSD = (await getTokenPrice("usd-coin")) || 1;
 
 
 
@@ -74,7 +77,9 @@ export const loadAppDetails = createAsyncThunk(
     const marketCap = circSupply * marketPrice;
 
     //const totalSupply = parseFloat(graphData.data.protocolMetrics[0].totalSupply);
-    //const treasuryMarketValue = parseFloat(graphData.data.protocolMetrics[0].treasuryMarketValue);
+    const lpPriceInUSDC = await getLPPriceInUSDC(provider, networkID);
+    const LPInTreasury = await getLPInTreasury(provider, networkID);
+    const treasuryMarketValue = LPInTreasury * lpPriceInUSDC * usdcPriceInUSD;
     // const currentBlock = parseFloat(graphData.data._meta.block.number);
 
     if (!provider) {
@@ -85,7 +90,7 @@ export const loadAppDetails = createAsyncThunk(
         marketCap: marketCap,
         circSupply: circSupply,
         totalSupply: totalSupply,
-        //treasuryMarketValue,
+        treasuryMarketValue,
       } as IAppData;
     }
     // Calculating staking
@@ -132,7 +137,7 @@ export const loadAppDetails = createAsyncThunk(
       marketPrice: marketPrice,
       circSupply: circSupply,
       totalSupply: totalSupply,
-      //treasuryMarketValue,
+      treasuryMarketValue,
       secondsToEpoch: secondsToEpoch,
     } as IAppData;
   },
@@ -186,7 +191,7 @@ export const findOrLoadMarketPrice = createAsyncThunk(
 const loadMarketPrice = createAsyncThunk("app/loadMarketPrice", async ({ networkID, provider }: IBaseAsyncThunk) => {
   let marketPrice = await getTokenPrice("pana-dao");
   if (!marketPrice) {
-    const usdcPriceInUSD = (await getTokenPrice("usd-coin")) || 1;
+    
     marketPrice = (await getPanaPriceInUSDC(provider, networkID)) * usdcPriceInUSD;
   }
   return {
@@ -203,6 +208,45 @@ export const getPanaPriceInUSDC = async (provider: ethers.providers.JsonRpcProvi
     return (reserves[1] * Math.pow(10, 12)) / reserves[0];
   }
   return reserves[0] / (reserves[1] * Math.pow(10, 12));
+}
+
+
+const getLPPriceInUSDC = async (
+  provider: ethers.providers.JsonRpcProvider,
+  networkId: NetworkId,
+) => {
+  const baseContract = UniswapV2Lp__factory.connect(addresses[networkId].PANA_USDC_LP, provider);
+  const reserves = await baseContract.getReserves();
+  const totalSupply = +(await baseContract.totalSupply()) / Math.pow(10, await baseContract.decimals());
+  const token0Address = await baseContract.token0();
+  const token1Address = await baseContract.token1();
+  let reserve, tokenContract;
+
+  if (token0Address.toLowerCase() == addresses[networkId].PANA_ADDRESS.toLowerCase()) {
+    reserve = +reserves._reserve1;
+    tokenContract = IERC20__factory.connect(token1Address, provider);
+  } else {
+    reserve = +reserves._reserve0;
+    tokenContract = IERC20__factory.connect(token0Address, provider);
+  }
+  const tokenDecimals = await tokenContract.decimals();
+
+  const usdcAmount = reserve / Math.pow(10, tokenDecimals);
+
+  // Price in terms of LP token for a single Pana
+  return (2 * usdcAmount) / totalSupply;
+};
+
+export async function getLPInTreasury(provider: any, networkID: NetworkId): Promise<number> {
+  try {
+    const account = addresses[networkID].DAO_TREASURY;
+    const contract = new ethers.Contract(addresses[networkID].PANA_USDC_LP, Erc20Abi, provider);
+    const result = await contract.balanceOf(account);
+    return +result / Math.pow(10, 18);
+  } catch (error) {
+    console.error("getErc20TokenBalance", error);
+  }
+  return 0;
 }
 
 export interface IAppData {
