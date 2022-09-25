@@ -123,7 +123,7 @@ function ChooseBond() {
                 {t`PANA Price`}
               </Typography>
               <Typography variant="h4" style={{ fontWeight: 500 }}>
-                <>{marketPrice ? formatCurrency(Number(marketPrice), 6) : <Skeleton width="100px" />}</>
+                <>{marketPrice ? formatCurrency(Number(marketPrice), 6) : <Skeleton width="100px"  style={{marginLeft: '35%'}}  />}</>
               </Typography>
             </Grid>
           </Grid>
