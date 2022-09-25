@@ -122,7 +122,7 @@ const Bond = ({ index }: { index: number }) => {
                 <Typography variant="h5" color="textSecondary">
                   <Trans>Bond Price</Trans>
                 </Typography>
-                <Typography variant="h3" className="price" color="primary">
+                <Typography variant="h3" className={'price'+(bond.isLP?" lpfont":"")} color="primary">
                   <>
                     {bond.soldOut ? (
                       t`--`
@@ -138,8 +138,8 @@ const Bond = ({ index }: { index: number }) => {
                 <Typography variant="h5" color="textSecondary">
                   <Trans>Market Price</Trans>
                 </Typography>
-                <Typography variant="h3" color="primary" className="price">
-                  {isBondLoading ? <Skeleton /> : trim2(bond.marketPriceInToken, (bond.isLP?10:8)) +(bond.isLP ?  " LP" : " USD")}
+                <Typography variant="h3" color="primary" className={'price'+(bond.isLP?" lpfont":"")}>
+                  {isBondLoading ? <Skeleton /> : trim2(bond.marketPriceInToken, (bond.isLP?14:8)) +(bond.isLP ?  " LP" : " USD")}
                 </Typography>
               </div>
             </Box>
@@ -159,7 +159,7 @@ export const DisplayBondPrice = ({ bond }: { bond: IBond }): ReactElement => {
 
   return (
     <Fragment>
-      {bond.isLP ? `${trim2(bond.priceUSD, 10)} LP` : new Intl.NumberFormat("en-US", {
+      {bond.isLP ? `${trim2(bond.priceUSD, 14)} LP` : new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
         maximumFractionDigits: 4,
