@@ -120,7 +120,7 @@ export const loadAppDetails = createAsyncThunk(
     const inforate = infos ? Number(infos?.rate) : 0;
     // const info = infos?.find(x=>x.recipient.toLowerCase()==addresses[networkID].STAKING_ADDRESS.toLowerCase());    
     // const stakingAPY = inforate? (Math.pow(1 + (inforate/1e6)/(365 * 3), 365 * 3) - 1):"-";    
-    const stakingAPY = inforate ? (Math.pow((1 + (inforate / 1e6)), 365 * 3) - 1) : "-";
+    const stakingAPY = inforate ? (Math.pow((1 + (inforate / 1e9)), 365 * 3) - 1) : "-";
 
     //APY = ((1+RR/N)^N)- 1
 
