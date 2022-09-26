@@ -75,7 +75,7 @@ export const loadAppDetails = createAsyncThunk(
     const circSupply = totalSupply - daoPanaBalance;
     const stakedCircSupply = stakingContract != null ? Number((await stakingContract.stakingSupply()).toString()) : 1;
     const marketCap = circSupply * marketPrice;
-
+    
     //const totalSupply = parseFloat(graphData.data.protocolMetrics[0].totalSupply);
     const lpPriceInUSDC = await getLPPriceInUSDC(provider, networkID);
     const LPInTreasury = await getLPInTreasury(provider, networkID);

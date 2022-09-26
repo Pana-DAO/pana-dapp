@@ -17,7 +17,7 @@ import { ChangeEvent, useState } from "react";
 import { useQuery } from "react-query";
 import { addresses, NETWORKS } from "src/constants";
 import { NetworkId } from "src/constants";
-import { formatCurrency } from "src/helpers";
+import { formatCurrency, trim2 } from "src/helpers";
 import { segmentUA } from "src/helpers/userAnalyticHelpers";
 import { useAppSelector } from "src/hooks";
 import { useWeb3Context } from "src/hooks/web3Context";
@@ -116,7 +116,7 @@ const BalanceValue = ({
 }) => (
   <Box sx={{ textAlign: "right", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
     <Typography variant="body2" style={{ fontWeight: 600 }}>
-      {!isLoading ? balance.substring(0, sigFigs) : <Skeleton variant="text" width={50} />}
+      {!isLoading ? trim2(balance, sigFigs): <Skeleton variant="text" width={50} />}
     </Typography>
     <Typography variant="body2" color="textSecondary">
       {!isLoading ? (

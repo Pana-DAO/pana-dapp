@@ -23,7 +23,7 @@ import { isPendingTxn, txnButtonText } from "src/slices/PendingTxnsSlice";
 import { AppDispatch } from "src/store";
 
 import ConnectButton from "../../components/ConnectButton/ConnectButton";
-import { shorten, trim } from "../../helpers";
+import { shorten, trim2 } from "../../helpers";
 import { error } from "../../slices/MessagesSlice";
 import { DisplayBondDiscount } from "./Bond";
 
@@ -68,7 +68,7 @@ function BondPurchase({
       dispatch(
         error(
           `Max capacity is ${maxBondable} ${bond.displayName} for ${
-            trim(+bond.maxPayoutOrCapacityInBase / +currentIndex, 4) || "0"
+            trim2(+bond.maxPayoutOrCapacityInBase / +currentIndex, 14) || "0"
           } KARSHA. Click Max to autocomplete.`,
         ),
       );
@@ -226,7 +226,7 @@ function BondPurchase({
               </Typography>
             </Box>
             <Typography className="price-data">
-              {isBondLoading ? <Skeleton width="100px" /> : `${trim(balanceNumber,(bond.isLP?6:4))} ${bond.displayName}`}
+              {isBondLoading ? <Skeleton width="100px" /> : `${trim2(balanceNumber,(bond.isLP?14:4))} ${bond.displayName}`}
             </Typography>
           </Box>
           <Box display="flex" flexDirection="row" justifyContent="space-between">
@@ -246,7 +246,7 @@ function BondPurchase({
               {isBondLoading ? (
                 <Skeleton width="100px" />
               ) : (
-                `≈${trim(+quantity / bond.priceToken / +currentIndex, 4) || "0"} KARSHA (≈${trim(+quantity / bond.priceToken, 4) || "0"} PANA)`
+                `≈${trim2(+quantity / bond.priceToken / +currentIndex, 14) || "0"} KARSHA (≈${trim2(+quantity / bond.priceToken, 14) || "0"} PANA)`
               )}
             </Typography>
           </Box>
@@ -258,8 +258,8 @@ function BondPurchase({
               {isBondLoading ? (
                 <Skeleton width="100px" />
               ) : (
-                `${trim(+bond.maxPayoutOrCapacityInBase / +currentIndex, 6) || "0"} KARSHA (≈${
-                  trim(+bond.maxPayoutOrCapacityInQuote, 6) || "0"
+                `${trim2(+bond.maxPayoutOrCapacityInBase / +currentIndex, 14) || "0"} KARSHA (≈${
+                  trim2(+bond.maxPayoutOrCapacityInQuote, 14) || "0"
                 } ${bond.displayName})`
               )}
             </Typography>
