@@ -25,7 +25,7 @@ import RebaseTimer from "../RebaseTimer/RebaseTimer";
 
 import { ReactComponent as PanaDAOIcon } from "../../assets/icons/panadao-nav-header.svg";
 import { getUserPoolBalance, getUserPendingPana } from "src/slices/StakingPoolsSlice";
-import { checkNetwork, isWalletTestnet } from "src/helpers/NetworkHelper";
+import { checkNetwork } from "src/helpers/NetworkHelper";
 
 type NavContentProps = {
   handleDrawerToggle?: () => void;
@@ -93,7 +93,7 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
             {checkNetwork(networkId) && checkNetwork(networkId).enabledNetwork ? (
               <>
                 <WalletAddressEns />
-                {isWalletTestnet(networkId) ? <RebaseTimer /> : <></>}
+                <RebaseTimer />
               </>
             ) : (
               <></>
