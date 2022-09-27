@@ -17,6 +17,7 @@ import { CurrentIndex, KARSHAPrice, PANAPrice, ExchangeAPY, CircSupply, MarketCa
 import { switchNetwork } from "src/helpers/NetworkHelper";
 import { NetworkId, NETWORKS } from "src/constants";
 import ConnectButton from "src/components/ConnectButton/ConnectButton";
+// import SwitchChain from "src/components/SwitchChain/SwitchChain";
 
 const TreasuryDashboard = memo(() => {
   const isSmallScreen = useMediaQuery("(max-width: 650px)");
@@ -80,8 +81,7 @@ const TreasuryDashboard = memo(() => {
       >
         <Box className="hero-metrics">
           <Paper className="paper-format-treasury pana-card dashboard-metrics">
-            {networkId === NetworkId.ARBITRUM_TESTNET ? (
-              <>
+            {<>
                 <Grid container direction="row" spacing={1}>
                   <MarketCap colSize={4}/>
                   <FullyDillutedMarketCap/>
@@ -97,11 +97,15 @@ const TreasuryDashboard = memo(() => {
                   {/* <FiveDayRate />
                   <NextRewardYield /> */}
                 </Grid>
-              </>
-            ) : (
-              <></>
-            )}
-            {chooseButtonArea()}
+              </>}
+            {/* {( connected?(<SwitchChain provider={provider}/>):(
+            <>
+              <Box display="flex" flexDirection="column">
+                <Box display="flex" justifyContent="space-around" flexWrap="wrap">
+                  <ConnectButton></ConnectButton>
+                </Box>
+              </Box>
+            </>))} */}
           </Paper>
         </Box>
 
