@@ -103,7 +103,7 @@ export const NETWORKS: { [key: number]: INetwork } = {
     image: arbitrum_logo,
     imageAltText: "Arbitrum Mainnet",
     uri: () => NodeHelper.getMainnetURI(NetworkId.ARBITRUM_MAINNET),
-    isOracleIntegrated: false
+    isOracleIntegrated: true
   },
   [NetworkId.ARBITRUM_TESTNET]: {
     chainName: "Arbitrum Testnet",
