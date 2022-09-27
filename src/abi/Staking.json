@@ -2,10 +2,26 @@
   "abi": [
     {
       "inputs": [
-        { "internalType": "address", "name": "_pana", "type": "address" },
-        { "internalType": "address", "name": "_sPana", "type": "address" },
-        { "internalType": "address", "name": "_karsha", "type": "address" },
-        { "internalType": "address", "name": "_authority", "type": "address" }
+        {
+          "internalType": "address",
+          "name": "_pana",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_sPana",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_karsha",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_authority",
+          "type": "address"
+        }
       ],
       "stateMutability": "nonpayable",
       "type": "constructor"
@@ -13,62 +29,149 @@
     {
       "anonymous": false,
       "inputs": [
-        { "indexed": true, "internalType": "contract IPanaAuthority", "name": "authority", "type": "address" }
+        {
+          "indexed": true,
+          "internalType": "contract IPanaAuthority",
+          "name": "authority",
+          "type": "address"
+        }
       ],
       "name": "AuthorityUpdated",
       "type": "event"
     },
     {
       "anonymous": false,
-      "inputs": [{ "indexed": false, "internalType": "address", "name": "distributor", "type": "address" }],
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "distributor",
+          "type": "address"
+        }
+      ],
       "name": "DistributorSet",
       "type": "event"
     },
     {
       "anonymous": false,
-      "inputs": [{ "indexed": false, "internalType": "uint256", "name": "warmup", "type": "uint256" }],
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "StakingMigrated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "warmup",
+          "type": "uint256"
+        }
+      ],
       "name": "WarmupSet",
       "type": "event"
     },
     {
       "inputs": [],
       "name": "KARSHA",
-      "outputs": [{ "internalType": "contract IKarsha", "name": "", "type": "address" }],
+      "outputs": [
+        {
+          "internalType": "contract IKarsha",
+          "name": "",
+          "type": "address"
+        }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [],
       "name": "PANA",
-      "outputs": [{ "internalType": "contract IERC20", "name": "", "type": "address" }],
+      "outputs": [
+        {
+          "internalType": "contract IERC20",
+          "name": "",
+          "type": "address"
+        }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
     {
-      "inputs": [{ "internalType": "bool", "name": "allow", "type": "bool" }],
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_depositor",
+          "type": "address"
+        }
+      ],
+      "name": "addApprovedDepositor",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bool",
+          "name": "allow",
+          "type": "bool"
+        }
+      ],
       "name": "allowExternalStaking",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
     },
     {
-      "inputs": [],
-      "name": "authority",
-      "outputs": [{ "internalType": "contract IPanaAuthority", "name": "", "type": "address" }],
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "approvedDepositor",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [],
-      "name": "bondDepositor",
-      "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+      "name": "authority",
+      "outputs": [
+        {
+          "internalType": "contract IPanaAuthority",
+          "name": "",
+          "type": "address"
+        }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [],
       "name": "distributor",
-      "outputs": [{ "internalType": "contract IDistributor", "name": "", "type": "address" }],
+      "outputs": [
+        {
+          "internalType": "contract IDistributor",
+          "name": "",
+          "type": "address"
+        }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
@@ -76,10 +179,26 @@
       "inputs": [],
       "name": "epoch",
       "outputs": [
-        { "internalType": "uint256", "name": "length", "type": "uint256" },
-        { "internalType": "uint256", "name": "number", "type": "uint256" },
-        { "internalType": "uint256", "name": "end", "type": "uint256" },
-        { "internalType": "uint256", "name": "distribute", "type": "uint256" }
+        {
+          "internalType": "uint256",
+          "name": "length",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "number",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "end",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "distribute",
+          "type": "uint256"
+        }
       ],
       "stateMutability": "view",
       "type": "function"
@@ -87,47 +206,96 @@
     {
       "inputs": [],
       "name": "index",
-      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [],
+      "name": "migrate",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
       "name": "rebase",
-      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_depositor",
+          "type": "address"
+        }
+      ],
+      "name": "removeApprovedDepositor",
+      "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
     },
     {
       "inputs": [],
       "name": "sPANA",
-      "outputs": [{ "internalType": "contract IsPana", "name": "", "type": "address" }],
+      "outputs": [
+        {
+          "internalType": "contract IsPana",
+          "name": "",
+          "type": "address"
+        }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [],
       "name": "secondsToNextEpoch",
-      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
     {
-      "inputs": [{ "internalType": "contract IPanaAuthority", "name": "_newAuthority", "type": "address" }],
+      "inputs": [
+        {
+          "internalType": "contract IPanaAuthority",
+          "name": "_newAuthority",
+          "type": "address"
+        }
+      ],
       "name": "setAuthority",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
     },
     {
-      "inputs": [{ "internalType": "address", "name": "_bondDepositor", "type": "address" }],
-      "name": "setBondDepositor",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [{ "internalType": "address", "name": "_distributor", "type": "address" }],
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_distributor",
+          "type": "address"
+        }
+      ],
       "name": "setDistributor",
       "outputs": [],
       "stateMutability": "nonpayable",
@@ -135,9 +303,21 @@
     },
     {
       "inputs": [
-        { "internalType": "uint256", "name": "_epochLength", "type": "uint256" },
-        { "internalType": "uint256", "name": "_firstEpochNumber", "type": "uint256" },
-        { "internalType": "uint256", "name": "_firstEpochTime", "type": "uint256" }
+        {
+          "internalType": "uint256",
+          "name": "_epochLength",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_firstEpochNumber",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_firstEpochTime",
+          "type": "uint256"
+        }
       ],
       "name": "setFirstEpoch",
       "outputs": [],
@@ -146,22 +326,93 @@
     },
     {
       "inputs": [
-        { "internalType": "address", "name": "_to", "type": "address" },
-        { "internalType": "uint256", "name": "_amount", "type": "uint256" }
+        {
+          "internalType": "address",
+          "name": "_migrator",
+          "type": "address"
+        }
       ],
-      "name": "stake",
-      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "name": "setStakingMigrator",
+      "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
     },
     {
       "inputs": [
-        { "internalType": "address", "name": "_to", "type": "address" },
-        { "internalType": "uint256", "name": "_amount", "type": "uint256" },
-        { "internalType": "bool", "name": "_trigger", "type": "bool" }
+        {
+          "internalType": "address",
+          "name": "_to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "stake",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "stakingMigrator",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "stakingSupply",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "_trigger",
+          "type": "bool"
+        }
       ],
       "name": "unstake",
-      "outputs": [{ "internalType": "uint256", "name": "amount_", "type": "uint256" }],
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "amount_",
+          "type": "uint256"
+        }
+      ],
       "stateMutability": "nonpayable",
       "type": "function"
     }

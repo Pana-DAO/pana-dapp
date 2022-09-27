@@ -13,10 +13,11 @@ import { useWeb3Context } from "src/hooks/web3Context";
 //   RunwayAvailableGraph,
 //   TotalValueDepositedGraph,
 // } from "./components/Graph/Graph";
-import { CurrentIndex, KARSHAPrice, PANAPrice, ExchangeAPY, CircSupply, MarketCap } from "./components/Metric/Metric";
+import { CurrentIndex, KARSHAPrice, PANAPrice, ExchangeAPY, CircSupply, MarketCap, FullyDillutedMarketCap } from "./components/Metric/Metric";
 import { switchNetwork } from "src/helpers/NetworkHelper";
 import { NetworkId, NETWORKS } from "src/constants";
 import ConnectButton from "src/components/ConnectButton/ConnectButton";
+// import SwitchChain from "src/components/SwitchChain/SwitchChain";
 
 const TreasuryDashboard = memo(() => {
   const isSmallScreen = useMediaQuery("(max-width: 650px)");
@@ -80,24 +81,31 @@ const TreasuryDashboard = memo(() => {
       >
         <Box className="hero-metrics">
           <Paper className="paper-format-treasury pana-card dashboard-metrics">
-            {networkId === NetworkId.ARBITRUM_TESTNET ? (
-              <>
+            {<>
                 <Grid container direction="row" spacing={1}>
-                  <MarketCap />
+                  <MarketCap colSize={4}/>
+                  <FullyDillutedMarketCap/>
+                  <CircSupply colSize={4}/>
                   <PANAPrice />
                   <KARSHAPrice />
-                  {<CircSupply />}
-                  {/* <BackingPerPANA /> */}
-                  <ExchangeAPY />
                   <CurrentIndex />
+                  <ExchangeAPY />
+                  {/* <BackingPerPANA /> */}
+                  
+                  
+                  
                   {/* <FiveDayRate />
                   <NextRewardYield /> */}
                 </Grid>
-              </>
-            ) : (
-              <></>
-            )}
-            {chooseButtonArea()}
+              </>}
+            {/* {( connected?(<SwitchChain provider={provider}/>):(
+            <>
+              <Box display="flex" flexDirection="column">
+                <Box display="flex" justifyContent="space-around" flexWrap="wrap">
+                  <ConnectButton></ConnectButton>
+                </Box>
+              </Box>
+            </>))} */}
           </Paper>
         </Box>
 

@@ -140,6 +140,22 @@ export function trim(number = 0, precision = 0) {
   const trimmedNumber = array.join(".");
   return trimmedNumber;
 }
+export function trim2(number = 0, precision = 0) {
+  // why would number ever be undefined??? what are we trimming?
+  const array = Number(number).toFixed(14).split(".");
+  if (array.length === 1) return number.toString();
+  if (precision === 0) return array[0].toString();
+
+  const poppedNumber = array.pop() || "0";
+  const sub2Array = poppedNumber.split('');
+  let lastValue = sub2Array.pop();
+  while(lastValue&&lastValue=="0"){
+    lastValue=sub2Array.pop();
+  }
+  if(sub2Array.length>0)
+    return array.concat(sub2Array.join('')+(lastValue&&lastValue!="0"?lastValue:"")).join('.');  
+  return array[0].toString();
+}
 
 export function getRebaseBlock(currentBlock: number) {
   return currentBlock + EPOCH_INTERVAL - (currentBlock % EPOCH_INTERVAL);

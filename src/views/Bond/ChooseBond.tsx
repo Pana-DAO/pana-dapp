@@ -29,8 +29,9 @@ import { formatCurrency } from "../../helpers";
 import { BondDataCard, BondTableData } from "./BondRow";
 import ClaimBonds from "./ClaimBonds";
 import { NetworkId, NETWORKS } from "src/constants";
-import CountDownSmall from "src/CountDownSmall";
+// import CountDownSmall from "src/CountDownSmall";
 import { CheckBondClock } from "src/helpers/NetworkHelper";
+import { formatMoney } from "src/helpers/tokenLaunch";
 
 function ChooseBond() {
   const { networkId, address, provider } = useWeb3Context();
@@ -96,8 +97,7 @@ function ChooseBond() {
 
   return (
     <>
-    {(isShowCountDown())?
-    (<CountDownSmall countDown={countDown} headerContent={'Karsha Bonds Launch (Phase-2)'}></CountDownSmall>):(
+    
     <div id="choose-bond-view">
       {(!isEmpty(accountNotes) || !isEmpty(accountOldNotes) || !isEmpty(v1AccountBonds)) && (
         <ClaimBonds activeNotes={accountNotes} activeOldNotes={accountOldNotes} />
@@ -114,7 +114,7 @@ function ChooseBond() {
                 {t`Treasury Balance`}
               </Typography>
               <Typography variant="h4" style={{ fontWeight: 500 }}>
-                {/* <>{!!treasuryBalance ? formattedTreasuryBalance:<Skeleton width="100px" />}</> */}
+                <>{!!treasuryBalance ? formatMoney(treasuryBalance):<Skeleton width="100px" style={{marginLeft: '35%'}} />}</>
               </Typography>
             </Grid>
             <Grid className="bondInfoGrid" item xs={6}>
@@ -122,7 +122,7 @@ function ChooseBond() {
                 {t`PANA Price`}
               </Typography>
               <Typography variant="h4" style={{ fontWeight: 500 }}>
-                <>{marketPrice ? formatCurrency(Number(marketPrice), 6) : <Skeleton width="100px" />}</>
+                <>{marketPrice ? formatCurrency(Number(marketPrice), 6) : <Skeleton width="100px"  style={{marginLeft: '35%'}}  />}</>
               </Typography>
             </Grid>
           </Grid>
@@ -187,7 +187,7 @@ function ChooseBond() {
           </Grid>
         </Box>
       )}
-    </div>)}
+    </div>
     </>
   );
 }

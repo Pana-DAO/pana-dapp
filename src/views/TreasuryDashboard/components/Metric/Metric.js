@@ -21,6 +21,7 @@ const MetricContent = ({
   metric,
   className,
   tooltip,
+  colSize
 }: {
   label: any,
   xsUnit?: GridSize,
@@ -28,9 +29,10 @@ const MetricContent = ({
   metric: any,
   className?: string,
   tooltip?: any,
+  colSize?:number
 }): ReactElement => {
   return (
-    <Grid item xs={12} sm={6} md={3} className={className}>
+    <Grid item xs={12} sm={6} md={colSize?colSize:3} className={className}>
       <Grid className="box-dash">
         <Typography variant="h6" color="textSecondary">
           {label}
@@ -52,9 +54,20 @@ const MetricContent = ({
   );
 };
 
-export const MarketCap = () => {
+
+export const FullyDillutedMarketCap = () => {
+  const totalSupply = useSelector(state => state.app.totalSupply);
+  const marketPrice = useSelector(state => state.app.marketPrice);
+  const isDataLoaded = marketPrice && totalSupply;
+  return <MetricContent colSize={4} label={t`Fully Diluted Market Cap`} 
+  metric={isDataLoaded && (formatMoney((totalSupply) * (marketPrice),true))} isLoading={!isDataLoaded} />;
+};
+
+
+
+export const MarketCap = ({colSize}) => {
   const marketCap = useSelector(state => state.app.marketCap || 0);
-  return <MetricContent label={t`Market Cap`} metric={formatMoney(marketCap, true)} isLoading={!marketCap} />;
+  return <MetricContent colSize={colSize} label={t`Market Cap`} metric={formatMoney(marketCap, true)} isLoading={!marketCap} />;  
 };
 
 export const TVLStakingPool = ({totalLiquidity}) => {
@@ -85,6 +98,11 @@ export const FiveDayRate = () => {
 
 export const ExchangeAPY = () => {
   const stakingAPY = useSelector(state => state.app.stakingAPY);
+  if(isNaN(stakingAPY)){
+    return (
+      <MetricContent label={t`APY`} metric={`-`} isLoading={!stakingAPY} />
+    );
+  }
   const trimmedExchangingAPY = trim(stakingAPY * 100, 1);
   const formattedTrimmedExchangingAPY = new Intl.NumberFormat("en-US").format(Number(trimmedExchangingAPY));
   return (
@@ -104,12 +122,12 @@ export const NextRewardYield = () => {
   );
 };
 
-export const CircSupply = () => {
+export const CircSupply = ({colSize}) => {
   const circSupply = useSelector(state => state.app.circSupply);
   const totalSupply = useSelector(state => state.app.totalSupply);
   const isDataLoaded = circSupply && totalSupply;
   return (
-    <MetricContent
+    <MetricContent  colSize={colSize}
       label={t`Circulating Supply (total)`} className="fnt-min"
       metric={isDataLoaded && parseInt(circSupply) + " / " + parseInt(totalSupply)}
       isLoading={!isDataLoaded}

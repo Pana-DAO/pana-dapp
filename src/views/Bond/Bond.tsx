@@ -12,7 +12,7 @@ import { usePathForNetwork } from "src/hooks/usePathForNetwork";
 import { useWeb3Context } from "src/hooks/web3Context";
 import { IBond } from "src/slices/BondSlice";
 
-import { formatCurrency, trim } from "../../helpers";
+import { trim, trim2 } from "../../helpers";
 import AdvancedSettings from "./AdvancedSettings";
 import BondPurchase from "./BondPurchase";
 import TokenStack from "src/lib/PanaTokenStack";
@@ -30,7 +30,6 @@ const Bond = ({ index }: { index: number }) => {
   const [recipientAddress, setRecipientAddress] = useState<string>(address);
 
   const isBondLoading = useAppSelector<boolean>(state => state.bonding.loading ?? true);
-
   const onRecipientAddressChange = (e: InputEvent): void => {
     return setRecipientAddress(e.target.value);
   };
@@ -123,12 +122,12 @@ const Bond = ({ index }: { index: number }) => {
                 <Typography variant="h5" color="textSecondary">
                   <Trans>Bond Price</Trans>
                 </Typography>
-                <Typography variant="h3" className="price" color="primary">
+                <Typography variant="h3" className={'price'+(bond.isLP?" lpfont":"")} color="primary">
                   <>
                     {bond.soldOut ? (
                       t`--`
                     ) : isBondLoading ? (
-                      <Skeleton width="50px" />
+                      <Skeleton width="100px" />
                     ) : (
                       <DisplayBondPrice key={bond.index} bond={bond} />
                     )}
@@ -139,8 +138,8 @@ const Bond = ({ index }: { index: number }) => {
                 <Typography variant="h5" color="textSecondary">
                   <Trans>Market Price</Trans>
                 </Typography>
-                <Typography variant="h3" color="primary" className="price">
-                  {isBondLoading ? <Skeleton /> : formatCurrency(bond.marketPriceInToken, 8, bond.isLP ? "PANA" : "USD") + " LP"}
+                <Typography variant="h3" color="primary" className={'price'+(bond.isLP?" lpfont":"")}>
+                  {isBondLoading ? <Skeleton /> : trim2(bond.marketPriceInToken, (bond.isLP?14:8)) +(bond.isLP ?  " LP" : " USD")}
                 </Typography>
               </div>
             </Box>
@@ -160,7 +159,7 @@ export const DisplayBondPrice = ({ bond }: { bond: IBond }): ReactElement => {
 
   return (
     <Fragment>
-      {bond.isLP ? `${trim(bond.priceUSD, 8)} LP` : new Intl.NumberFormat("en-US", {
+      {bond.isLP ? `${trim2(bond.priceUSD, 14)} LP` : new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
         maximumFractionDigits: 4,

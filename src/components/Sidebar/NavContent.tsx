@@ -25,7 +25,7 @@ import RebaseTimer from "../RebaseTimer/RebaseTimer";
 
 import { ReactComponent as PanaDAOIcon } from "../../assets/icons/panadao-nav-header.svg";
 import { getUserPoolBalance, getUserPendingPana } from "src/slices/StakingPoolsSlice";
-import { checkNetwork, isWalletTestnet } from "src/helpers/NetworkHelper";
+import { checkNetwork } from "src/helpers/NetworkHelper";
 
 type NavContentProps = {
   handleDrawerToggle?: () => void;
@@ -93,7 +93,7 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
             {checkNetwork(networkId) && checkNetwork(networkId).enabledNetwork ? (
               <>
                 <WalletAddressEns />
-                {isWalletTestnet(networkId) && checkNetwork(networkId).enabledNetwork ? <RebaseTimer /> : <></>}
+                <RebaseTimer />
               </>
             ) : (
               <></>
@@ -105,7 +105,7 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
               {
                 <>
                   <List component="nav">
-                    {isWalletTestnet(networkId) && checkNetwork(networkId).enabledNetwork ? (
+                    {checkNetwork(networkId).enabledNetwork ? (
                       <Link className="nav-link" component={NavLink} to="/dashboard">
                         <ListItem button selected={location.pathname == "/dashboard"}>
                           <Typography variant="h6" className="nav-content">
@@ -139,7 +139,7 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
                           </Typography>
                         </ListItem>
                       </Link>
-                    {isWalletTestnet(networkId) && checkNetwork(networkId).enabledNetwork ? (
+                    { checkNetwork(networkId).enabledNetwork ? (
                       <>
                         
                         <Collapse in={true} timeout="auto" unmountOnExit>

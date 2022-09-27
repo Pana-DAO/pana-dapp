@@ -23,7 +23,7 @@ import { isPendingTxn, txnButtonText } from "src/slices/PendingTxnsSlice";
 import { AppDispatch } from "src/store";
 
 import ConnectButton from "../../components/ConnectButton/ConnectButton";
-import { shorten, trim } from "../../helpers";
+import { shorten, trim2 } from "../../helpers";
 import { error } from "../../slices/MessagesSlice";
 import { DisplayBondDiscount } from "./Bond";
 
@@ -68,11 +68,11 @@ function BondPurchase({
       dispatch(
         error(
           `Max capacity is ${maxBondable} ${bond.displayName} for ${
-            trim(+bond.maxPayoutOrCapacityInBase / +currentIndex, 4) || "0"
+            trim2(+bond.maxPayoutOrCapacityInBase / +currentIndex, 14) || "0"
           } KARSHA. Click Max to autocomplete.`,
         ),
       );
-    } else {
+    } else {      
       dispatch(
         purchaseBond({
           amount: ethers.utils.parseUnits(quantity, bond.quoteDecimals),
@@ -86,6 +86,9 @@ function BondPurchase({
     }
   }
 
+  const updateInput = (value:any) => {
+    setQuantity(getCorrectPercision(value,bond.quoteDecimals));
+  };
   const clearInput = () => {
     setQuantity("");
   };
@@ -94,11 +97,16 @@ function BondPurchase({
     return +balance?.allowance > 0;
   }, [balance]);
 
+  const getCorrectPercision = (value:any,decimal:number)=>{
+    const vals= String(value).split('.');
+    if(vals.length==2) return vals[0]+"."+vals[1].substring(0,decimal);
+    return value;
+  }
   const setMax = () => {
     let maxQ: string;
     const maxBondableNumber = maxBondable * 0.999;
     if (balanceNumber > maxBondableNumber) {
-      maxQ = maxBondableNumber.toString();
+      maxQ = getCorrectPercision(maxBondableNumber,bond.quoteDecimals);
     } else {
       maxQ = ethers.utils.formatUnits(balance.balance, bond.quoteDecimals);
     }
@@ -157,7 +165,7 @@ function BondPurchase({
                       id="outlined-adornment-amount"
                       type="number"
                       value={quantity}
-                      onChange={e => setQuantity(e.target.value)}
+                      onChange={e => updateInput(e.target.value)}
                       endAdornment={<InputAdornment onClick={setMax} position="end">{t`Max`}</InputAdornment>}
                       aria-describedby="outlined-weight-helper-text"
                       inputProps={{
@@ -218,7 +226,7 @@ function BondPurchase({
               </Typography>
             </Box>
             <Typography className="price-data">
-              {isBondLoading ? <Skeleton width="100px" /> : `${trim(balanceNumber, 4)} ${bond.displayName}`}
+              {isBondLoading ? <Skeleton width="100px" /> : `${trim2(balanceNumber,(bond.isLP?14:4))} ${bond.displayName}`}
             </Typography>
           </Box>
           <Box display="flex" flexDirection="row" justifyContent="space-between">
@@ -238,7 +246,7 @@ function BondPurchase({
               {isBondLoading ? (
                 <Skeleton width="100px" />
               ) : (
-                `≈${trim(+quantity / bond.priceToken / +currentIndex, 4) || "0"} KARSHA (≈${trim(+quantity / bond.priceToken, 4) || "0"} PANA)`
+                `≈${trim2(+quantity / bond.priceToken / +currentIndex, 14) || "0"} KARSHA (≈${trim2(+quantity / bond.priceToken, 14) || "0"} PANA)`
               )}
             </Typography>
           </Box>
@@ -250,8 +258,8 @@ function BondPurchase({
               {isBondLoading ? (
                 <Skeleton width="100px" />
               ) : (
-                `${trim(+bond.maxPayoutOrCapacityInBase / +currentIndex, 4) || "0"} KARSHA (≈${
-                  trim(+bond.maxPayoutOrCapacityInQuote, 4) || "0"
+                `${trim2(+bond.maxPayoutOrCapacityInBase / +currentIndex, 14) || "0"} KARSHA (≈${
+                  trim2(+bond.maxPayoutOrCapacityInQuote, 14) || "0"
                 } ${bond.displayName})`
               )}
             </Typography>
