@@ -29,7 +29,7 @@ import { formatCurrency } from "../../helpers";
 import { BondDataCard, BondTableData } from "./BondRow";
 import ClaimBonds from "./ClaimBonds";
 import { NetworkId, NETWORKS } from "src/constants";
-import CountDownSmall from "src/CountDownSmall";
+// import CountDownSmall from "src/CountDownSmall";
 import { CheckBondClock } from "src/helpers/NetworkHelper";
 import { formatMoney } from "src/helpers/tokenLaunch";
 
@@ -97,8 +97,7 @@ function ChooseBond() {
 
   return (
     <>
-    {(isShowCountDown())?
-    (<CountDownSmall countDown={countDown} headerContent={'Karsha Bonds Launch (Phase-2)'}></CountDownSmall>):(
+    
     <div id="choose-bond-view">
       {(!isEmpty(accountNotes) || !isEmpty(accountOldNotes) || !isEmpty(v1AccountBonds)) && (
         <ClaimBonds activeNotes={accountNotes} activeOldNotes={accountOldNotes} />
@@ -188,7 +187,7 @@ function ChooseBond() {
           </Grid>
         </Box>
       )}
-    </div>)}
+    </div>
     </>
   );
 }
