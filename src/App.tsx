@@ -6,7 +6,7 @@ import { useEffect, useState, useCallback } from "react";
 import { Route, Redirect, Switch, useLocation } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { useDispatch } from "react-redux";
-import { useMediaQuery } from "@material-ui/core";
+import { Box, useMediaQuery } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import useTheme from "./hooks/useTheme";
@@ -37,6 +37,9 @@ import Farm from "./views/tokenLaunch/farm";
 import { farms } from "./helpers/tokenLaunch";
 import { getUserPendingPana, getUserPoolBalance } from "./slices/StakingPoolsSlice";
 import { getAllBonds, getUserNotes } from "./slices/BondSlice";
+import SwitchChain from "./components/SwitchChain/SwitchChain";
+import { checkNetwork } from "./helpers/NetworkHelper";
+import ConnectButton from "./components/ConnectButton/ConnectButton";
 
 const queryClient = new QueryClient();
 
@@ -224,6 +227,8 @@ function App() {
           </nav>
 
           <div className={`${classes.content} ${isSmallerScreen && classes.contentShift}`}>
+          {connected&&checkNetwork(networkId) && checkNetwork(networkId).enabledNetwork ? (
+              <>              
             <Switch>
               <Route exact path="/dashboard">
                 <TreasuryDashboard />
@@ -269,6 +274,16 @@ function App() {
               </Route>
               <Route component={NotFound} />
             </Switch>
+            </>
+            ):( connected?(<SwitchChain provider={provider}/>):(
+            <>
+              <Box display="flex" flexDirection="column">
+                <Box display="flex" justifyContent="space-around" flexWrap="wrap">
+                  <ConnectButton></ConnectButton>
+                </Box>
+              </Box>
+            </>))
+          }
           </div>
           <div style={{ zIndex: 10 }}>
             <Footer />
