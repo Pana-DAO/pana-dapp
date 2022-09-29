@@ -74,9 +74,9 @@ export const changeApproval = createAsyncThunk(
 
     let approveTx;
     let stakeAllowance = await panaContract.allowance(address, addresses[networkID].STAKING_ADDRESS);
-    const exchangeAllowance = await karshaContract.allowance(address, addresses[networkID].STAKING_ADDRESS);
-    let pPanaRedeemAllowance = BigNumber.from("0"); //await pPanaContract.allowance(address, addresses[networkID].PPANA_REDEEM_ADDRESS);
-    let pPanaUSDCAllowance = BigNumber.from("0"); //await usdcContract.allowance(address, addresses[networkID].PPANA_REDEEM_ADDRESS);
+    let exchangeAllowance = await karshaContract.allowance(address, addresses[networkID].STAKING_ADDRESS);
+    const pPanaRedeemAllowance = BigNumber.from("0"); //await pPanaContract.allowance(address, addresses[networkID].PPANA_REDEEM_ADDRESS);
+    const pPanaUSDCAllowance = BigNumber.from("0"); //await usdcContract.allowance(address, addresses[networkID].PPANA_REDEEM_ADDRESS);
 
     // return early if approval has already happened
     if (alreadyApprovedToken(token, stakeAllowance, exchangeAllowance, pPanaRedeemAllowance, pPanaUSDCAllowance)) {
@@ -136,14 +136,15 @@ export const changeApproval = createAsyncThunk(
 
     // go get fresh allowances
     stakeAllowance = await panaContract.allowance(address, addresses[networkID].STAKING_ADDRESS);
-    pPanaRedeemAllowance = await pPanaContract.allowance(address, addresses[networkID].PPANA_REDEEM_ADDRESS);
-    pPanaUSDCAllowance = await usdcContract.allowance(address, addresses[networkID].PPANA_REDEEM_ADDRESS);
+    exchangeAllowance = await karshaContract.allowance(address, addresses[networkID].STAKING_ADDRESS);
+    // pPanaRedeemAllowance = await pPanaContract.allowance(address, addresses[networkID].PPANA_REDEEM_ADDRESS);
+    // pPanaUSDCAllowance = await usdcContract.allowance(address, addresses[networkID].PPANA_REDEEM_ADDRESS);
 
     return dispatch(
       fetchAccountSuccess({
         staking: {
           panaStake: +stakeAllowance,
-          karshaUnstake: +exchangeAllowance,
+          panaUnstake: +exchangeAllowance,
         },
         redeem: {
           pPanaRedeem: +pPanaRedeemAllowance,
