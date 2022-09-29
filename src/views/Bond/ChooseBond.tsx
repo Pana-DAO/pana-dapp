@@ -112,7 +112,7 @@ function ChooseBond() {
       <Zoom in={true}>
         <Paper className="bond-list">
           <Typography variant="h5" className="card-header" style={{ fontWeight: 600 }}>
-            {t`Bond (4,4)`}
+            {t`Bond`}
           </Typography>
           <Grid container direction="row" spacing={3}>
             <Grid className="bondInfoGrid" item xs={4}>
@@ -154,7 +154,7 @@ function ChooseBond() {
           )}
 
           {!isSmallScreen && bonds.length != 0 && (
-            <Grid container item>
+            <Grid container item className="bond-container">
               <TableContainer>
                 <Table aria-label="Available bonds">
                   <TableHead>
