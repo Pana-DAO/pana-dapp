@@ -25,7 +25,7 @@ import { IUserBondDetails } from "src/slices/AccountSlice";
 import { getAllBonds, getUserNotes, IUserNote } from "src/slices/BondSlice";
 import { AppDispatch } from "src/store";
 import { Skeleton } from "@material-ui/lab";
-import { formatCurrency } from "../../helpers";
+import { formatCurrency, trim } from "../../helpers";
 import { BondDataCard, BondTableData } from "./BondRow";
 import ClaimBonds from "./ClaimBonds";
 import { NetworkId, NETWORKS } from "src/constants";
@@ -67,6 +67,12 @@ function ChooseBond() {
 
   const treasuryBalance = useAppSelector(state => state.app.treasuryMarketValue);
 
+  const stakingAPY = useAppSelector(state => state.app.stakingAPY);
+  const formatAPY = (stakingAPY: any) => {
+    const trimmedExchangingAPY = trim(stakingAPY * 100, 1);
+    return new Intl.NumberFormat("en-US").format(Number(trimmedExchangingAPY));
+  }
+
   const isBondsLoading = useAppSelector(state => state.bonding.loading ?? true);
 
   const formattedTreasuryBalance = new Intl.NumberFormat("en-US", {
@@ -106,24 +112,38 @@ function ChooseBond() {
       <Zoom in={true}>
         <Paper className="bond-list">
           <Typography variant="h5" className="card-header" style={{ fontWeight: 600 }}>
-            {t`Bond (4,4)`}
+            {t`Bond`}
           </Typography>
-          <Grid container direction="row" spacing={2}>
-            <Grid className="bondInfoGrid" item xs={6}>
-              <Typography variant="h5" color="textSecondary" className="card-title-text">
-                {t`Treasury Balance`}
-              </Typography>
-              <Typography variant="h4" style={{ fontWeight: 500 }}>
-                <>{!!treasuryBalance ? formatMoney(treasuryBalance):<Skeleton width="100px" style={{marginLeft: '35%'}} />}</>
-              </Typography>
+          <Grid container direction="row" spacing={3}>
+            <Grid className="bondInfoGrid" item xs={4}>
+              <Grid className="box-dash">
+                <Typography variant="h6" color="textSecondary" className="card-title-text">
+                  {t`Treasury Balance`}
+                </Typography>
+                <Typography variant="h5" style={{ fontWeight: 500 }}>
+                  <>{!!treasuryBalance ? formatMoney(treasuryBalance):<Skeleton width="100px" style={{marginLeft: '35%'}} />}</>
+                </Typography>
+              </Grid>
             </Grid>
-            <Grid className="bondInfoGrid" item xs={6}>
-              <Typography variant="h5" color="textSecondary" className="card-title-text">
-                {t`PANA Price`}
-              </Typography>
-              <Typography variant="h4" style={{ fontWeight: 500 }}>
-                <>{marketPrice ? formatCurrency(Number(marketPrice), 6) : <Skeleton width="100px"  style={{marginLeft: '35%'}}  />}</>
-              </Typography>
+            <Grid className="bondInfoGrid" item xs={4}>
+              <Grid className="box-dash">
+                <Typography variant="h6" color="textSecondary" className="card-title-text">
+                  {t`APY`}
+                </Typography>
+                <Typography variant="h5" style={{ fontWeight: 500 }}>
+                  <>{!!stakingAPY ? `${formatAPY(stakingAPY)}%`:<Skeleton width="100px" style={{marginLeft: '35%'}} />}</>
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid className="bondInfoGrid" item xs={4}>
+              <Grid className="box-dash">
+                <Typography variant="h6" color="textSecondary" className="card-title-text">
+                  {t`PANA Price`}
+                </Typography>
+                <Typography variant="h5" style={{ fontWeight: 500 }}>
+                  <>{marketPrice ? formatCurrency(Number(marketPrice), 6) : <Skeleton width="100px"  style={{marginLeft: '35%'}}  />}</>
+                </Typography>
+              </Grid>
             </Grid>
           </Grid>
 
@@ -134,7 +154,7 @@ function ChooseBond() {
           )}
 
           {!isSmallScreen && bonds.length != 0 && (
-            <Grid container item>
+            <Grid container item className="bond-container">
               <TableContainer>
                 <Table aria-label="Available bonds">
                   <TableHead>
