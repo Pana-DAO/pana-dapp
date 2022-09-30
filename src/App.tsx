@@ -88,7 +88,7 @@ function App() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const { address, connect, hasCachedProvider, provider, connected, networkId, providerInitialized } = useWeb3Context();
+  const { address, connect, hasCachedProvider, provider,defaultNetwork, defaultProvider,  connected, networkId, providerInitialized } = useWeb3Context();
 
   const isSmallerScreen = useMediaQuery("(max-width: 980px)");
   const isSmallScreen = useMediaQuery("(max-width: 600px)");
@@ -104,7 +104,7 @@ function App() {
     // address lookup on the wrong chain which then throws the error. To properly resolve this,
     // we shouldn't be initializing to networkID=1 in web3Context without first listening for the
     // network. To actually test rinkeby, change setnetworkID equal to 4 before testing.
-    const loadProvider = provider;
+    const loadProvider = defaultProvider;
 
     if (whichDetails === "app") {
       loadApp(loadProvider);
@@ -118,8 +118,8 @@ function App() {
 
   const loadApp = useCallback(
     loadProvider => {
-      dispatch(loadAppDetails({ networkID: networkId, provider: loadProvider }));
-      dispatch(getAllBonds({ provider: loadProvider, networkID: networkId, address }));
+      dispatch(loadAppDetails({ networkID: defaultNetwork, provider: loadProvider }));
+      dispatch(getAllBonds({ provider: loadProvider, networkID: defaultNetwork, address }));
     },
     [networkId, address],
   );
@@ -129,11 +129,11 @@ function App() {
       if (!providerInitialized) {
         return;
       }
-      dispatch(getUserNotes({ networkID: networkId, address, provider: loadProvider }));
+      dispatch(getUserNotes({ networkID: defaultNetwork, address, provider: loadProvider }));
       //dispatch(getUserOldNotes({ networkID: networkId, address, provider: loadProvider }));
-      dispatch(loadAccountDetails({ networkID: networkId, address, provider: loadProvider }));
-      dispatch(getUserPoolBalance({ networkID: networkId, address, provider: loadProvider }));
-      dispatch(getUserPendingPana({ networkID: networkId, address, provider: loadProvider }));
+      dispatch(loadAccountDetails({ networkID: defaultNetwork, address, provider: loadProvider }));
+      dispatch(getUserPoolBalance({ networkID: defaultNetwork, address, provider: loadProvider }));
+      dispatch(getUserPendingPana({ networkID: defaultNetwork, address, provider: loadProvider }));
     },
     [networkId, address, providerInitialized],
   );
@@ -226,64 +226,76 @@ function App() {
             )}
           </nav>
 
-          <div className={`${classes.content} ${isSmallerScreen && classes.contentShift}`}>
-          {connected&&checkNetwork(networkId) && checkNetwork(networkId).enabledNetwork ? (
-              <>              
-            <Switch>
-              <Route exact path="/dashboard">
-                <TreasuryDashboard />
-              </Route>
-
-              <Route exact path="/">
-                <Redirect to="/bonds" />
-              </Route>
-
-              <Route path="/exchange">
-                <Exchange />
-              </Route>
-
-              <Route path="/allTokens">
-                <AllTokens />
-              </Route>
-              <Route exact key="1" path={`/redeem/ppana`}>
-                <RedeemPPana />
-              </Route>
-              <Route path={`/tokenlaunch`}>
-                {farms.filter(x=>x.network==networkId).map(farm => {
-                  return (
-                    <Route exact key={farm.index} path={`/tokenlaunch/${farm.index}`}>
-                      <Farm index={farm.index} />
-                    </Route>
-                  );
-                })}
-                <TokenLaunch />
-              </Route>
-              <Route path="/memorandum">
-                <Memorandum />
-              </Route>
-
-              <Route path="/bonds">
-                {bondIndexes.map(index => {
-                  return (
-                    <Route exact key={index} path={`/bonds/${index}`}>
-                      <Bond index={index} />
-                    </Route>
-                  );
-                })}
-                <ChooseBond />
-              </Route>
-              <Route component={NotFound} />
-            </Switch>
+          <div className={`${classes.content} ${isSmallerScreen && classes.contentShift}`}>            
+          <Switch>
+          <Route exact path="/dashboard">
+            <TreasuryDashboard />
+          </Route>
+          <Route path="/memorandum">
+            <Memorandum />
+          </Route>
+          <Route path={`/tokenlaunch`}>
+          {!connected || (connected&&networkId==defaultNetwork&&checkNetwork(networkId) && checkNetwork(networkId).enabledNetwork) ? (
+            <>             
+            
+              {farms.filter(x=>x.network==defaultNetwork).map(farm => {
+                return (
+                  <Route exact key={farm.index} path={`/tokenlaunch/${farm.index}`}>
+                    <Farm index={farm.index} />
+                  </Route>
+                );
+              })}
+              <TokenLaunch />
+            
             </>
-            ):( connected?(<SwitchChain provider={provider}/>):(
-            <>
-              <Box display="flex" flexDirection="column">
-                <Box display="flex" justifyContent="space-around" flexWrap="wrap">
-                  <ConnectButton></ConnectButton>
-                </Box>
-              </Box>
-            </>))
-          }
+          ):( connected?(
+            <SwitchChain provider={provider}/>
+          ):(
+            <Box display="flex" flexDirection="column">
+            <Box display="flex" justifyContent="space-around" flexWrap="wrap">
+              <ConnectButton></ConnectButton>
+            </Box>
+          </Box>))}              
+          </Route>
+              {connected&&checkNetwork(networkId) && checkNetwork(networkId).enabledNetwork ? (
+                  <>    
+                  <Route exact path="/">
+                    <Redirect to="/bonds" />
+                  </Route>
+
+                  <Route path="/exchange">
+                    <Exchange />
+                  </Route>
+
+                  <Route path="/allTokens">
+                    <AllTokens />
+                  </Route>
+                  <Route exact key="1" path={`/redeem/ppana`}>
+                    <RedeemPPana />
+                  </Route>
+
+                  <Route path="/bonds">
+                    {bondIndexes.map(index => {
+                      return (
+                        <Route exact key={index} path={`/bonds/${index}`}>
+                          <Bond index={index} />
+                        </Route>
+                      );
+                    })}
+                    <ChooseBond />
+                  </Route>
+                </>
+                ):( connected?(
+                  <SwitchChain provider={provider}/>
+                ):(
+                  <Box display="flex" flexDirection="column">
+                  <Box display="flex" justifyContent="space-around" flexWrap="wrap">
+                    <ConnectButton></ConnectButton>
+                  </Box>
+                </Box>))
+              }
+              <Route component={NotFound} />
+          </Switch>
           </div>
           <div style={{ zIndex: 10 }}>
             <Footer />

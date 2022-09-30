@@ -25,7 +25,7 @@ import RebaseTimer from "../RebaseTimer/RebaseTimer";
 
 import { ReactComponent as PanaDAOIcon } from "../../assets/icons/panadao-nav-header.svg";
 import { getUserPoolBalance, getUserPendingPana } from "src/slices/StakingPoolsSlice";
-import { checkNetwork } from "src/helpers/NetworkHelper";
+// import { checkNetwork } from "src/helpers/NetworkHelper";
 
 type NavContentProps = {
   handleDrawerToggle?: () => void;
@@ -90,14 +90,11 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
                 style={{ minWidth: "151px", minHeight: "40px", width: "151px" }}
               />
             </Link>
-            {checkNetwork(networkId) && checkNetwork(networkId).enabledNetwork ? (
-              <>
+            
                 <WalletAddressEns />
                 <RebaseTimer />
-              </>
-            ) : (
-              <></>
-            )}
+              
+            
           </Box>
 
           <div className="dapp-menu-links">
@@ -105,7 +102,7 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
               {
                 <>
                   <List component="nav">
-                    {checkNetwork(networkId).enabledNetwork ? (
+                    
                       <Link className="nav-link" component={NavLink} to="/dashboard">
                         <ListItem button selected={location.pathname == "/dashboard"}>
                           <Typography variant="h6" className="nav-content">
@@ -116,9 +113,7 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
                           </Typography>
                         </ListItem>
                       </Link>
-                    ) : (
-                      <></>
-                    )}
+                    
                     <Link className="nav-link" component={NavLink} to="/tokenlaunch">
                       <ListItem button selected={location.pathname == "/tokenlaunch"}>
                         <Typography variant="h6" className="nav-content">
@@ -139,7 +134,7 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
                           </Typography>
                         </ListItem>
                       </Link>
-                    { checkNetwork(networkId).enabledNetwork ? (
+                    
                       <>
                         
                         <Collapse in={true} timeout="auto" unmountOnExit>
@@ -193,9 +188,7 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
                           </ListItem>
                         </Link>
                       </>
-                    ) : (
-                      <></>
-                    )}
+                    
                     {/* {isWalletTestnet(networkId) ? ( // pPana Redeem is not available in phase-2
                       <>
                         <ListItem button onClick={() => setIsRedeemOpen(!isRedeemOpen)}>

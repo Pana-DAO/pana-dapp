@@ -84,9 +84,11 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({ chil
   const [connected, setConnected] = useState(false);
   const [connectionError, setConnectionError] = useState<IConnectionError | null>(null);
   const [address, setAddress] = useState("");
-  // NOTE (appleseed): loading eth mainnet as default rpc provider for a non-connected wallet
-  const [provider, setProvider] = useState<JsonRpcProvider>(NodeHelper.getMainnetStaticProvider());
-  const [networkId, setNetworkId] = useState(parseInt(EnvHelper.env.REACT_APP_DEFAULTNETWORK as string));
+  // NOTE (appleseed): loading envirnmont network id  as default rpc provider for a non-connected wallet
+  const [defaultNetwork, setDefaultNetwork] = useState(parseInt(EnvHelper.env.REACT_APP_DEFAULTNETWORK as string));  
+  const [defaultProvider, setDefaultProvider] = useState<JsonRpcProvider>(NodeHelper.getAnynetStaticProvider(defaultNetwork));
+  const [provider, setProvider] = useState<JsonRpcProvider>(NodeHelper.getAnynetStaticProvider(defaultNetwork));
+  const [networkId, setNetworkId] = useState(defaultNetwork);
   const [networkName, setNetworkName] = useState("");
   const [providerUri, setProviderUri] = useState("");
   const [blockExplorerUrl, setBlockExplorerUrl] = useState("");
@@ -192,6 +194,8 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({ chil
       provider,
       connected,
       connectionError,
+      defaultNetwork,
+      defaultProvider,
       address,
       web3Modal,
       networkId,
@@ -207,6 +211,8 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({ chil
       provider,
       connected,
       connectionError,
+      defaultNetwork,
+      defaultProvider,
       address,
       web3Modal,
       networkId,
