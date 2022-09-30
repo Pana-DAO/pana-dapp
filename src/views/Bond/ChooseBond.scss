@@ -165,11 +165,13 @@
 
   .bond-container {
     margin-top: 2rem;
-    background-color: white;
     border-radius: 4px;
   }
+  
 }
-
+.app.light .bond-container {
+  background-color: white;
+}
 .tablet #choose-bond-view {
   .claim-bond-card-buttons {
     button {
