@@ -140,3 +140,22 @@
 .bond_discount_positive {
   color: green;
 }
+.alinMarketpriceinfo{
+  display: inline-flex;
+}
+.flxrow .alinMarketpriceinfo{
+  display: inline-flex;
+  svg{
+    top:-5px;
+    position:relative;
+  }
+}
+
+.bond-container{
+   .alinMarketpriceinfo{
+    svg{
+      top:-2px;
+      position:relative;
+    }
+  }
+}
