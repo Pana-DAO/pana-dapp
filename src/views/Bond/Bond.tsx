@@ -1,10 +1,10 @@
 import "./Bond.scss";
 
 import { t, Trans } from "@lingui/macro";
-import { Box, Fade, Grid, Typography, Modal, SvgIcon, Paper } from "@material-ui/core";
+import { Box, Fade, Grid, Typography, Modal, SvgIcon, Paper, Tooltip } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 import { ChangeEvent, Fragment, ReactElement, useEffect, useState } from "react";
-import { Settings, Close } from "@material-ui/icons";
+import { Settings, Close, InfoOutlined } from "@material-ui/icons";
 import { useHistory } from "react-router";
 import { useAppSelector } from "src/hooks";
 import useEscape from "src/hooks/useEscape";
@@ -169,14 +169,23 @@ export const DisplayBondPrice = ({ bond }: { bond: IBond }): ReactElement => {
   );
 };
 
-export const DisplayBondDiscount = ({ bond }: { bond: IBond }): ReactElement => {
+export const DisplayBondDiscount = ({ bond,isNav }: { bond: IBond,isNav:boolean }): ReactElement => {
   if (typeof bond.discount === undefined || bond.soldOut) {
     return <Fragment>--</Fragment>;
   }
   return (
     <Fragment>
       <span style={bond.discount > 0.003 ? { color: "#3ba56c" } : {}}>
-        {bond.discount && trim(bond.discount * 100, 2)}%
+        
+        {(bond.discount>0?(trim(bond.discount * 100, 2)+"%"):(
+          
+          <span className="alinMarketpriceinfo">
+          {isNav?(<span className="navzerobond">@MP</span>):(<Typography>Buy at Market Price</Typography>)}
+          <Tooltip title="Bond price is at par with Market price currently due to high demand for bonds. However, you can buy at Market price and earn rebase rewards" style={{ cursor: "pointer" }}>
+            <SvgIcon viewBox="-6 -6 30 30" component={InfoOutlined}></SvgIcon>
+          </Tooltip>
+        </span>
+        ))}
       </span>
     </Fragment>
   );

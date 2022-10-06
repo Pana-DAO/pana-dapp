@@ -57,7 +57,7 @@ export function BondDataCard({ bond, networkId }: { bond: IBond; networkId: Netw
             <Trans>Discount</Trans>
           </Typography>
           <Typography>
-            {isBondLoading ? <Skeleton width="50px" /> : <DisplayBondDiscount key={bond.index} bond={bond} />}
+            {isBondLoading ? <Skeleton width="50px" /> : <DisplayBondDiscount isNav={false} key={bond.index} bond={bond} />}
           </Typography>
         </div>
         <div className="data-row">
@@ -133,7 +133,7 @@ export function BondTableData({ bond, networkId }: { bond: IBond; networkId: Net
         </Typography>
       </TableCell>
       <TableCell align="left">
-        {isBondLoading ? <Skeleton width="50px" /> : <DisplayBondDiscount key={bond.index} bond={bond} />}
+        {isBondLoading ? <Skeleton width="50px" /> : <DisplayBondDiscount isNav={false} key={bond.index} bond={bond} />}
       </TableCell>
       <TableCell align="left">{isBondLoading ? <Skeleton /> : bond.duration}</TableCell>
       <TableCell>

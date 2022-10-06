@@ -269,7 +269,7 @@ function BondPurchase({
               <Trans>Discount</Trans>
             </Typography>
             <Typography>
-              {isBondLoading ? <Skeleton width="100px" /> : <DisplayBondDiscount key={bond.displayName} bond={bond} />}
+              {isBondLoading ? <Skeleton width="100px" /> : <DisplayBondDiscount key={bond.displayName} isNav={false} bond={bond} />}
             </Typography>
           </Box>
 
