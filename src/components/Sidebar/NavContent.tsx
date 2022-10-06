@@ -172,7 +172,7 @@ const NavContent: React.FC<NavContentProps> = ({ handleDrawerToggle }) => {
                                       <Typography variant="body2">
                                         {bond.displayName}
                                         <span className="bond-pair-roi">
-                                          <DisplayBondDiscount key={bond.index} bond={bond} isNav={true} />
+                                          <DisplayBondDiscount key={bond.index} bond={bond} showNumber={true} />
                                         </span>
                                       </Typography>
                                     </Link>

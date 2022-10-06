@@ -169,7 +169,7 @@ export const DisplayBondPrice = ({ bond }: { bond: IBond }): ReactElement => {
   );
 };
 
-export const DisplayBondDiscount = ({ bond,isNav }: { bond: IBond,isNav:boolean }): ReactElement => {
+export const DisplayBondDiscount = ({ bond,showNumber }: { bond: IBond,showNumber:boolean }): ReactElement => {
   if (typeof bond.discount === undefined || bond.soldOut) {
     return <Fragment>--</Fragment>;
   }
@@ -180,7 +180,7 @@ export const DisplayBondDiscount = ({ bond,isNav }: { bond: IBond,isNav:boolean 
         {(bond.discount>0?(trim(bond.discount * 100, 2)+"%"):(
           
           <span className="alinMarketpriceinfo">
-          {isNav?(<span className="navzerobond">{trim(bond.discount * 100, 2)}%</span>):(<Typography>Buy at Market Price</Typography>)}
+          {showNumber?(<span className="navzerobond">{trim(bond.discount * 100, 2)}%</span>):(<Typography>Buy at Market Price</Typography>)}
           <Tooltip title="Bond price is at par with market price currently due to high demand for bonds. However, you can buy at market price and earn rebase rewards" style={{ cursor: "pointer" }}>
             <SvgIcon viewBox="-6 -6 30 30" component={InfoOutlined}></SvgIcon>
           </Tooltip>
