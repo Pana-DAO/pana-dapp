@@ -180,8 +180,8 @@ export const DisplayBondDiscount = ({ bond,isNav }: { bond: IBond,isNav:boolean 
         {(bond.discount>0?(trim(bond.discount * 100, 2)+"%"):(
           
           <span className="alinMarketpriceinfo">
-          {isNav?(<span className="navzerobond">@MP</span>):(<Typography>Buy at Market Price</Typography>)}
-          <Tooltip title="Bond price is at par with Market price currently due to high demand for bonds. However, you can buy at Market price and earn rebase rewards" style={{ cursor: "pointer" }}>
+          {isNav?(<span className="navzerobond">{trim(bond.discount * 100, 2)}%</span>):(<Typography>Buy at Market Price</Typography>)}
+          <Tooltip title="Bond price is at par with market price currently due to high demand for bonds. However, you can buy at market price and earn rebase rewards" style={{ cursor: "pointer" }}>
             <SvgIcon viewBox="-6 -6 30 30" component={InfoOutlined}></SvgIcon>
           </Tooltip>
         </span>
