@@ -1,6 +1,7 @@
 import { StaticJsonRpcProvider } from "@ethersproject/providers";
 import { ethers } from "ethers";
-import { NetworkId } from "src/constants";
+import { NetworkId,NETWORKS } from "src/constants";
+
 
 import { EnvHelper } from "./Environment";
 import { minutesAgo } from "./index";
@@ -126,7 +127,7 @@ export class NodeHelper {
    * @returns StaticJsonRpcProvider for querying
    */
   static getMainnetStaticProvider = () => {
-    return new StaticJsonRpcProvider(NodeHelper.getMainnetURI(NetworkId.ARBITRUM_MAINNET));
+    return new StaticJsonRpcProvider(NodeHelper.getMainnetURI(NetworkId.ARBITRUM_MAINNET));    
   };
 
   /**
@@ -136,7 +137,7 @@ export class NodeHelper {
    * @returns StaticJsonRpcProvider for querying
    */
   static getAnynetStaticProvider = (chainId: NetworkId) => {
-    return new StaticJsonRpcProvider(NodeHelper.getMainnetURI(chainId));
+    return new StaticJsonRpcProvider(NETWORKS[chainId].rpcUrls[0]);
   };
 
   /**

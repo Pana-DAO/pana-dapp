@@ -15,7 +15,7 @@ const SECONDS_TO_REFRESH = 60;
 
 const RebaseTimer: React.FC = () => {
   const dispatch = useDispatch();
-  const { provider, networkId } = useWeb3Context();
+  const { provider, networkId, defaultNetwork,defaultProvider } = useWeb3Context();
 
   const [secondsToRebase, setSecondsToRebase] = useState<number>(0);
   const [rebaseString, setRebaseString] = useState<string | React.ReactElement>("");
@@ -46,7 +46,7 @@ const RebaseTimer: React.FC = () => {
       // When the countdown goes negative, reload the app details and reinitialize the timer
       if (secondsToRebase < 0) {
         async function reload() {
-          await dispatch(loadAppDetails({ networkID: networkId, provider: provider }));
+          await dispatch(loadAppDetails({ networkID: defaultNetwork, provider: defaultProvider }));
         }
         reload();
         setRebaseString("");
