@@ -260,7 +260,7 @@ function App() {
               {connected&&checkNetwork(networkId) && checkNetwork(networkId).enabledNetwork ? (
                   <>    
                   <Route exact path="/">
-                    <Redirect to="/bonds" />
+                    <Redirect to="/dashboard" />
                   </Route>
 
                   <Route path="/exchange">
@@ -288,11 +288,11 @@ function App() {
                 ):( connected?(
                   <SwitchChain provider={provider}/>
                 ):(
-                  <Box display="flex" flexDirection="column">
-                  <Box display="flex" justifyContent="space-around" flexWrap="wrap">
-                    <ConnectButton></ConnectButton>
-                  </Box>
-                </Box>))
+                  <>
+                    <Route exact path="/">
+                      <Redirect to="/dashboard" />
+                    </Route>
+                </>))
               }
               <Route component={NotFound} />
           </Switch>
