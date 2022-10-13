@@ -33,9 +33,6 @@ export const loadAppDetails = createAsyncThunk(
   async ({ networkID, provider }: IBaseAsyncThunk, { dispatch }) => {
     usdcPriceInUSD = (await getTokenPrice("usd-coin")) || 1;
 
-
-
-
     // NOTE (appleseed): marketPrice from Graph was delayed, so get CoinGecko price    
     let marketPrice;
     try {
