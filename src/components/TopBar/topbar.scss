@@ -36,11 +36,16 @@
 }
 
 .marquee span {
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .marquee:hover .marquee__inner {
   animation-play-state: paused;
+}
+@media screen and (min-width: 980px) {
+  .marquee {
+    left:250px;
+  }
 }
 
 @keyframes marquee {
