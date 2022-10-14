@@ -448,7 +448,7 @@ export const farms: FarmInfo[] = [
     name: "USDC Stable Coin",
     address: "0x327459343E34F4c2Cc3fE6678ea8cA3Cf22fBfC8",
     decimals: 6,
-    points: 10,
+    points: 100,
     coingeckoId: "usd-coin",
     icon: ["USDC"],
     url: "https://swapr.eth.limo/#/swap?chainId=421613",
