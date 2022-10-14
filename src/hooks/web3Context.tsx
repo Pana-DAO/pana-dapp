@@ -85,7 +85,9 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({ chil
   const [connectionError, setConnectionError] = useState<IConnectionError | null>(null);
   const [address, setAddress] = useState("");
   // NOTE (appleseed): loading envirnmont network id  as default rpc provider for a non-connected wallet
-  const [defaultNetwork, setDefaultNetwork] = useState(parseInt(EnvHelper.env.REACT_APP_DEFAULTNETWORK as string));  
+  let defaultNM = parseInt(EnvHelper.env.REACT_APP_DEFAULTNETWORK as string);
+  if(defaultNM==421611) defaultNM=421613
+  const [defaultNetwork, setDefaultNetwork] = useState(defaultNM);  
   const [defaultProvider, setDefaultProvider] = useState<JsonRpcProvider>(NodeHelper.getAnynetStaticProvider(defaultNetwork));
   const [provider, setProvider] = useState<JsonRpcProvider>(NodeHelper.getAnynetStaticProvider(defaultNetwork));
   const [networkId, setNetworkId] = useState(defaultNetwork);
