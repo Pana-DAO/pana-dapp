@@ -59,12 +59,6 @@ function TopBar({ theme, toggleTheme, handleDrawerToggle }: TopBarProps) {
           <Wallet />
         </Box>
       </Toolbar>
-      <div className="marquee">
-        <div className="marquee__inner" aria-hidden="true">
-          <span>Please Note! Free Streaming of PANA through Staking Pools will be stopped at the end of phase 2(Oct 18th 2022). Please unstake your assets and keep bonding to earn rebase rewards.</span>
-        </div>
-      </div>
-     
     </AppBar>
   );
 }
