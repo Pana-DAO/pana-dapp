@@ -423,7 +423,7 @@ export const farms: FarmInfo[] = [
     points: 400,
     coingeckoId: "",
     icon: ["USDC", "PANA"],
-    url: "https://swapr.eth.limo/#/swap?chainId=421613",
+    url: "https://swapr.eth.limo/#/pools/add/0x28a4d7A1da539cAAb96b615cd454e2B446B16F1c/0x327459343E34F4c2Cc3fE6678ea8cA3Cf22fBfC8?chainId=421613",
     calculateLiquidity: panaUSDCLiquidity,
     network: NetworkId.ARBITRUM_TESTNET,
   },
