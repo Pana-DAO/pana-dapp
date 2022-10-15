@@ -69,7 +69,7 @@ function ChooseBond() {
 
   const stakingAPY = useAppSelector(state => state.app.stakingAPY);
   const formatAPY = (stakingAPY: any) => {
-    const trimmedExchangingAPY = trim(stakingAPY * 100, 1);
+    const trimmedExchangingAPY = trim(Math.round(stakingAPY * 100), 2);
     return new Intl.NumberFormat("en-US").format(Number(trimmedExchangingAPY));
   }
 
