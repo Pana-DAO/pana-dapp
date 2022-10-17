@@ -121,7 +121,7 @@ function ChooseBond() {
                   {t`Treasury Balance`}
                 </Typography>
                 <Typography variant="h5" style={{ fontWeight: 500 }}>
-                  <>{!!treasuryBalance ? formatMoney(treasuryBalance):<Skeleton width="100px" style={{marginLeft: '35%'}} />}</>
+                  <>{!!treasuryBalance ? formatMoney(treasuryBalance):(stakingAPY?'-':<Skeleton width="100px" style={{marginLeft: '35%'}} />)}</>
                 </Typography>
               </Grid>
             </Grid>
