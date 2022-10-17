@@ -36,7 +36,7 @@ import AllTokens from "./views/allTokens/allTokens";
 import Farm from "./views/tokenLaunch/farm";
 import { farms } from "./helpers/tokenLaunch";
 import { getUserPendingPana, getUserPoolBalance } from "./slices/StakingPoolsSlice";
-import { getAllBonds, getUserNotes } from "./slices/BondSlice";
+import { getAllBonds, getUserNotes, getUserOldNotes } from "./slices/BondSlice";
 import SwitchChain from "./components/SwitchChain/SwitchChain";
 import { checkNetwork } from "./helpers/NetworkHelper";
 import ConnectButton from "./components/ConnectButton/ConnectButton";
@@ -130,7 +130,7 @@ function App() {
         return;
       }
       dispatch(getUserNotes({ networkID: defaultNetwork, address, provider: loadProvider }));
-      //dispatch(getUserOldNotes({ networkID: networkId, address, provider: loadProvider }));
+      dispatch(getUserOldNotes({ networkID: defaultNetwork, address, provider: loadProvider }));
       dispatch(loadAccountDetails({ networkID: defaultNetwork, address, provider: loadProvider }));
       dispatch(getUserPoolBalance({ networkID: defaultNetwork, address, provider: loadProvider }));
       dispatch(getUserPendingPana({ networkID: defaultNetwork, address, provider: loadProvider }));
@@ -226,7 +226,12 @@ function App() {
             )}
           </nav>
 
-          <div className={`${classes.content} ${isSmallerScreen && classes.contentShift}`}>            
+          <div className={`${classes.content} ${isSmallerScreen && classes.contentShift}`}>  
+          <div className="marquee">
+            <div className="marquee__inner" aria-hidden="true">
+              <span>Please Note! Free Streaming of PANA through Staking Pools will be stopped at the end of phase 2(Oct 18th 2022). Please unstake your assets and keep bonding to earn rebase rewards.</span>
+            </div>
+          </div>          
           <Switch>
           <Route exact path="/dashboard">
             <TreasuryDashboard />

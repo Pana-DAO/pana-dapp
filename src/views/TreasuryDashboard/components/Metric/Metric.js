@@ -103,7 +103,7 @@ export const ExchangeAPY = () => {
       <MetricContent label={t`APY`} metric={`-`} isLoading={!stakingAPY} />
     );
   }
-  const trimmedExchangingAPY = trim(stakingAPY * 100, 1);
+  const trimmedExchangingAPY = trim(Math.round(stakingAPY * 100), 2);
   const formattedTrimmedExchangingAPY = new Intl.NumberFormat("en-US").format(Number(trimmedExchangingAPY));
   return (
     <MetricContent label={t`APY`} metric={stakingAPY && `${formattedTrimmedExchangingAPY}%`} isLoading={!stakingAPY} />

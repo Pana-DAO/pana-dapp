@@ -10,6 +10,10 @@ import {
   OutlinedInput,
   InputAdornment,
   InputLabel,
+  DialogContentText,
+  Dialog,
+  DialogContent,
+  DialogActions,
 } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 import { InfoOutlined } from "@material-ui/icons";
@@ -18,7 +22,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "src/hooks";
 import { useWeb3Context } from "src/hooks/web3Context";
-import { changeApproval, getSingleBond, IBond, purchaseBond } from "src/slices/BondSlice";
+import { changeApproval, getSingleBond, IBond, IUserNote, purchaseBond } from "src/slices/BondSlice";
 import { isPendingTxn, txnButtonText } from "src/slices/PendingTxnsSlice";
 import { AppDispatch } from "src/store";
 
@@ -47,6 +51,8 @@ function BondPurchase({
   const [secondsToRefresh, setSecondsToRefresh] = useState(SECONDS_TO_REFRESH);
 
   const isBondLoading = useAppSelector(state => state.bonding.loading ?? true);
+  const accountNotes: IUserNote[] = useAppSelector(state => state.bonding.notes);
+  const vestingBonds = accountNotes.filter(note => !note.fullyMatured);
 
   const balance = useAppSelector(state => state.bonding.balances[bond.quoteToken]);
 
@@ -60,6 +66,28 @@ function BondPurchase({
   const pendingTransactions = useAppSelector(state => {
     return state.pendingTransactions;
   });
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    if (quantity === "" || Number(quantity) <= 0) {
+      dispatch(error(t`Please enter a value!`));
+    } else if (Number(quantity) > maxBondable) {
+      dispatch(
+        error(
+          `Max capacity is ${maxBondable} ${bond.displayName} for ${
+            trim2(+bond.maxPayoutOrCapacityInBase / +currentIndex, 14) || "0"
+          } KARSHA. Click Max to autocomplete.`,
+        ),
+      );
+    }
+    else{
+      setOpen(true);
+    }    
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   async function onBond() {
     if (quantity === "" || Number(quantity) <= 0) {
@@ -91,6 +119,7 @@ function BondPurchase({
   };
   const clearInput = () => {
     setQuantity("");
+    handleClose();
   };
 
   const hasAllowance = useCallback(() => {
@@ -157,22 +186,36 @@ function BondPurchase({
                     </em>
                   </div>
                 ) : (
-                  <FormControl className="pana-input" variant="outlined">
-                    <InputLabel className="pana-input-label" htmlFor="outlined-adornment-amount">
-                      Amount
-                    </InputLabel>
-                    <OutlinedInput
-                      id="outlined-adornment-amount"
-                      type="number"
-                      value={quantity}
-                      onChange={e => updateInput(e.target.value)}
-                      endAdornment={<InputAdornment onClick={setMax} position="end">{t`Max`}</InputAdornment>}
-                      aria-describedby="outlined-weight-helper-text"
-                      inputProps={{
-                        "aria-label": "Amount",
-                      }}
-                    />
-                  </FormControl>
+                  vestingBonds.length>0?
+                  (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      id="bond-btn"
+                      className="transaction-button"
+                      disabled={true}
+                    >
+                      Please wait for current bond to be vested
+                    </Button>
+                    ):
+                  (
+                    <FormControl className="pana-input" variant="outlined">
+                      <InputLabel className="pana-input-label" htmlFor="outlined-adornment-amount">
+                        Amount
+                      </InputLabel>
+                      <OutlinedInput
+                        id="outlined-adornment-amount"
+                        type="number"
+                        value={quantity}
+                        onChange={e => updateInput(e.target.value)}
+                        endAdornment={<InputAdornment onClick={setMax} position="end">{t`Max`}</InputAdornment>}
+                        aria-describedby="outlined-weight-helper-text"
+                        inputProps={{
+                          "aria-label": "Amount",
+                        }}
+                      />
+                    </FormControl>
+                  )
                 )}
                 {bond.soldOut ? (
                   <Button
@@ -185,18 +228,42 @@ function BondPurchase({
                     <Trans>Sold Out</Trans>
                   </Button>
                 ) : balance ? (
-                  hasAllowance() ? (
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      id="bond-btn"
-                      className="transaction-button"
-                      disabled={isPendingTxn(pendingTransactions, "bond_" + bond.displayName)}
-                      onClick={onBond}
+                  hasAllowance()&&vestingBonds.length==0 ? (
+                    <>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        id="bond-btn"
+                        className="transaction-button"
+                        disabled={isPendingTxn(pendingTransactions, "bond_" + bond.displayName)}
+                        // onClick={onBond}
+                        onClick={handleClickOpen}
+                      >
+                        {txnButtonText(pendingTransactions, "bond_" + bond.displayName, "Bond")}
+                      </Button>
+                      <Dialog
+                      open={open}
+                      onClose={handleClose}
+                      aria-labelledby="alert-dialog-title"
+                      aria-describedby="alert-dialog-description"
                     >
-                      {txnButtonText(pendingTransactions, "bond_" + bond.displayName, "Bond")}
-                    </Button>
+                      <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                        Are you sure you want to buy <b>≈${trim2(+quantity / bond.priceToken / +currentIndex, 14) || "0"} KARSHA</b>. 
+                        Please Note, You can purchase new bond only after this bond vests(Vesting Period:<b> {bond.duration}</b>).
+                        </DialogContentText>
+                      </DialogContent>
+                      <DialogActions>
+                        <Button variant="contained" color="secondary" className="transaction-button" onClick={handleClose}>NO</Button>
+                        <Button variant="contained" color="primary" className="transaction-button" onClick={onBond} autoFocus>
+                          YES
+                        </Button>
+                      </DialogActions>
+                      </Dialog>
+                    </>
                   ) : (
+                    vestingBonds.length==0?
+                  (
                     <Button
                       variant="contained"
                       color="primary"
@@ -207,6 +274,7 @@ function BondPurchase({
                     >
                       {txnButtonText(pendingTransactions, `approve_${bond.displayName}_bonding`, "Approve")}
                     </Button>
+                  ):(<></>)
                   )
                 ) : (
                   <Skeleton width="300px" height={40} />
@@ -218,7 +286,15 @@ function BondPurchase({
       </Box>
 
       <Slide direction="left" in={true} mountOnEnter unmountOnExit {...{ timeout: 533 }}>
+        
         <Box className="bond-data">
+        <Box display="flex" className="flxrow data-row" flexDirection="row" justifyContent="space-between">
+            <Box display="flex" flexDirection="row" className="bond-info-alert">
+              <Typography>
+                  Please Note - You can purchase new bond only after vesting of the old bonds
+              </Typography>
+            </Box>            
+          </Box>
           <Box display="flex" className="flxrow data-row" flexDirection="row" justifyContent="space-between">
             <Box display="flex" flexDirection="row">
               <Typography>

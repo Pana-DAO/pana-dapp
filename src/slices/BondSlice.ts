@@ -106,7 +106,7 @@ export interface IUserNote {
 }
 
 function checkNetwork(networkID: NetworkId) {
-  if (networkID !== 421611 && networkID !== 42161) {
+  if (networkID !== 421613 && networkID !== 42161) {
     //ENABLE FOR MAINNET LAUNCH
     throw Error(`Network=${networkID} is not supported`);
   }
