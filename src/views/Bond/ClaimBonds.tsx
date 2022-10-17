@@ -175,7 +175,7 @@ function ClaimBonds({ activeNotes, activeOldNotes }: { activeNotes: IUserNote[];
           {/* <Paper headerText="Your v1 Bonds (please claim all of them soon)"> */}
           <Paper className="bond-list">
             <Typography variant="h5" style={{ fontWeight: 600 }}>
-              {t`Your v1 Bonds (please claim all of them soon)`}
+              {t`Your Prior Bonds`}
             </Typography>
             <Box>
               {!isSmallScreen && (
