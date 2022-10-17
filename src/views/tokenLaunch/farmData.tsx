@@ -138,7 +138,7 @@ function getUserPoolBalanceFormated(pid: number, index: number) {
               <Link component={NavLink} to={`/tokenlaunch/${farm.index}`}>
                 {
                   <Button disabled={!connected} variant="outlined" color="primary" style={{ width: "100%" }}>
-                    <Typography variant="h6">{t`Stake/Unstake`}</Typography>
+                    <Typography variant="h6">{t`Unstake`}</Typography>
                   </Button>
                 }
               </Link>
