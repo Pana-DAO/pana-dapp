@@ -68,7 +68,7 @@ export const initNetworkFunc = async ({ provider }: IGetCurrentNetwork) => {
         uri = NodeHelper.getMainnetURI(id);
         blockExplorerUrl = network["blockExplorerUrl"];
         break;
-      case 421611:
+      case 421613:
         networkName = "Arbitrum Testnet";
         uri = NodeHelper.getMainnetURI(id);
         blockExplorerUrl = network["blockExplorerUrl"];
