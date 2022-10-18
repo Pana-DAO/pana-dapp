@@ -6,7 +6,7 @@ import {
   Button,
   Fade,
   FormControl,
-  FormControlLabel,
+  // FormControlLabel,
   Grid,
   InputAdornment,
   InputLabel,
@@ -15,7 +15,7 @@ import {
   OutlinedInput,
   Paper,
   Radio,
-  RadioGroup,
+  // RadioGroup,
   Slide,
   SvgIcon,
   Typography,
@@ -53,7 +53,7 @@ function Farm({ index }: { index: number }) {
   const [quantity, setQuantity] = useState("");
   const [isFarmLoading, setFarmLoading] = useState(false);
   const [quantityUnstake, setQuantityUnstake] = useState("");
-  const [stake, setStake] = useState("stake");
+  const [stake, setStake] = useState("unstake");
   const [panaPerDay, setPanaPerDay] = useState(ethers.constants.Zero);
   const [farmBalance, setFarmBalance] = useState(ethers.constants.MaxUint256);
   const onClickAway = (): void => {
@@ -145,6 +145,8 @@ function Farm({ index }: { index: number }) {
 
   const onStakeUnstake = async () => {
     if (stake == "stake") {
+      dispatch(error(t`Free Streaming has Stopped Please Unstaked your tokens and Stake throw bonding`));
+      return;
       if (quantity === "" || Number(quantity) <= 0) {
         dispatch(error(t`Please enter a value!`));
       } else if (Number(quantity) > Number(assetBalance)) {
@@ -328,8 +330,8 @@ function Farm({ index }: { index: number }) {
                           </em>
                         </div>
                       ) : (
-                        <div>
-                          <FormControl>
+                        <>
+                          {/* <FormControl>
                             <RadioGroup
                               aria-labelledby="rb-group-stake"
                               value={stake}
@@ -345,7 +347,7 @@ function Farm({ index }: { index: number }) {
                                 label="Unstake"
                               />
                             </RadioGroup>
-                          </FormControl>
+                          </FormControl> */}
                           {stake == "stake" ? (
                             <FormControl className="pana-input" variant="outlined">
                               <InputLabel className="pana-input-label" htmlFor="outlined-adornment-amount">
@@ -383,7 +385,7 @@ function Farm({ index }: { index: number }) {
                               />
                             </FormControl>
                           )}
-                        </div>
+                        </>
                       )
                     ) : (
                       <></>
