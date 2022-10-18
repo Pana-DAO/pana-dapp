@@ -40,7 +40,8 @@ export interface FarmPriceData {
 export const stakingPoolsConfig = {
   startTime: 1660483741,
   endTime: 1665849600,
-  panaPerSecond: BigNumber.from("578703703703700000"),
+  // panaPerSecond: BigNumber.from("578703703703700000"),
+  panaPerSecond: BigNumber.from("0"),
 };
 
 export const panaUSDCLiquidity = async (
