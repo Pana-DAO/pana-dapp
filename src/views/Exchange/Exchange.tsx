@@ -143,7 +143,7 @@ function Exchange() {
       .reduce((a, b) => a + b, 0)
       .toFixed(4),
   );
-  const trimmedExchangingAPY = trim(stakingAPY * 100, 1);
+  const trimmedExchangingAPY = trim(Math.round(stakingAPY * 100), 2);
 
   const stakingRebasePercentage = trim(stakingRebase * 100, 4);
   const nextRewardValue = trim((Number(stakingRebasePercentage) / 100) * trimmedBalance, 4);
