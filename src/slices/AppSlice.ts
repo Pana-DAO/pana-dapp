@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 import { BigNumber, ethers } from "ethers";
 import { RootState } from "src/store";
-import { Distributor__factory, IERC20__factory, Pana, SPana, Staking__factory, UniswapV2Lp__factory } from "src/typechain";
+import { Distributor__factory, IERC20__factory, PairContract, Pana, PropotionalSupplyController, Staking__factory, UniswapV2Lp__factory } from "src/typechain";
 
 import { abi as panaAbi } from "../abi/Pana.json";
-import { abi as sPanaAbi } from "../abi/sPana.json";
 import { abi as pairContractAbi } from "../abi/PairContract.json";
+import { abi as supplyControllerAbi } from "../abi/PropotionalSupplyController.json";
 import { addresses, NetworkId } from "../constants";
 import { setAll } from "../helpers";
 
@@ -33,6 +33,8 @@ export const loadAppDetails = createAsyncThunk(
   async ({ networkID, provider }: IBaseAsyncThunk, { dispatch }) => {
     usdcPriceInUSD = (await getTokenPrice("usd-coin")) || 1;
 
+    dispatch(loadSupplyControllerDetails({networkID, provider}));
+
     // NOTE (appleseed): marketPrice from Graph was delayed, so get CoinGecko price    
     let marketPrice;
     try {
@@ -58,17 +60,10 @@ export const loadAppDetails = createAsyncThunk(
       provider,
     ) as Pana;
 
-    const sPanaContract = addresses[networkID].SPANA_ADDRESS != "" ? new ethers.Contract(
-      addresses[networkID].SPANA_ADDRESS as string,
-      sPanaAbi,
-      provider,
-    ) as SPana : null;
-
-
-
 
     const totalSupply = parseFloat(parseFloat(getRealNumber((await panaMainContract.totalSupply()).toBigInt())).toFixed(4));
     const daoPanaBalance = parseFloat(parseFloat(getRealNumber((await panaMainContract.balanceOf(daoMultisig)).toBigInt())).toFixed(4));
+    const panaInTreasury = parseFloat(parseFloat(getRealNumber((await panaMainContract.balanceOf(addresses[networkID].DAO_TREASURY)).toBigInt())).toFixed(4));
     const circSupply = totalSupply - daoPanaBalance;
     const stakedCircSupply = stakingContract != null ? Number((await stakingContract.stakingSupply()).toString()) : 1;
     const marketCap = circSupply * marketPrice;
@@ -88,6 +83,9 @@ export const loadAppDetails = createAsyncThunk(
         circSupply: circSupply,
         totalSupply: totalSupply,
         treasuryMarketValue,
+        usdcPriceInUSD:usdcPriceInUSD,
+        lpInTreasury: LPInTreasury,
+        panaInTreasury
       } as IAppData;
     }
     // Calculating staking
@@ -136,11 +134,46 @@ export const loadAppDetails = createAsyncThunk(
       totalSupply: totalSupply,
       treasuryMarketValue,
       secondsToEpoch: secondsToEpoch,
+      usdcPriceInUSD:usdcPriceInUSD,
+      lpInTreasury: LPInTreasury,
+      panaInTreasury
     } as IAppData;
   },
 );
 
 export const debug = false;
+
+
+export const loadSupplyControllerDetails = createAsyncThunk(
+  "app/loadSupplyControllerDetails",
+  async ({ networkID, provider }: IBaseAsyncThunk, { dispatch }) => {
+
+    const lpContract = addresses[networkID].PANA_USDC_LP != "" ? new ethers.Contract(
+      addresses[networkID].PANA_USDC_LP as string,
+      pairContractAbi,
+      provider,
+    ) as PairContract : null;
+    const panaInPool = parseFloat(parseFloat(getRealNumber((await lpContract?.getReserves())?.reserve0.toBigInt())).toFixed(4));
+
+    const supplyControllerContract = addresses[networkID].SUPPLY_CONTROLLER != "" ? new ethers.Contract(
+      addresses[networkID].SUPPLY_CONTROLLER as string,
+      supplyControllerAbi,
+      provider,
+    ) as PropotionalSupplyController : null;
+
+
+    const targetSupplyRatio = (await supplyControllerContract?.lossRatio())?.toNumber();
+    const isSupplyControllerEnabled = await supplyControllerContract?.supplyControlEnabled();
+
+    const KP = (await supplyControllerContract?.kp())?.toNumber();
+
+    return {
+      panaInPool,
+      targetSupplyRatio,
+      isSupplyControllerEnabled,
+      KP
+    }
+});
 
 /**
  * checks if app.slice has marketPrice already
@@ -262,11 +295,18 @@ export interface IAppData {
   readonly treasuryBalance?: number;
   readonly treasuryMarketValue?: number;
   readonly secondsToEpoch?: number;
+  readonly usdcPriceInUSD?:number;
+  readonly panaInPool?: number;
+  readonly lpInTreasury?: number;
+  readonly panaInTreasury?: number;
+  readonly isSupplyControllerEnabled: boolean;
+  readonly KP?: number;
 }
 
 const initialState: IAppData = {
   loading: false,
   loadingMarketPrice: false,
+  isSupplyControllerEnabled: false
 };
 
 const appSlice = createSlice({
@@ -300,6 +340,12 @@ const appSlice = createSlice({
       .addCase(loadMarketPrice.rejected, (state, { error }) => {
         state.loadingMarketPrice = false;
         console.error(error.name, error.message, error.stack);
+      })
+      .addCase(loadSupplyControllerDetails.rejected, (state, { error }) => {
+        console.error(error.name, error.message, error.stack);
+      })
+      .addCase(loadSupplyControllerDetails.fulfilled, (state, action) => {
+        setAll(state, action.payload);
       });
   },
 });
