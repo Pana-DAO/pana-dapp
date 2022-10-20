@@ -93,6 +93,23 @@ export const LRPTreasuryBalance = () => {
         }/>;
 };
 
+export const LRPDaysToTarget = () => {
+  const totalSupply = useSelector(state => state.app.totalSupply);
+  const panaInPool = useSelector(state => state.app.panaInPool);
+  const targetSupplyRatio = useSelector(state => state.app.targetSupplyRatio);
+  const KP = useSelector(state => state.app.KP);
+  let days;
+  if (totalSupply && panaInPool && targetSupplyRatio && KP) {
+    const hrs = (Math.log(0.005 / (Math.abs((targetSupplyRatio / 10000) - (panaInPool / totalSupply)))) / Math.log(1 - KP / 10000));
+    days = Number.parseInt(hrs / 24);
+  }
+
+  return <MetricContent colSize={4} label={t`Days to reach Target`} 
+      metric={(days && (days > 0 ? (days + ' - ' + (days + 1) + ' days') : '1 day'))} isLoading={!days} 
+      tooltip={t`This is the approximate value considering LRP is executed once every hour. Other market 
+          forces like bond purchase and swaps on pool may affect estimation`} />;
+};
+
 
 export const FullyDillutedMarketCap = () => {
   const totalSupply = useSelector(state => state.app.totalSupply);
