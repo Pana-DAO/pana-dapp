@@ -16,7 +16,7 @@ import { useWeb3Context } from "src/hooks/web3Context";
 // } from "./components/Graph/Graph";
 import {
   CurrentIndex, KARSHAPrice, PANAPrice, ExchangeAPY, CircSupply, MarketCap,
-  FullyDillutedMarketCap, LRPSupplyRatio, PanaInPool, LRPTreasuryBalance
+  FullyDillutedMarketCap, LRPSupplyRatio, PanaInPool, LRPTreasuryBalance, LRPDaysToTarget
 } from "./components/Metric/Metric";
 // import { switchNetwork } from "src/helpers/NetworkHelper";
 import { NetworkId, NETWORKS } from "src/constants";
@@ -115,6 +115,7 @@ const TreasuryDashboard = memo(() => {
                 <PanaInPool />
                 <LRPSupplyRatio />
                 <LRPTreasuryBalance />
+                <LRPDaysToTarget />
               </Grid>
             </>}
             {/* {( connected?(<SwitchChain provider={provider}/>):(

@@ -163,10 +163,13 @@ export const loadSupplyControllerDetails = createAsyncThunk(
     const targetSupplyRatio = (await supplyControllerContract?.lossRatio())?.toNumber();
     const isSupplyControllerEnabled = await supplyControllerContract?.supplyControlEnabled();
 
+    const KP = (await supplyControllerContract?.kp())?.toNumber();
+
     return {
       panaInPool,
       targetSupplyRatio,
-      isSupplyControllerEnabled
+      isSupplyControllerEnabled,
+      KP
     }
 });
 
@@ -294,6 +297,7 @@ export interface IAppData {
   readonly lpInTreasury?: number;
   readonly panaInTreasury?: number;
   readonly isSupplyControllerEnabled: boolean;
+  readonly KP?: number;
 }
 
 const initialState: IAppData = {
