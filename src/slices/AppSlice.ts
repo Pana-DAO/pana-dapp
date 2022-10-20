@@ -83,6 +83,7 @@ export const loadAppDetails = createAsyncThunk(
         circSupply: circSupply,
         totalSupply: totalSupply,
         treasuryMarketValue,
+        usdcPriceInUSD:usdcPriceInUSD,
         lpInTreasury: LPInTreasury,
         panaInTreasury
       } as IAppData;
@@ -133,6 +134,7 @@ export const loadAppDetails = createAsyncThunk(
       totalSupply: totalSupply,
       treasuryMarketValue,
       secondsToEpoch: secondsToEpoch,
+      usdcPriceInUSD:usdcPriceInUSD,
       lpInTreasury: LPInTreasury,
       panaInTreasury
     } as IAppData;
@@ -290,6 +292,7 @@ export interface IAppData {
   readonly treasuryBalance?: number;
   readonly treasuryMarketValue?: number;
   readonly secondsToEpoch?: number;
+  readonly usdcPriceInUSD?:number;
   readonly panaInPool?: number;
   readonly lpInTreasury?: number;
   readonly panaInTreasury?: number;

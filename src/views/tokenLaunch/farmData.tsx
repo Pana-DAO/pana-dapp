@@ -107,10 +107,13 @@ function getUserPoolBalanceFormated(pid: number, index: number) {
               </div>
             </TableCell>
             <TableCell align="center">
-              <Typography>{farm.points / 10}x</Typography>
+              <Typography>
+                {/* {farm.points / 10}x */}
+                &mdash;
+              </Typography>
             </TableCell>
             <TableCell align="center">
-             {farmLiquidity && farmLiquidity.liquidity? (<Typography>{getFarmLiquidity(farmLiquidity)}</Typography>):
+             {farmLiquidity ? (<Typography>{getFarmLiquidity(farmLiquidity)}</Typography>):
              (<Skeleton width="50px" />)}
             </TableCell>
             <TableCell align="center">
@@ -122,18 +125,21 @@ function getUserPoolBalanceFormated(pid: number, index: number) {
              ):(connected?(<Skeleton width="50px" />):'-')}
             </TableCell>
             <TableCell align="center">
-             {farmLiquidity&&farmLiquidity.farmperday? 
-              (<Typography>{ connected ? getFarmRewardsPerDayFormated(farmLiquidity) : '-'}</Typography>):
-              (connected?(<Skeleton width="50px" />):'-')
-              }
-
-            </TableCell>
-            <TableCell align="center">
              {
-              pendingPanaForUser?(<Typography>{connected ? getPendingPanaForUserFormated(farm.pid) : "-"}</Typography>):
-              (connected?(<Skeleton width="50px" />):'-')
-             }
+            //  farmLiquidity&&farmLiquidity.farmperday? 
+            //   (<Typography>{ connected ? getFarmRewardsPerDayFormated(farmLiquidity) : '-'}</Typography>):
+            //   (connected?(<Skeleton width="50px" />):'-')
+            
+              }
+                &mdash;
             </TableCell>
+            {/* <TableCell align="center">
+             {
+              // pendingPanaForUser?(<Typography>{connected ? getPendingPanaForUserFormated(farm.pid) : "-"}</Typography>):
+              // (connected?(<Skeleton width="50px" />):'-')              
+             }
+             <b>Concluded</b>
+            </TableCell> */}
             <TableCell>
               <Link component={NavLink} to={`/tokenlaunch/${farm.index}`}>
                 {
