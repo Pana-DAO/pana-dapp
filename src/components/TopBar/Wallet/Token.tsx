@@ -265,6 +265,7 @@ export const useWallet = (
 
   const connectedChainBalances = useAppSelector(s => s.account.balances);
   const panaPrice = useAppSelector(s => s.app.marketPrice);
+  const usdPrice = useAppSelector(s=>s.app.usdcPriceInUSD);
   const currentIndex = useAppSelector(s => s.app.currentIndex);
 
   const tokens = {
@@ -272,7 +273,7 @@ export const useWallet = (
       symbol: "Karsha",
       address: addresses[networkId].KARSHA_ADDRESS,
       balance: connectedChainBalances.karsha,
-      price: panaPrice || 0,
+      price:  (panaPrice || 0) * Number(currentIndex || 0),
       icon: "KARSHA",
       decimals: 18,
     },
@@ -280,7 +281,7 @@ export const useWallet = (
       symbol: "Pana",
       address: addresses[networkId].PANA_ADDRESS,
       balance: connectedChainBalances.pana,
-      price: (panaPrice || 0) * Number(currentIndex || 0),
+      price:panaPrice || 0,
       icon: "PANA",
       decimals: 18,
     },
@@ -288,7 +289,7 @@ export const useWallet = (
       symbol: "USDC",
       address: addresses[networkId].USDC_ADDRESS,
       balance: connectedChainBalances.usdc,
-      price: 1,
+      price: usdPrice,
       icon: "USDC",
       decimals: 6,
     },
