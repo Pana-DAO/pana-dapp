@@ -122,8 +122,7 @@ const WalletTotalValue = () => {
   const tokens = useWallet(userAddress, networkId, providerInitialized);
   const isLoading = useAppSelector(s => s.account.loading || s.app.loadingMarketPrice || s.app.loading);
   const marketPrice = useAppSelector(s => s.app.marketPrice || 0);
-  const [currency, setCurrency] = useState<"USD" | "PANA">("USD");
-
+  const [currency, setCurrency] = useState<"USD" | "PANA">("USD");  
   const walletTotalValueUSD = Object.values(tokens).reduce(
     (totalValue, token) => totalValue + parseFloat(token.totalBalance) * token.price,
     0,

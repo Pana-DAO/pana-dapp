@@ -88,6 +88,7 @@ export const loadAppDetails = createAsyncThunk(
         circSupply: circSupply,
         totalSupply: totalSupply,
         treasuryMarketValue,
+        usdcPriceInUSD:usdcPriceInUSD,
       } as IAppData;
     }
     // Calculating staking
@@ -136,6 +137,7 @@ export const loadAppDetails = createAsyncThunk(
       totalSupply: totalSupply,
       treasuryMarketValue,
       secondsToEpoch: secondsToEpoch,
+      usdcPriceInUSD:usdcPriceInUSD
     } as IAppData;
   },
 );
@@ -262,6 +264,7 @@ export interface IAppData {
   readonly treasuryBalance?: number;
   readonly treasuryMarketValue?: number;
   readonly secondsToEpoch?: number;
+  readonly usdcPriceInUSD?:number
 }
 
 const initialState: IAppData = {

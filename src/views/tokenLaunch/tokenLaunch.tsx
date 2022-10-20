@@ -28,7 +28,7 @@ import { onHarvestAll } from "src/slices/StakingPoolsSlice";
 import { useDispatch } from "react-redux";
 // import { AppDispatch } from "src/store";
 import { CircSupply, MarketCap, PANAPrice, TVLStakingPool } from "../TreasuryDashboard/components/Metric/Metric";
-import { Skeleton } from "@material-ui/lab";
+// import { Skeleton } from "@material-ui/lab";
 import { useEffect } from "react";
 import { getAllTokenPrice } from "src/helpers";
 import {
@@ -166,33 +166,39 @@ function TokenLaunch() {
         }
       }
     }
-    if (isOnlyTotalValue) {
-      setTotalLiquidity(totalLiq);
-      setCheckIsTotalPana(false);
-    }
-    else {
+    // if (isOnlyTotalValue) {
+    //   setTotalLiquidity(totalLiq);
+    //   setCheckIsTotalPana(false);
+    // }
+    // else {
+    //   setTotalLiquidity(totalLiq);
+    //   setTotalLiquidityUSD(totalLiqUSD);
+    //   setTotalPana(totalP);
+    // }
       setTotalLiquidity(totalLiq);
       setTotalLiquidityUSD(totalLiqUSD);
       setTotalPana(totalP);
-    }
 
   };
 
   useEffect(() => {
     //&&userPoolBalance!=null 
-    if (checkIsLoading == false && ((address && userPoolBalance != null))) {
-      setCheckIsLoading(true);
-      setCheckIsTotalPana(false);
-      loadFarmLiquidity(false).finally(() => {
-        setCheckIsLoading(false);
-        setCheckIsTotalPana(true);
-      });
-    }
+    // if (checkIsLoading == false && ((address && userPoolBalance != null))) {
+    //   setCheckIsLoading(true);
+    //   setCheckIsTotalPana(false);
+    //   loadFarmLiquidity(false).finally(() => {
+    //     setCheckIsLoading(false);
+    //     setCheckIsTotalPana(true);
+    //   });
+    // }
   }, [loadCount]);
 
   useEffect(() => {
     if (!address) {
-      loadFarmLiquidity(true);
+      loadFarmLiquidity(true).finally(()=>{
+        setCheckIsLoading(false);
+        setCheckIsTotalPana(true);
+      });
     }
   }, [address]);
 
@@ -257,6 +263,7 @@ function TokenLaunch() {
           <Paper className="paper-format pana-card" elevation={0}>
             <Typography variant="h5" className="card-header" style={{ fontWeight: 600 }}>
               {t`Pana Token Launch`}
+              <p className="pana-launch-info">Free streaming concluded on Oct 18,2022 4PM GMT. Please unstake your assets and keep bonding</p>
             </Typography>
 
             {networkFarms.length != 0 && (
@@ -307,13 +314,17 @@ function TokenLaunch() {
                         </Typography>
                         <Typography variant="h4" align="center" style={{ marginBottom: "10px" }}>
                           <>
-                            {((totalLiquidity && !checkIsLoading && checkIsTotalPana) || checkGreaterZero(totalPana)) ? (
-                              totalPana ? (
-                                formatCurrency(+ethers.utils.formatUnits(totalPana, 18), 4, "PANA")
-                              ) : (
-                                "-"
-                              )
-                            ) : <Skeleton width="200px" />}
+                            {
+                            // ((totalLiquidity && !checkIsLoading && checkIsTotalPana) || checkGreaterZero(totalPana)) ? (
+                            //   totalPana ? (
+                            //     formatCurrency(+ethers.utils.formatUnits(totalPana, 18), 4, "PANA")
+                            //   ) : (
+                            //     "-"
+                            //   )
+                            // ) : <Skeleton width="200px" />
+                            
+                            }
+                            &mdash;
                           </>
                         </Typography>
                       </div>
@@ -342,9 +353,9 @@ function TokenLaunch() {
                               <TableCell align="center">
                                 <Trans>Per Day</Trans>
                               </TableCell>
-                              <TableCell align="center">
+                              {/* <TableCell align="center">
                                 <Trans>Rewards (Pana)</Trans>
-                              </TableCell>
+                              </TableCell> */}
                             </TableRow>
                           </TableHead>
                         </>
