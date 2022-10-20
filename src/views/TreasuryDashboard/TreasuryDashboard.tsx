@@ -2,7 +2,7 @@ import "./treasury-dashboard.scss";
 
 // import { Box, Container, Grid, useMediaQuery, Zoom } from "@material-ui/core";
 // import { Box, Button, Container, Divider, Typography, useMediaQuery, Grid, Paper } from "@material-ui/core";
-import { Box,  Container,  useMediaQuery, Grid, Paper } from "@material-ui/core";
+import { Box, Container, useMediaQuery, Grid, Paper, Typography } from "@material-ui/core";
 import { memo } from "react";
 import { useWeb3Context } from "src/hooks/web3Context";
 
@@ -14,10 +14,14 @@ import { useWeb3Context } from "src/hooks/web3Context";
 //   RunwayAvailableGraph,
 //   TotalValueDepositedGraph,
 // } from "./components/Graph/Graph";
-import { CurrentIndex, KARSHAPrice, PANAPrice, ExchangeAPY, CircSupply, MarketCap, 
-  FullyDillutedMarketCap } from "./components/Metric/Metric";
+import {
+  CurrentIndex, KARSHAPrice, PANAPrice, ExchangeAPY, CircSupply, MarketCap,
+  FullyDillutedMarketCap, LRPSupplyRatio, PanaInPool, LRPTreasuryBalance
+} from "./components/Metric/Metric";
 // import { switchNetwork } from "src/helpers/NetworkHelper";
 import { NetworkId, NETWORKS } from "src/constants";
+import { t } from "@lingui/macro";
+import { useAppSelector } from "src/hooks";
 // import ConnectButton from "src/components/ConnectButton/ConnectButton";
 // import SwitchChain from "src/components/SwitchChain/SwitchChain";
 
@@ -27,6 +31,7 @@ const TreasuryDashboard = memo(() => {
   const { provider, address, networkId } = useWeb3Context();
 
   const arbitrum_testnet = NETWORKS[NetworkId.ARBITRUM_TESTNET];
+  const isSupplyControllerEnabled = useAppSelector(state => state.app.isSupplyControllerEnabled);
 
   // const handleSwitchChain = (id: any) => {
   //   return () => {
@@ -84,22 +89,34 @@ const TreasuryDashboard = memo(() => {
         <Box className="hero-metrics">
           <Paper className="paper-format-treasury pana-card dashboard-metrics">
             {<>
-                <Grid container direction="row" spacing={1}>
-                  <MarketCap colSize={4}/>
-                  <FullyDillutedMarketCap/>
-                  <CircSupply colSize={4}/>
-                  <PANAPrice />
-                  <KARSHAPrice />
-                  <CurrentIndex />
-                  <ExchangeAPY />
-                  {/* <BackingPerPANA /> */}
-                  
-                  
-                  
-                  {/* <FiveDayRate />
+              <Grid container direction="row" spacing={1}>
+                <MarketCap colSize={4} />
+                <FullyDillutedMarketCap />
+                <CircSupply colSize={4} />
+                <PANAPrice />
+                <KARSHAPrice />
+                <CurrentIndex />
+                <ExchangeAPY />
+                {/* <BackingPerPANA /> */}
+
+
+
+                {/* <FiveDayRate />
                   <NextRewardYield /> */}
-                </Grid>
-              </>}
+              </Grid>
+              <Grid container direction="row" spacing={1}>
+                <div className="lrp-header">
+                  <Typography variant="h5" className="card-header" style={{ fontWeight: 600, paddingLeft: '4px' }}>
+                    {t`Loss Ratio Peg`}
+                  </Typography>
+                  <span><i>&nbsp;&nbsp;&nbsp;{isSupplyControllerEnabled ? '(Active)' : '(InActive)'}</i></span>
+                </div>
+
+                <PanaInPool />
+                <LRPSupplyRatio />
+                <LRPTreasuryBalance />
+              </Grid>
+            </>}
             {/* {( connected?(<SwitchChain provider={provider}/>):(
             <>
               <Box display="flex" flexDirection="column">
