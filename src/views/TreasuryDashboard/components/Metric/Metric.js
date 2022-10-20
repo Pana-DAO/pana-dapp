@@ -55,6 +55,45 @@ const MetricContent = ({
 };
 
 
+export const LRPSupplyRatio = () => {
+  const totalSupply = useSelector(state => state.app.totalSupply);
+  const panaInPool = useSelector(state => state.app.panaInPool);
+  const targetSupplyRatio = useSelector(state => state.app.targetSupplyRatio);
+  const isDataLoaded = panaInPool && totalSupply && targetSupplyRatio;
+  return <MetricContent colSize={4} label={t`Current Supply Ratio (Target)`} 
+  metric={isDataLoaded && trim((panaInPool / totalSupply) * 100, 2) + '%'
+    + (targetSupplyRatio && (' / ' + (targetSupplyRatio / 100) + '%'))} isLoading={!isDataLoaded} 
+    tooltip={
+      <React.Fragment>
+        {t`Current Supply Ratio = PANA in Liquidity Pool / Total Supply of PANA`}
+        <br /> <br />
+        {t`Target - This is the ideal Supply Ratio which the Loss Ratio Peg will aim to achieve`}
+      </React.Fragment>
+    }/>;
+};
+
+export const PanaInPool = () => {
+  const panaInPool = useSelector(state => state.app.panaInPool);
+  return <MetricContent colSize={4} label={t`PANA in Liquidity Pool`} 
+  metric={panaInPool && (formatMoney(panaInPool, true, false))} isLoading={!panaInPool} />;
+};
+
+export const LRPTreasuryBalance = () => {
+  const lpInTreasury = useSelector(state => state.app.lpInTreasury);
+  const panaInTreasury = useSelector(state => state.app.panaInTreasury);
+  return <MetricContent colSize={4} label={t`Treasury Balance`} 
+  metric={(lpInTreasury && (trim(lpInTreasury, 6) + ' SLP')) + 
+        (panaInTreasury && (' / ' + formatMoney(panaInTreasury, true, false) + ' PANA'))} isLoading={!lpInTreasury} 
+        tooltip={
+          <React.Fragment>
+            {t`If Current Supply Ratio is greater than the Target, necessary SLP tokens from treasury will be burnt to pull PANA out of LP.`}
+            <br /> <br />
+            {t`If Current Supply Ratio is lesser than the Target, necessary PANA from treasury will be used to restore supply in LP.`}
+          </React.Fragment>
+        }/>;
+};
+
+
 export const FullyDillutedMarketCap = () => {
   const totalSupply = useSelector(state => state.app.totalSupply);
   const marketPrice = useSelector(state => state.app.marketPrice);
@@ -78,7 +117,7 @@ export const PANAPrice = () => {
   const marketPrice = useSelector(state => state.app.marketPrice);
   return (
     <MetricContent
-      label={t`Pana Price`}
+      label={t`PANA Price`}
       metric={marketPrice && formatCurrency(marketPrice, 6)}
       isLoading={!marketPrice}
     />
