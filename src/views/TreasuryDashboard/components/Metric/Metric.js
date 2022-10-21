@@ -74,14 +74,14 @@ export const LRPSupplyRatio = () => {
 
 export const PanaInPool = () => {
   const panaInPool = useSelector(state => state.app.panaInPool);
-  return <MetricContent colSize={4} label={t`PANA in Liquidity Pool`} 
+  return <MetricContent colSize={3} label={t`PANA in Liquidity Pool`} 
   metric={panaInPool && (formatMoney(panaInPool, true, false))} isLoading={!panaInPool} />;
 };
 
 export const LRPTreasuryBalance = () => {
   const lpInTreasury = useSelector(state => state.app.lpInTreasury);
   const panaInTreasury = useSelector(state => state.app.panaInTreasury);
-  return <MetricContent colSize={4} label={t`Treasury Balance`} 
+  return <MetricContent colSize={5} label={t`Treasury Balance`} 
   metric={(lpInTreasury && (trim(lpInTreasury, 6) + ' SLP')) + 
         (panaInTreasury && (' / ' + formatMoney(panaInTreasury, true, false) + ' PANA'))} isLoading={!lpInTreasury} 
         tooltip={
@@ -104,7 +104,7 @@ export const LRPDaysToTarget = () => {
     days = Number.parseInt(hrs / 24);
   }
 
-  return <MetricContent colSize={4} label={t`Days to reach Target`} 
+  return <MetricContent colSize={3} label={t`Days to reach Target`} 
       metric={(days && (days > 0 ? (days + ' - ' + (days + 1) + ' days') : '1 day'))} isLoading={!days} 
       tooltip={t`This is the approximate value considering LRP is executed once every hour. Other market 
           forces like bond purchase and swaps on pool may affect estimation`} />;
