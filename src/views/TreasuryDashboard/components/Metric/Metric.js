@@ -60,7 +60,7 @@ export const LRPSupplyRatio = () => {
   const panaInPool = useSelector(state => state.app.panaInPool);
   const targetSupplyRatio = useSelector(state => state.app.targetSupplyRatio);
   const isDataLoaded = panaInPool && totalSupply && targetSupplyRatio;
-  return <MetricContent colSize={4} label={t`Current Supply Ratio (Target)`} 
+  return <MetricContent colSize={5} label={t`Current Supply Ratio (Target)`} 
   metric={isDataLoaded && trim((panaInPool / totalSupply) * 100, 2) + '%'
     + (targetSupplyRatio && (' / ' + (targetSupplyRatio / 100) + '%'))} isLoading={!isDataLoaded} 
     tooltip={
@@ -104,7 +104,7 @@ export const LRPDaysToTarget = () => {
     days = Number.parseInt(hrs / 24);
   }
 
-  return <MetricContent colSize={3} label={t`Days to reach Target`} 
+  return <MetricContent colSize={4} label={t`Days to reach Target`} 
       metric={(days && (days > 0 ? (days + ' - ' + (days + 1) + ' days') : '1 day'))} isLoading={!days} 
       tooltip={t`This is the approximate value considering LRP is executed once every hour. Other market 
           forces like bond purchase and swaps on pool may affect estimation`} />;
