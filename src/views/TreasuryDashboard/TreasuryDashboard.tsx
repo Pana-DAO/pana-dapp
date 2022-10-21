@@ -113,9 +113,9 @@ const TreasuryDashboard = memo(() => {
                 </div>
 
                 <PanaInPool />
-                <LRPSupplyRatio />
-                <LRPTreasuryBalance />
+                <LRPSupplyRatio />                
                 <LRPDaysToTarget />
+                <LRPTreasuryBalance />
               </Grid>
             </>}
             {/* {( connected?(<SwitchChain provider={provider}/>):(
