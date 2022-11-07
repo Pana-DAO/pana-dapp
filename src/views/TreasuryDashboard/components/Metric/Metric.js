@@ -105,7 +105,7 @@ export const LRPDaysToTarget = () => {
   }
 
   return <MetricContent colSize={4} label={t`Days to reach Target`} 
-      metric={(days && (days > 0 ? (days + ' - ' + (days + 1) + ' days') : '1 day'))} isLoading={!days} 
+      metric={(days !== undefined && (days > 0 ? (days + ' - ' + (days + 1) + ' days') : '1 day'))} isLoading={days === undefined} 
       tooltip={t`This is the approximate value considering LRP is executed once every hour. Other market 
           forces like bond purchase and swaps on pool may affect estimation`} />;
 };
