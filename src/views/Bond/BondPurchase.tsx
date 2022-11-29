@@ -42,9 +42,13 @@ function BondPurchase({
 }) {
   const SECONDS_TO_REFRESH = 60;
   const dispatch = useDispatch<AppDispatch>();
-  const { provider, address, networkId } = useWeb3Context();
+  const { provider, address, networkId } = useWeb3Context();  
   const currentIndex = useAppSelector(state => {
     return state.app.currentIndex ?? "1";
+  });
+
+  const isCurrentIndex = useAppSelector(state => {
+    return state.app.currentIndex !=undefined;
   });
 
   const [quantity, setQuantity] = useState("");
@@ -319,7 +323,7 @@ function BondPurchase({
               </Tooltip>
             </Box>
             <Typography id="bond-value-id" className="price-data">
-              {isBondLoading ? (
+              {isBondLoading||!isCurrentIndex ? (
                 <Skeleton width="100px" />
               ) : (
                 `≈${trim2(+quantity / bond.priceToken / +currentIndex, 14) || "0"} KARSHA (≈${trim2(+quantity / bond.priceToken, 14) || "0"} PANA)`

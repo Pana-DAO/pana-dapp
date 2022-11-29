@@ -294,6 +294,19 @@ function App() {
                   <SwitchChain provider={provider}/>
                 ):(
                   <>
+                  <Route path="/exchange">
+                    <Exchange />
+                  </Route>
+                  <Route path="/bonds">
+                    {bondIndexes.map(index => {
+                      return (
+                        <Route exact key={index} path={`/bonds/${index}`}>
+                          <Bond index={index} />
+                        </Route>
+                      );
+                    })}
+                    <ChooseBond />
+                  </Route>
                     <Route exact path="/">
                       <Redirect to="/dashboard" />
                     </Route>
